@@ -20,7 +20,7 @@ domain pack.
 - `stories.md` — stories + AC.
 - `test-scenarios.md`, `traceability-matrix.md`.
 
-Then run `/clarify:finalize prd` to compile a final, sign-off-ready PRD
-(`final-prd.md`).
+Then run `/clarify:finalize prd` to compile a sign-off-ready PRD
+(`prd.md` — never named "final-…").
 
 See `input-prd.md` for the starting document.

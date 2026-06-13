@@ -28,9 +28,9 @@ ARTIFACTS = [  # (filename-or-glob, produced-by, description)
     ("traceability-matrix.md", "/clarify:from-spec", "traceability"),
     ("decision-log.md", "/clarify:improve answers", "decision audit trail"),
     ("change-impact.md", "/clarify:improve change-request", "CR impact analysis"),
-    ("final-brd.md|final-prd.md", "/clarify:finalize", "final sign-off doc"),
+    ("brd.md|prd.md", "/clarify:finalize", "sign-off doc (no 'final' in name)"),
     ("wireframes.html", "/clarify:finalize", "low-fi HTML wireframes"),
-    ("review-pack/index.html", "/clarify:export", "visual review pack"),
+    ("brd.html|prd.html", "/clarify:export", "full HTML BRD/PRD (from brd.md)"),
 ]
 ID_RE = re.compile(r"\*\*([AQSV]\d+)\*\*")
 
@@ -139,9 +139,10 @@ def cmd_answers(d, src, as_json, by, source_label):
 
 # ---------------------------------------------------------------- integrity
 DEF_PATTERNS = {  # id-kind -> (defining file globs, definition regex)
-    "BR": (["brd-draft.md", "prd-draft.md", "final-brd.md", "final-prd.md"], r"\|\s*(BR-?\d+)\s*\|"),
-    "F":  (["model-suggestions.md", "final-brd.md", "final-prd.md"], r"\|\s*(F\d+)\s*\|"),
-    "S":  (["review-pack/screens/screen-inventory.md"], r"\|\s*(S\d+)\s*\|"),
+    "BR": (["brd-draft.md", "prd-draft.md", "brd.md", "prd.md"], r"\|\s*(BR-?\d+)\s*\|"),
+    # Flows are named F0n-Name (number is the stable anchor; -Name is appended): capture the F\d+ part.
+    "F":  (["model-suggestions.md", "brd-draft.md", "prd-draft.md", "brd.md", "prd.md"], r"\|\s*(F\d+)(?:-\w+)?\s*\|"),
+    "S":  (["brd.md", "prd.md", "wireframes.html"], r"\|\s*(S\d+)\s*\|"),
     "CODE": (["error-handling.md"], r"\|\s*([A-Z][A-Z0-9]+_[A-Z0-9_]*\d+)\s*\|"),
 }
 REF_RES = {

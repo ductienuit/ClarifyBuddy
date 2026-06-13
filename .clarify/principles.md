@@ -115,3 +115,64 @@ Note in the output which mode was used: `domain pack: <name>` or
 `domain: <inferred> (no pack — items below are labeled inferences)`. Packs are
 worth maintaining only for domains used repeatedly or with org-specific
 rules/compliance; rely on labeled inference for the long tail.
+
+## 13. Document presentation & naming conventions
+
+A BRD/PRD must read top-to-bottom for someone seeing the feature for the **first
+time**, and its machine anchors must stay stable across versions. These
+conventions are the **default** for `from-idea` (draft), `finalize` (final), and
+`export` (HTML); `audit` / `from-spec` reference them under the **clarity** and
+**structure** dimensions. They are *presentation* rules — they restate content
+that already exists and add no business rule (Principle 2 still holds).
+
+**13.1 File naming — never the word "final".**
+The canonical output is `brd.md` / `prd.md` (not `final-brd.md`). A prior version
+is archived as `brd.v<semver>.md` / `prd.v<semver>.md`; the canonical name always
+holds the latest. Version lives in the Change history + the archive name, never in
+the main file name. The HTML rendering is `brd.html` / `prd.html`.
+
+**13.2 The HTML is a full BRD/PRD, not a "review pack".**
+`export` renders `brd.html` **from `brd.md`** (one source of truth) via pandoc,
+then: (a) renders diagrams — Mermaid client-side, PlantUML via plantuml.com hex
+`~h` encoding with a code fallback; (b) turns requirement group-band rows into
+`colspan` merged header cells; (c) appends a TOC and an **Artifact index (source)**
+linking back to `brd.md` + companions; (d) round-trips through LibreOffice
+(`soffice --convert-to docx`) so Word export validates. No tool label
+("Clarify", "Visual Review Pack") appears in the displayed content.
+
+**13.3 Heading language follows the Document Profile Language.**
+When `Language = vi`, render every section heading as `Vietnamese (English term)`
+— e.g. `Yêu cầu nghiệp vụ (Business requirements)` — never an ad-hoc Anglo-Vietnamese
+mix. When `Language = en`, use the English term only. Machine-readable anchors stay
+English **always**: IDs (`F#`/`BRD-R#`/`BR#`/`T-#`/`A#`/`Q#`/`S#`/`V#`), error
+codes, the `ASSUMPTION`/`OPEN QUESTION`/`SUGGESTION` labels, and file names.
+
+**13.4 §0 "How to read this document" up front (after the summary).**
+- `0.1` what this document is + a quick-read hint.
+- `0.2` a **symbol-conventions** table: `F0n-Name` = Flow, `BRD-R#` = Requirement,
+  `BR#` = Rule, `T-#` = Test, `A#/Q#/S#` = Assumption / Open Question / Suggestion;
+  state plainly that *codes stay stable across versions; names are only for reading*.
+- `0.3` the **Glossary** — moved to the front (not buried inside the requirements
+  section): define each core term ONCE, only terms the requirements use.
+
+**13.5 "How the system works (overview)" before the requirements.**
+An end-to-end narrative of the journey plus ONE representative diagram. Per-flow
+detail stays in the Functional Flows section.
+
+**13.6 Flow naming = `F0n-FeatureName`.**
+Keep the **number** stable (so traceability never breaks); only *append* a short
+English feature name (Login / Consent / Token / Revoke / Suspend / Payment /
+Onboarding …). The heading leads with the Profile-language name, e.g.
+`Luồng F02-Login — Định danh người dùng`. Use `F0n-Name` consistently in the flow
+catalog, error map, screen matrix, traceability, and inside the diagrams.
+
+**13.7 Requirements = ONE table, grouped by capability + real sequence.**
+Columns: `ID | Requirement (self-standing sentence) | Why (business reason) |
+Priority`. Separate capability groups with a bold band row (Markdown) / a
+`colspan` merged cell (HTML); order groups by the real journey and within a group
+**Must → Should → Could**. A cross-reference like `Source: BR2` is **not** a Why.
+Do **not** stuff flow / rule / test / source into the requirements section — those
+belong in **Traceability**, which carries a **Source** column (`← A#/BR#/S#/Q#` that
+produced the requirement). Every requirement (including deferred — keep the row,
+mark Status = Deferred) appears once and stays mapped in Traceability. A flat
+one-liner dump with no grouping / no Why is a clarity finding.

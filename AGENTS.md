@@ -13,8 +13,8 @@ rules — label uncertain items `ASSUMPTION` or `OPEN QUESTION`.
 | "audit this spec", "score these requirements", "how good is this spec" | `.clarify/workflows/audit.md` | the doc | `audit-report.md` |
 | "improve the acceptance criteria / edge cases / clarity / diagrams …" | `.clarify/workflows/improve.md` | prior `clarify-output/` | overwrites the relevant file |
 | "create the dev/QA handoff", "hand this off" | `.clarify/workflows/handoff.md` | prior `clarify-output/` | `handoff-pack.md` |
-| "finalize the doc", "produce the final PRD/BRD", "we've confirmed, export it" | `.clarify/workflows/finalize.md` | prior `clarify-output/` | `final-prd.md` or `final-brd.md` |
-| "make a review pack", "render the diagrams", "something I can open and review", "hand off to design" | `.clarify/workflows/export.md` | final doc + companions | `clarify-output/review-pack/` (HTML + diagrams + screens + HTML wireframes + traceability) |
+| "finalize the doc", "produce the PRD/BRD", "we've confirmed, export it" | `.clarify/workflows/finalize.md` | prior `clarify-output/` | `brd.md` or `prd.md` (never "final-…") |
+| "make the HTML version", "render the diagrams", "something I can open / Word-export", "hand off to design" | `.clarify/workflows/export.md` | `brd.md`/`prd.md` + companions | `clarify-output/brd.html` (full HTML BRD/PRD rendered from the Markdown) |
 | "where were we?", "what's left?", "status of the BRD" | `.clarify/workflows/status.md` | everything in `clarify-output/` | chat reply only (read-only) |
 | "we have a change request", "what does this change affect?" | `.clarify/workflows/improve.md` (mode `change-request`) | traceability + catalogs | `change-impact.md` (analysis only) |
 

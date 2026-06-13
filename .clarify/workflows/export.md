@@ -1,55 +1,63 @@
-# Workflow: export (Visual Review Pack)
+# Workflow: export (HTML BRD/PRD)
 
 ## When to use
-After `finalize` (or after `from-spec`), to package an **openable Review Pack** so
-reviewers don't copy diagram code into web viewers and Design gets screen flow +
-low-fi HTML wireframes. The final doc remains the source of truth; the pack is
-derived.
+After `finalize`, to render the sign-off document as **one full, openable HTML
+BRD/PRD** (`brd.html` / `prd.html`) **from `brd.md` / `prd.md`** — for easy reading,
+sharing, and Word export, without anyone copying diagram code into web viewers. The
+Markdown stays the single source of truth; the HTML is its rendering, **not** a
+separate "review pack".
 
 ## Inputs
-- Prior outputs in `clarify-output/`: `final-brd.md`/`final-prd.md` (preferred) or
-  the draft, plus companions (`model-suggestions.md`, `error-handling.md`,
+- Prior outputs in `clarify-output/`: `brd.md`/`prd.md` (preferred) or the draft,
+  plus companions (`model-suggestions.md`, `error-handling.md`,
   `traceability-matrix.md`, `edge-case-matrix.md`, `stories.md`, `test-scenarios.md`,
   `api-data-impact.md`). Read; do not re-derive.
-- `$ARGUMENTS`: `html` (default) | `all` (render + offline + signoff) | `offline`.
+- `$ARGUMENTS`: `html` (default) | `all` (static render + offline + docx round-trip +
+  wireframes) | `offline`.
 
 ## Engine sequence (ordered)
-1. `trace` — ensure the traceability matrix is current (build if missing) and extend
-   it with a Screen column for the pack.
-2. `export` — probe the environment, then assemble `clarify-output/review-pack/`:
-   HTML pack (client-side Mermaid + PlantUML fallback), manifest, screen inventory +
-   screen-flow + low-fi HTML wireframes (derive-only), static render + offline HTML
-   (best-effort), optional sign-off pack, review checklist, open questions.
+1. `trace` — ensure the traceability matrix is current (build if missing) and that it
+   carries Flow (`F0n-Name`) / Business rule / Error-State / **Source** columns.
+2. `export` — probe the environment, then render `clarify-output/brd.html` **from**
+   `brd.md`: pandoc md→html (fallback minimal converter), Mermaid client-side,
+   PlantUML via plantuml.com hex `~h` + code fallback, requirement group-bands →
+   `colspan` merged cells, TOC + Artifact index, low-fi HTML wireframes (derive-only),
+   optional LibreOffice docx round-trip, optional offline variant.
 
 ## Templates to fill
-- `templates/review-pack-template.html`, `templates/review-manifest-template.json`,
-  `templates/screen-inventory-template.md`, `templates/wireframe-template.html`,
-  `templates/traceability-map-template.md`, `templates/review-checklist-template.md`.
+- `templates/review-pack-template.html` (the HTML shell: CSS + mermaid.js),
+  `templates/wireframe-template.html` (low-fi screen wireframes).
 
 ## Outputs written
-- `clarify-output/review-pack/index.html` + `manifest.json` (always).
-- `diagrams/`, `screens/` (inventory + screen-flow + `wireframes.html`),
-  `traceability/`, `review/` — per phase.
-- `index-offline.html`, rendered `.svg/.png`, `signoff-pack.pdf` — when mode/env allow.
+- `clarify-output/brd.html` (or `prd.html`) — always.
+- `brd-assets/` (rendered diagram `.svg` + supporting files), `wireframes.html` —
+  per phase.
+- `brd.offline.html`, `brd.docx` (Word-export validation) — when mode/env allow.
 
 ## Phasing
-- **Phase 1:** HTML pack (client-side Mermaid, PlantUML fallback-to-code), manifest,
-  artifact index — parse-only.
-- **Phase 2:** screen inventory + screen-flow + low-fi HTML wireframes
-  (derive-only, embedded in `index.html` and saved as `screens/wireframes.html`).
-- **Phase 3:** static SVG render (local-first) + `index-offline.html`.
-- **Phase 4:** `signoff-pack.pdf/.docx` from rendered images.
+- **Phase 1:** md→html (pandoc/fallback) into the HTML shell; strip tool labels;
+  Mermaid client-side + PlantUML hex `~h` fallback-to-code; requirement group-bands
+  → `colspan`; TOC + Artifact index. Always runs.
+- **Phase 2:** low-fi HTML wireframes (derive-only), embedded in `brd.html` and saved
+  as `wireframes.html`.
+- **Phase 3:** static SVG render (local-first) + `brd.offline.html`.
+- **Phase 4:** LibreOffice `soffice --convert-to docx` round-trip → `brd.docx`
+  (validates the XML for Word).
 
 ## Done criteria
-- BA can open `index.html` and see every diagram rendered (Mermaid client-side;
-  PlantUML rendered or code+link) — **no copy-paste to web viewers needed**.
-- Each flow has diagram source AND a rendered output OR a recorded fallback.
-- Screen flow derives from the screen inventory; wireframes derive from the
-  Screen/Display Matrix + flow steps + rules + error map + state (derive-only;
-  unknowns → ASSUMPTION / OPEN QUESTION; stamped low-fi, not final UI). Wireframes
-  render as a responsive grayscale HTML widget, not ASCII art.
-- Traceability map covers Requirement → Flow → Screen → Rule → Error/State → Test;
-  orphans flagged.
-- Review checklist + artifact index present; manifest records render status.
-- Fallback works (pack opens even with no renderer/network); nothing invented; the
-  final doc is unchanged; re-running `export` is idempotent.
+- A reader can open `brd.html` and see the **full BRD/PRD** — same content as
+  `brd.md` — with every diagram rendered (Mermaid client-side; PlantUML rendered or
+  code+link), no copy-paste to web viewers needed, and **no tool label** ("Clarify",
+  "Visual Review Pack") on screen.
+- The HTML is generated **from** `brd.md`/`prd.md` (one source of truth); the
+  Markdown is unchanged; re-running `export` is idempotent.
+- The Business requirements table renders as a **banded table** (group rows are
+  `colspan` merged cells); a TOC and an **Artifact index (source)** link back to
+  `brd.md` + companions.
+- Wireframes derive from the Screen/Display Matrix + flow steps + rules + error map +
+  state (derive-only; unknowns → ASSUMPTION / OPEN QUESTION; stamped low-fi, not
+  final UI); responsive grayscale HTML widget, not ASCII art.
+- Fallback works (the HTML opens even with no pandoc/renderer/`soffice`/network);
+  diagrams degrade to code + viewer link; the build log records what was skipped.
+- When `soffice` is available, the docx round-trip is attempted and its PASS/skip is
+  recorded; nothing is invented.

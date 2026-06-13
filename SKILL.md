@@ -84,8 +84,8 @@ path: from-idea → improve answers → (optional from-spec) → handoff/finaliz
 | Score / audit only (`audit`) | `.clarify/workflows/audit.md` | the doc | `audit-report.md` |
 | Improve one section or resolve answers (`improve <mode>`) | `.clarify/workflows/improve.md` | prior outputs | overwrites the relevant file |
 | Dev + QA handoff (`handoff`) | `.clarify/workflows/handoff.md` | prior outputs | `handoff-pack.md` |
-| Final sign-off document (`finalize [prd\|brd]`) | `.clarify/workflows/finalize.md` | prior outputs | `final-prd.md` or `final-brd.md` |
-| Visual Review Pack (`export [html\|all]`) | `.clarify/workflows/export.md` | final doc + companions | `review-pack/` (HTML + diagrams + screens + wireframes + traceability) |
+| Sign-off document (`finalize [prd\|brd]`) | `.clarify/workflows/finalize.md` | prior outputs | `brd.md` or `prd.md` (never "final-…") |
+| HTML BRD/PRD (`export [html\|all]`) | `.clarify/workflows/export.md` | `brd.md`/`prd.md` + companions | `brd.html` (full HTML doc rendered from the Markdown: diagrams + banded requirement tables + TOC + wireframes) |
 | Where do we stand? (`status`) | `.clarify/workflows/status.md` | everything in `clarify-output/` | chat reply only (read-only) |
 
 ## Key behaviors to preserve

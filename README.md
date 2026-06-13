@@ -60,10 +60,10 @@ Copy Answer Sheet, điền sau mỗi mã, dán lại. Clarify áp từng quyết
 Khi cần bàn giao Dev/QA: thêm điểm audit, user stories, acceptance criteria, test, phân tích API/dữ liệu, ma trận truy vết. Bỏ qua nếu chỉ cần ký duyệt nghiệp vụ.
 
 **4. Chốt tài liệu — `/clarify:finalize brd`** (hoặc `prd`)
-Biên soạn tài liệu cuối chuẩn ký duyệt: Document control + Change history, Executive summary, Functional Flows theo nghiệp vụ, bảng lỗi & thông điệp khách hàng, truy vết, Sign-off blockers. Chạy lại không đè mất bản cũ (tự lưu `final-brd.v1.md`, tăng version).
+Biên soạn tài liệu ký duyệt `brd.md`/`prd.md` (không đặt tên "final"): Document control + Change history, §0 "Cách đọc tài liệu" (bảng ký hiệu + glossary), "Cách hệ thống hoạt động (tổng quan)", bảng yêu cầu nhóm theo chức năng, Functional Flows `F0n-Tên`, bảng lỗi & thông điệp khách hàng, truy vết (có cột Nguồn), Sign-off blockers. Chạy lại không đè mất bản cũ (tự lưu `brd.v1.md`, tăng version).
 
-**5. Đóng gói review — `/clarify:export`**
-Tạo **Review Pack HTML** (`review-pack/index.html`): mở bằng trình duyệt là thấy sơ đồ render sẵn, sơ đồ điều hướng màn hình, wireframe low-fi, bảng lỗi, truy vết, checklist. Gửi một file cho cả PO/Design/Dev/QA.
+**5. Xuất bản HTML — `/clarify:export`**
+Render **toàn bộ BRD/PRD ra một file HTML** (`brd.html`) **từ `brd.md`** (một nguồn sự thật): mở bằng trình duyệt là thấy sơ đồ render sẵn (Mermaid client-side, PlantUML qua plantuml.com), bảng yêu cầu gộp ô theo nhóm, mục lục, wireframe low-fi, chỉ mục artifact, và round-trip qua LibreOffice để xuất Word chuẩn. Gửi một file cho cả PO/Design/Dev/QA.
 
 **6. Khi cần — `status`, `handoff`, `change-request`**
 `/clarify:status` cho biết bạn đang ở đâu, còn gì tồn đọng. `/clarify:handoff` xuất gói Dev + gói QA. `/clarify:improve change-request` phân tích tác động của một thay đổi qua chuỗi truy vết.

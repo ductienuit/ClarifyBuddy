@@ -13,9 +13,10 @@
   `finalize`.
 - `modeling` emits PlantUML activity + Mermaid sequence diagrams with viewer
   links.
-- `export` packages a Visual Review Pack (openable HTML; Mermaid rendered
-  client-side; PlantUML rendered best-effort with fallback; screen flow + low-fi
-  wireframes + traceability map).
+- `export` renders the full HTML BRD/PRD (`brd.html` from `brd.md`; Mermaid rendered
+  client-side; PlantUML via plantuml.com hex `~h` with fallback; requirement
+  group-bands → `colspan`; TOC + low-fi wireframes + artifact index; LibreOffice
+  docx round-trip).
 - 36-entry anti-pattern catalog (yaml source of truth + human catalog).
 - Reproducible 100-point / 10-dimension scoring rubric with bands.
 - 3 mini domain packs (ecommerce, saas-b2b, fintech) + domain-pack template.

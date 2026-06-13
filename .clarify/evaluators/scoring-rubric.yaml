@@ -34,9 +34,9 @@ dimensions:
   - id: clarity
     weight: 12
     anchors:
-      full: "Every requirement has a clear actor, trigger, and outcome; no ambiguous terms; business-facing requirements use business language before technical mechanics; Functional Flows are process-centric (Flow Catalog, then one block per process with step-by-step + activity + sequence for the SAME process, Screen Matrix after the flows) so the process narrative reads coherently."
-      half: "Actors/triggers present but some vague terms ('manage', 'handle', 'support'), technical jargon in business-facing sections, or flows organized by diagram type with occasional mixed-process blocks / Screen Matrix before the flows / missing Flow Catalog."
-      zero: "Reader cannot tell who does what, when, or to what effect; business reviewers cannot validate the requirement language; diagrams of different processes are mixed with no Flow Catalog."
+      full: "Every requirement has a clear actor, trigger, and outcome; no ambiguous terms; business-facing requirements use business language before technical mechanics; the document follows the presentation conventions (Principle 13) — a §0 'How to read' with symbol table + front glossary, a 'How the system works' overview before requirements, requirements as ONE grouped table (ID | Requirement | Why | Priority; capability bands in journey order; Why is a business reason, not a cross-reference; flow/rule/test/source live in Traceability), and process-centric Functional Flows named F0n-Name (Flow Catalog, then one block per process with step-by-step + activity + sequence for the SAME process, Screen Matrix after) so the document reads coherently top-to-bottom."
+      half: "Actors/triggers present but some vague terms ('manage', 'handle', 'support'), technical jargon in business-facing sections, a flat one-liner requirements table with no grouping/Why, no §0/front glossary/overview, flows not named F0n-Name, or flows organized by diagram type with occasional mixed-process blocks / Screen Matrix before the flows / missing Flow Catalog."
+      zero: "Reader cannot tell who does what, when, or to what effect; business reviewers cannot validate the requirement language; requirements are an unreadable one-liner dump with no glossary/overview/grouping; diagrams of different processes are mixed with no Flow Catalog."
 
   - id: completeness
     weight: 12

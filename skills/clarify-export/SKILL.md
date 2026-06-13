@@ -1,45 +1,54 @@
 ---
 name: clarify-export
 description: >-
-  Clarify · Export — package a Visual Review Pack from a finalized BRD/PRD so
-  BA/PO/Design/Dev/QA can open and review it without copying diagram code into
-  plantuml.com / mermaid.live. Use after finalize when the user wants a shareable,
-  openable review artifact: an HTML pack with client-side-rendered diagrams,
-  customer journey, per-flow activity + sequence, screen flow, low-fi HTML wireframes,
-  state models, error/message mapping, traceability map, review checklist, and
-  open questions. The final doc stays the source of truth; the pack is derived and
-  never invents content. Part of the Clarify requirement-quality pack.
+  Clarify · Export — render the sign-off BRD/PRD as one full, openable HTML
+  document (brd.html / prd.html) from brd.md / prd.md, so BA/PO/Design/Dev/QA can
+  read, share, and Word-export it without copying diagram code into plantuml.com /
+  mermaid.live. Use after finalize when the user wants the HTML version of the
+  document: diagrams rendered (Mermaid client-side, PlantUML via plantuml.com),
+  requirement groups as banded tables, a table of contents, low-fi HTML wireframes,
+  and an artifact index linking back to the source. The Markdown stays the single
+  source of truth; the HTML is its rendering and never invents content. Part of the
+  Clarify requirement-quality pack.
 ---
 
-# Clarify: Export (Visual Review Pack)
+# Clarify: Export (HTML BRD/PRD)
 
-Package an openable Review Pack from the finalized BRD/PRD. Compose from prior
-outputs; never invent business content. The final doc is the source of truth.
+Render the sign-off document as one full, openable HTML BRD/PRD **from** `brd.md` /
+`prd.md` (single source of truth). Compose from the Markdown; never invent content;
+never author in or edit the HTML as a master. Not a "review pack".
 
 ## Steps
-1. Read `.clarify/principles.md`.
-2. Determine the mode: `html` (default) | `all` (render + offline + signoff) |
-   `offline`. Probe the environment (Mermaid CLI? plantuml.jar+Java? network?).
+1. Read `.clarify/principles.md` (esp. Principle 13.2 — the HTML is a full BRD/PRD).
+2. Determine the mode: `html` (default) | `all` (static render + offline + docx
+   round-trip + wireframes) | `offline`. Probe the environment (pandoc? Mermaid CLI?
+   plantuml.jar+Java? `soffice`/LibreOffice? network?).
 3. Run the workflow `.clarify/workflows/export.md` (engines: `trace` → `export`).
-4. Write `clarify-output/review-pack/` per `.clarify/output-conventions.md`.
+4. Write `clarify-output/brd.html` (or `prd.html`) per `.clarify/output-conventions.md`.
 
 ## Rules
-- Read `final-brd.md`/`final-prd.md` (or the draft) + companions; do not re-derive.
-  Missing companion → its section is an OPEN QUESTION naming the command that
-  produces it; the pack still builds.
-- Render Mermaid **client-side** in the HTML; PlantUML rendered if a renderer is
-  available, else code + viewer link with a "not rendered" badge.
-- **Fallback-first**: pack always opens even with no renderer/network; record
-  `render_status` in `manifest.json`. Never fail on render.
+- Read `brd.md`/`prd.md` (or the draft) + companions; do not re-derive. Missing
+  companion → its section is an OPEN QUESTION naming the command that produces it;
+  the HTML still builds.
+- Render **from** the Markdown via pandoc (fallback: minimal built-in converter) into
+  the HTML shell `templates/review-pack-template.html`. **No tool label** ("Clarify",
+  "Visual Review Pack") and **no "final"** in the displayed content or file names.
+- Render Mermaid **client-side**; PlantUML via the plantuml.com hex `~h` scheme with
+  the code kept inline as a fallback + a badge (or a locally rendered `.svg` when
+  `plantuml.jar` is present).
+- Turn requirement **group-band rows** into `colspan` merged cells; add a TOC and an
+  **Artifact index (source)** linking back to `brd.md` + companions.
+- **Fallback-first**: the HTML always opens even with no pandoc/renderer/network;
+  record what was skipped in the build log. Never fail on render.
 - Screens/wireframes are derive-only and low-fi HTML ("not final UI"); unknowns →
-  ASSUMPTION / OPEN QUESTION. Render the wireframes as an inline HTML widget in
-  `index.html` and one self-contained `screens/wireframes.html` file, never as
-  ASCII art. Traceability map: Requirement → Flow → Screen → Rule → Error/State →
-  Test, with orphans flagged.
-- Domain-agnostic; idempotent.
+  ASSUMPTION / OPEN QUESTION. Render them inline in `brd.html` and as one
+  self-contained `wireframes.html`, never as ASCII art.
+- Domain-agnostic; idempotent (same Markdown → same HTML).
 
 ## Phases
-1. HTML pack (client-side Mermaid + PlantUML fallback) + manifest + artifact index.
-2. Screen inventory + screen-flow + low-fi HTML wireframes (derive-only).
-3. Static SVG render (local-first) + `index-offline.html`.
-4. `signoff-pack.pdf/.docx` from rendered images.
+1. md→html into the HTML shell + diagrams (Mermaid client-side, PlantUML hex `~h`
+   fallback) + requirement group-bands → `colspan` + TOC + Artifact index.
+2. Low-fi HTML wireframes (derive-only), embedded + saved as `wireframes.html`.
+3. Static SVG render (local-first) + `brd.offline.html`.
+4. LibreOffice `soffice --convert-to docx` round-trip → `brd.docx` (Word-export
+   validation).

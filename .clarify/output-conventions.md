@@ -11,7 +11,8 @@ Create the directory if it does not exist. Never scatter outputs elsewhere.
 | `clarify-output/prd-draft.md` *or* `brd-draft.md` | `from-idea` | Shaped draft at the standard's altitude (PRD product-focus / BRD business-focus): Document Profile, scope, journey, screen matrix, business rules, error/message summary, state summary, assumptions, open questions, suggestions. |
 | `clarify-output/edge-case-matrix.md` | `from-idea`, `from-spec`, `improve edge` | Edge / negative / boundary / exception coverage. |
 | `clarify-output/handoff-pack.md` | `handoff` | Dev pack + QA pack, traced to requirements. |
-| `clarify-output/final-prd.md` *or* `final-brd.md` | `finalize` | Final, standard sign-off document (PRD or BRD per the Document Profile). |
+| `clarify-output/prd.md` *or* `brd.md` | `finalize` | Standard sign-off document (PRD or BRD per the Document Profile). **No "final" in the name** — version lives in the Change history + archive name (Principle 13.1). |
+| `clarify-output/prd.html` *or* `brd.html` | `export` | Full HTML BRD/PRD rendered **from `brd.md`/`prd.md`** (one source of truth): rendered diagrams, merged requirement group cells, TOC, artifact index. Not a "review pack" (Principle 13.2). |
 
 ## Supplementary files (created as needed)
 
@@ -34,32 +35,36 @@ most relevant canonical file, or written as clearly-named companions:
   Answer-Sheet decisions and CRs (written by `improve answers` / CR apply).
 - `clarify-output/change-impact.md` — CR impact analysis from the traceability
   chain (written by `improve change-request`; analysis only).
-- `clarify-output/final-*.v<N>.md` — archived prior versions of the final doc
-  (`finalize` never overwrites silently; Version bumps + Change history row).
+- `clarify-output/brd.v<N>.md` *or* `prd.v<N>.md` — archived prior versions of the
+  sign-off doc (`finalize` never overwrites silently; Version bumps + Change history
+  row). The canonical `brd.md`/`prd.md` always holds the latest version.
 - `clarify-output/wireframes.html` — low-fidelity HTML wireframe widget written by
   `finalize` when screen/flow requirements exist and inline HTML is unavailable.
 
-## Visual Review Pack (written by `export`)
+## HTML BRD/PRD (written by `export`)
 
-`export` packages a derived, openable review artifact under
-`clarify-output/review-pack/` (the final doc stays the source of truth):
+`export` renders the sign-off doc as **one full, openable HTML document
+`clarify-output/brd.html` (or `prd.html`) from `brd.md`/`prd.md`** — a single
+source of truth, not a separate "review pack". `brd.md`/`prd.md` stays the master;
+`brd.html` is its rendering and never the place edits are made.
 
 ```
-review-pack/
-  index.html              # HTML pack (Mermaid renders client-side; PlantUML rendered or code+link)
-  index-offline.html      # mermaid.js inlined; images embedded; no network (mode all/offline)
-  manifest.json           # every artifact + source_section + render_status + viewer_link
-  diagrams/               # <Fxx>-activity.puml(+.svg), <Fxx>-sequence.mmd(+.svg), state-*.mmd
-  screens/                # screen-inventory.md, screen-flow.mmd(+.svg), wireframes.html, wireframe-brief.md
-  traceability/           # traceability-map.md + .csv (Req→Flow→Screen→Rule→Error/State→Story→Test)
-  review/                 # review-checklist.md, open-questions.md
-  signoff-pack.pdf        # optional (mode all), from rendered images
+clarify-output/
+  brd.html  (or prd.html)   # full BRD/PRD: pandoc md→html + rendered diagrams + merged
+                            #   requirement cells + TOC + Artifact index; no tool labels
+  brd.offline.html          # mermaid.js inlined; images embedded; no network (mode all/offline)
+  brd-assets/               # rendered diagram .svg + supporting files when produced
+  wireframes.html           # low-fi HTML screen wireframes (derive-only, "not final UI")
 ```
 
-`export` **composes** from the final doc + companions and never invents content;
-rendering is best-effort with fallback to diagram code + viewer link (status in
-`manifest.json`); wireframes are low-fi HTML derive-only ("not final UI"), embedded
-in `index.html` and saved as one self-contained `screens/wireframes.html` file.
+`export` **composes** from `brd.md` + companions and never invents content:
+(a) Mermaid renders client-side, PlantUML via plantuml.com hex `~h` encoding with a
+code fallback; (b) requirement group-band rows become `colspan` merged header cells;
+(c) a TOC and an **Artifact index (source)** link back to `brd.md` + companions;
+(d) the HTML round-trips through LibreOffice (`soffice --convert-to docx`) so Word
+export validates. Rendering is best-effort with fallback to diagram code + viewer
+link; no tool label ("Clarify", "Visual Review Pack") appears in the displayed
+content (Principle 13.2).
 
 ## Composability rules
 

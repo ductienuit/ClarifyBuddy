@@ -20,10 +20,12 @@ project after a break. Read-only: **writes no files, changes nothing**.
    `edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`,
    `audit-report.md`, `stories.md`, `test-scenarios.md`, `api-data-impact.md`,
    `traceability-matrix.md`, `decision-log.md`, `change-impact.md`,
-   `final-brd.md`/`final-prd.md` (+ archived `.v<N>` versions), `wireframes.html`,
-   `review-pack/`.
-2. **Document Profile.** Read §0 of the draft (or final doc): role, target
-   standard, domain mode, language. If no draft exists, say so.
+   `brd.md`/`prd.md` (the sign-off doc — no "final" in the name; + archived
+   `brd.v<N>.md`/`prd.v<N>.md` versions), `wireframes.html`,
+   `brd.html`/`prd.html` (HTML rendering from export).
+2. **Document Profile.** Read the `## Document Profile` heading of the draft (or
+   sign-off doc): role, target standard, domain mode, language. If no draft exists,
+   say so.
 3. **Outstanding items.** Parse the draft's Assumptions / Open Questions /
    Suggestions / Variant sections and the Answer Sheet: count unresolved
    `A#/Q#/S#/V#` (and list the top blockers). Include audit blockers if an

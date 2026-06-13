@@ -5,11 +5,30 @@ All notable changes to Clarify are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Changed
+
+- **Document presentation & naming conventions (Principle 13) are now the default**
+  for `from-idea`, `finalize`, and `export`:
+  - Sign-off output is `brd.md` / `prd.md` (**never named "final-…"**); prior
+    versions archive as `brd.v<N>.md` / `prd.v<N>.md`.
+  - `export` renders **one full HTML BRD/PRD** (`brd.html`) **from `brd.md`** (single
+    source of truth) — pandoc md→html, Mermaid client-side + PlantUML plantuml.com
+    hex `~h` with code fallback, requirement group-bands → `colspan` banded tables,
+    a TOC + an artifact index, and a LibreOffice docx round-trip. No tool label in
+    the displayed content. (Replaces the "Visual Review Pack" framing.)
+  - Headings render `Vietnamese (English)` when Language=vi; machine anchors stay
+    English.
+  - Documents now open with a **§0 "How to read"** (intro + symbol table + front
+    glossary) and a **"How the system works (overview)"** before the requirements.
+  - Flows are named **`F0n-Name`** (stable number, appended feature name).
+  - Requirements are **ONE grouped table** (`ID | Requirement | Why | Priority`);
+    flow/rule/test/source links move to Traceability, which gains a **Source** column.
+
 ### Added
 
 - `/clarify:finalize [prd|brd]` — closing step that compiles confirmed outputs
-  into a final, standard sign-off document (`final-prd.md` / `final-brd.md`) for
-  a BA or PO. Includes document control, audit-score stamp, and a Sign-off
+  into the standard sign-off document (`brd.md` / `prd.md` — never named "final-…")
+  for a BA or PO. Includes document control, audit-score stamp, and a Sign-off
   blockers section.
 - **Document Profile** (role BA/PO + target standard PRD/BRD) captured during
   `clarify` and carried through to `finalize`.

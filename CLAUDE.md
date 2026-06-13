@@ -23,12 +23,15 @@ Defined in `.claude/commands/clarify/`:
   (`answers` resolves the Answer Sheet after `from-idea`; `model` regenerates the
   diagrams).
 - `/clarify:handoff` — emit Dev + QA packs from prior output.
-- `/clarify:finalize [prd|brd]` — closing step: compile confirmed outputs into
-  a final, standard sign-off document (PRD or BRD per the Document Profile).
-- `/clarify:export [html|all|offline]` — package a **Visual Review Pack** under
-  `clarify-output/review-pack/` (openable HTML with client-side-rendered diagrams,
-  screen flow, low-fi HTML wireframes, traceability map, review checklist). Derived from
-  the final doc; renders best-effort with fallback; never invents.
+- `/clarify:finalize [prd|brd]` — closing step: compile confirmed outputs into the
+  standard sign-off document `brd.md`/`prd.md` (PRD or BRD per the Document Profile;
+  **never named "final-…"**, Principle 13.1).
+- `/clarify:export [html|all|offline]` — render the sign-off doc as **one full HTML
+  BRD/PRD** `clarify-output/brd.html` **from `brd.md`** (one source of truth):
+  client-side Mermaid + PlantUML (plantuml.com hex `~h` + code fallback), requirement
+  group-bands as `colspan` banded tables, a TOC, low-fi HTML wireframes, an artifact
+  index, and a LibreOffice docx round-trip. Best-effort with fallback; never invents;
+  no tool labels in displayed content.
 - `/clarify:status` — read-only: artifact inventory, Document Profile, unresolved
   A/Q/S/V counts + blockers, and the recommended next step. Writes no files.
 
@@ -51,6 +54,18 @@ Defined in `.claude/commands/clarify/`:
 12. Domain pack is an optional accelerator, not a gate — auto-detect the domain,
     load a matching pack if any, else proceed with **labeled inference** (never
     force-fit a wrong pack or block on a missing one).
+13. Document presentation & naming conventions — the default for from-idea,
+    finalize, and export: (13.1) output is `brd.md`/`prd.md`, **never "final-…"**,
+    archive `brd.v<semver>.md`; (13.2) the HTML is a full BRD/PRD rendered from
+    `brd.md` (pandoc + client-side Mermaid + PlantUML hex `~h`, requirement
+    group-bands → `colspan`, TOC + artifact index, LibreOffice docx round-trip; no
+    tool labels) — not a "review pack"; (13.3) headings render `Vietnamese (English)`
+    when Language=vi, machine anchors always English; (13.4) a §0 "How to read"
+    (intro + symbol table + front glossary); (13.5) a "How the system works
+    (overview)" before requirements; (13.6) flows named `F0n-Name` (stable number,
+    appended name); (13.7) requirements are ONE grouped table (`ID | Requirement |
+    Why | Priority`), with flow/rule/test/source moved to Traceability (+Source).
+    Scored under `clarity`/structure.
 
 ## Where things live
 
@@ -89,12 +104,12 @@ Defined in `.claude/commands/clarify/`:
 
 All artifacts go to `clarify-output/` at repo root (see
 `.clarify/output-conventions.md`). `improve`, `handoff`, `finalize`, and `export`
-READ prior outputs rather than re-deriving. `export` writes the derived
-`review-pack/` and never edits the final doc.
+READ prior outputs rather than re-deriving. `finalize` writes `brd.md`/`prd.md`;
+`export` renders `brd.html` **from** that Markdown and never edits the master.
 
 Recommended flows:
 - Business sign-off from idea: `from-idea` → `improve answers` → `finalize brd`
-  → optional `export` (review pack for stakeholders/design).
+  → optional `export` (HTML BRD for stakeholders/design).
 - Dev/QA handoff: `from-idea` → `improve answers` → optional `from-spec` →
   `handoff` → optional `export`.
 - Existing document: `from-spec` when build-ready elaboration is needed, or
@@ -108,8 +123,8 @@ renders in it; ASSUMPTION/OPEN QUESTION/SUGGESTION labels and all IDs stay
 English as parse anchors); questions carry an elicitation owner (`→ ask:
 <stakeholder>`) and are regrouped per owner in `elicitation-pack.md`; applied
 decisions append to `decision-log.md`; `finalize` never overwrites silently
-(archives `final-*.v<N>.md`, bumps Version, adds a Change history row); `trace`
-reports dangling ID references.
+(archives `brd.v<N>.md`/`prd.v<N>.md`, bumps Version, adds a Change history row);
+`trace` reports dangling ID references.
 
 ## Build/scope notes
 

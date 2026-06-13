@@ -343,7 +343,7 @@ html.js .hero .rv{transition-duration:.8s}
       chặn ở "Not ready for handoff": tài liệu không thể tự nhận là xong.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">🖼️</span><div>
       <b>Sơ đồ và wireframe xem ngay</b>
-      <p>Review Pack HTML mở ra là thấy: diagram render sẵn trong trình duyệt, wireframe
+      <p>Bản HTML BRD mở ra là thấy: diagram render sẵn trong trình duyệt, wireframe
       low-fi dạng khung điện thoại với nhãn thật lấy từ tài liệu.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">📜</span><div>
       <b>Có vết, có version</b>
@@ -404,7 +404,7 @@ html.js .hero .rv{transition-duration:.8s}
     <div class="pstep" role="listitem"><b>improve answers</b><small>Bạn trả lời Answer Sheet, bản nháp được chốt dần</small></div>
     <div class="pstep opt" role="listitem"><span class="lbl">TUỲ CHỌN</span><b>from-spec</b><small>Thêm lớp build-ready: stories, AC, test, API</small></div>
     <div class="pstep" role="listitem"><b>finalize</b><small>Tài liệu BRD/PRD cuối, chuẩn ký duyệt</small></div>
-    <div class="pstep" role="listitem"><b>export</b><small>Review Pack HTML: diagram, wireframe xem ngay</small></div>
+    <div class="pstep" role="listitem"><b>export</b><small>Bản HTML BRD từ brd.md: diagram, wireframe xem ngay</small></div>
     <div class="pstep opt" role="listitem"><span class="lbl">KHI CẦN</span><b>handoff · status</b><small>Gói Dev-QA · xem mình đang ở đâu</small></div>
   </div>
 
@@ -472,23 +472,26 @@ S2: later                             <span class="c"># để sau: dashboard huy
 
     <article class="jstep rv"><div>
       <h3>Chốt tài liệu · <code>/clarify:finalize brd</code></h3>
-      <p class="who"><b>Nhận về:</b> <code>final-brd.md</code> chuẩn ký duyệt</p>
-      <p class="maxw">Biên soạn tài liệu cuối: Document control với Change history, Executive
-      summary, mục tiêu, phạm vi, stakeholder, <strong>Functional Flows tổ chức theo nghiệp
-      vụ</strong> (Flow Catalog rồi từng quy trình: mở sổ, tất toán sớm, đáo hạn và tái tục;
-      mỗi flow đủ bộ step-by-step, activity, sequence), bảng lỗi và thông điệp khách hàng,
-      state model, truy vết, cùng mục <strong>Sign-off blockers</strong> gom mọi điểm chưa chốt.</p>
+      <p class="who"><b>Nhận về:</b> <code>brd.md</code> chuẩn ký duyệt (không đặt tên "final")</p>
+      <p class="maxw">Biên soạn tài liệu: Document control với Change history, Executive
+      summary, <strong>§0 "Cách đọc tài liệu"</strong> (bảng ký hiệu + glossary), <strong>"Cách
+      hệ thống hoạt động (tổng quan)"</strong>, <strong>bảng yêu cầu nhóm theo chức năng</strong>
+      (ID · Yêu cầu · Vì sao · Ưu tiên), <strong>Functional Flows tổ chức theo nghiệp
+      vụ</strong> đặt tên <code>F0n-Tên</code> (Flow Catalog rồi từng quy trình; mỗi flow đủ bộ
+      step-by-step, activity, sequence), bảng lỗi và thông điệp khách hàng, state model,
+      truy vết (có cột Nguồn), cùng mục <strong>Sign-off blockers</strong> gom mọi điểm chưa chốt.</p>
       <p class="maxw">Chạy lại finalize sau khi sửa? Bản cũ tự lưu thành
-      <code>final-brd.v1.md</code>, version tăng, Change history thêm dòng. Không bao giờ
+      <code>brd.v1.md</code>, version tăng, Change history thêm dòng. Không bao giờ
       đè mất.</p>
     </div></article>
 
     <article class="jstep rv"><div>
-      <h3>Đóng gói review · <code>/clarify:export</code></h3>
-      <p class="who"><b>Nhận về:</b> <code>review-pack/index.html</code>, mở bằng trình duyệt là xem được</p>
-      <p class="maxw">Hết cảnh copy code PlantUML/Mermaid sang web để xem sơ đồ. Review Pack
-      là một trang HTML có mục lục: journey, từng flow với diagram render sẵn, sơ đồ điều hướng
-      màn hình, wireframe low-fi, bảng lỗi, truy vết, checklist review và danh sách câu hỏi tồn.
+      <h3>Xuất bản HTML · <code>/clarify:export</code></h3>
+      <p class="who"><b>Nhận về:</b> <code>brd.html</code> — toàn bộ BRD render từ <code>brd.md</code>, mở bằng trình duyệt là xem được</p>
+      <p class="maxw">Hết cảnh copy code PlantUML/Mermaid sang web để xem sơ đồ. Bản HTML
+      là chính tài liệu BRD/PRD render từ <code>brd.md</code> (một nguồn sự thật): mục lục,
+      sơ đồ render sẵn (Mermaid client-side, PlantUML qua plantuml.com), bảng yêu cầu gộp ô
+      theo nhóm, wireframe low-fi, chỉ mục artifact, round-trip qua LibreOffice để xuất Word chuẩn.
       Gửi một file cho cả PO, Design, Dev, QA.</p>
       <div class="wf-demo">
         <div class="wf" role="img" aria-label="Wireframe low-fi màn xác nhận mở sổ">
@@ -509,7 +512,7 @@ S2: later                             <span class="c"># để sau: dashboard huy
           <div class="btn">Xem chi tiết sổ</div>
           <div class="src">S04 · Flow F01 bước 7 · trace về R1</div>
         </div>
-        <p class="cap">Wireframe trong Review Pack: khung điện thoại grayscale, đánh số theo
+        <p class="cap">Wireframe trong bản HTML BRD: khung điện thoại grayscale, đánh số theo
         flow, nhãn thật từ BRD, mỗi màn ghi rõ nguồn truy vết. Được đóng dấu "low-fi, not
         final UI" vì nó phục vụ chốt nội dung, không thay designer.</p>
       </div>
@@ -588,9 +591,9 @@ S2: later                             <span class="c"># để sau: dashboard huy
     <tr><td><code>stories.md</code> · <code>test-scenarios.md</code> · <code>api-data-impact.md</code> · <code>traceability-matrix.md</code></td><td>Lớp build-ready cho Dev/QA</td><td>from-spec</td></tr>
     <tr><td><code>decision-log.md</code></td><td>Nhật ký quyết định (chỉ ghi thêm, không sửa cũ)</td><td>improve answers</td></tr>
     <tr><td><code>change-impact.md</code></td><td>Phân tích tác động change request</td><td>improve change-request</td></tr>
-    <tr><td><code>final-brd.md</code> / <code>final-prd.md</code> (+ <code>.v1, .v2…</code>)</td><td>Tài liệu ký duyệt, có version</td><td>finalize</td></tr>
+    <tr><td><code>brd.md</code> / <code>prd.md</code> (+ <code>brd.v1.md, .v2…</code>)</td><td>Tài liệu ký duyệt, có version (không đặt tên "final")</td><td>finalize</td></tr>
     <tr><td><code>wireframes.html</code></td><td>Wireframe low-fi HTML</td><td>finalize / export</td></tr>
-    <tr><td><code>review-pack/index.html</code></td><td>Gói review mở là xem: diagram, wireframe, truy vết, checklist</td><td>export</td></tr>
+    <tr><td><code>brd.html</code> / <code>prd.html</code></td><td>Toàn bộ BRD/PRD render từ brd.md: diagram, bảng yêu cầu gộp ô, mục lục, wireframe, chỉ mục artifact</td><td>export</td></tr>
     <tr><td><code>handoff-pack.md</code></td><td>Gói Dev và gói QA</td><td>handoff</td></tr>
   </table></div>
 </div></section>
@@ -643,15 +646,15 @@ S2: later                             <span class="c"># để sau: dashboard huy
     "sản phẩm hoạt động ra sao": flow, màn hình, state, AC chi tiết. Chọn một lần ở Document
     Profile, mọi template tự theo.</p></div></details>
   <details class="rv"><summary>Sơ đồ vẽ bằng gì? Tôi có phải cài thêm gì không?</summary><div>
-    <p>Activity dùng PlantUML; Sequence và State dùng Mermaid (quy ước cố định). Trong Review
-    Pack, Mermaid render ngay trong trình duyệt (không cần mạng, không gửi dữ liệu đi đâu);
+    <p>Activity dùng PlantUML; Sequence và State dùng Mermaid (quy ước cố định). Trong bản
+    HTML BRD, Mermaid render ngay trong trình duyệt (không cần mạng, không gửi dữ liệu đi đâu);
     PlantUML có ảnh kèm hoặc fallback code với link viewer. Không phải cài gì.</p></div></details>
   <details class="rv"><summary>Wireframe có thay được designer không?</summary><div>
     <p>Không, và nó được đóng dấu rõ "BA low-fi wireframe, not final UI". Mục đích là chốt
     màn hình nào có thông tin gì, nút gì, lỗi hiện ra sao trước khi Design vào việc; mỗi
     phần tử đều truy vết về flow, step, rule, mã lỗi nguồn.</p></div></details>
   <details class="rv"><summary>Lỡ chạy finalize nhiều lần có mất bản cũ không?</summary><div>
-    <p>Không. Bản cũ tự lưu thành <code>final-brd.v1.md</code>, version tăng, Change history
+    <p>Không. Bản cũ tự lưu thành <code>brd.v1.md</code>, version tăng, Change history
     ghi lý do. Quyết định nào dẫn đến thay đổi đều nằm trong <code>decision-log.md</code>.</p></div></details>
   <details class="rv"><summary>Một phiên from-idea mất bao lâu? Có mẹo gì không?</summary><div>
     <p>Vài phút sinh nháp; phần tốn thời gian (xứng đáng) là bạn trả lời câu hỏi. Mẹo:

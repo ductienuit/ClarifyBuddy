@@ -16,6 +16,28 @@ report their absence separately unless the user requested handoff readiness.
 - [ ] No subjective/vague verbs like "manage", "fast" (`non-testable-requirement`).
 - [ ] BRD/business-facing requirements use business language first; technical
       mechanics are moved to downstream notes (`technical-jargon-in-business-requirement`).
+- [ ] Requirements are **one grouped table** (Principle 13.7): `ID | Requirement |
+      Why | Priority`, grouped by capability in journey order (bold band rows),
+      Must → Should → Could within a group. `Why` is a business reason, not a
+      `Source: BRx` cross-reference. A flat one-liner dump (no grouping, no `Why`) is
+      a clarity finding.
+
+## Structure & readability (Principle 13)
+- [ ] **§0 "How to read this document"** is present up front: 0.1 intro + quick
+      read, 0.2 a **symbol-conventions** table, 0.3 the **Glossary** moved to the
+      front (not buried inside requirements).
+- [ ] A **"How the system works (overview)"** section precedes the requirements
+      (end-to-end narrative + one representative diagram).
+- [ ] Section order matches Principle 13 (Summary → §0 → context → objectives →
+      scope → how-it-works → stakeholders → requirements → rules → flows → screens →
+      data → errors → constraints/risks/NFR → traceability → open items → blockers →
+      approval → artifact index).
+- [ ] Flows are named `F0n-Name` consistently (catalog, error map, screen matrix,
+      traceability, diagrams); the number is stable, the name only appended.
+- [ ] Flow/rule/test/**source** links live in Traceability (which has a **Source**
+      column ← A#/BR#/S#/Q#), not crammed into the requirements section.
+- [ ] Output file is `brd.md`/`prd.md` (never "final-…"); HTML is `brd.html` rendered
+      from it; no tool label ("Visual Review Pack") in displayed content.
 
 ## Completeness
 - [ ] In-scope stated (`missing-scope`).

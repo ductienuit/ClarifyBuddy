@@ -2,7 +2,7 @@
 
 ## Register
 brand — the design surfaces of this repo are communication surfaces: the user
-guide landing page (`docs/index.html`) and the generated review-pack/wireframe
+guide landing page (`docs/index.html`) and the generated HTML BRD + wireframe
 HTML templates. Design IS the deliverable for these pages. (The skill pack itself
 is markdown/prompt engineering, out of scope for visual design work.)
 
@@ -28,7 +28,7 @@ print shop. Authority from typography and structure, not decoration.
 
 ## Visual identity anchors
 - Committed color strategy around the existing brand blue (#2b59ff family,
-  already shipped in the review-pack templates); deep ink-blue may carry large
+  already shipped in the HTML BRD templates); deep ink-blue may carry large
   surfaces (hero). Body background stays true off-white tinted toward the brand
   hue, never warm cream.
 - Typography pairs on a serif/sans contrast axis with full Vietnamese diacritic

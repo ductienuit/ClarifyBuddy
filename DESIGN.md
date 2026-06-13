@@ -1,7 +1,7 @@
 # Design
 
 Visual system for this repo's communication surfaces (currently `docs/index.html`;
-the review-pack templates share the accent family). Voice: a bank's appraisal
+the HTML BRD templates share the accent family). Voice: a bank's appraisal
 dossier re-typeset by a meticulous print shop — trustworthy, precise, composed.
 
 ## Theme

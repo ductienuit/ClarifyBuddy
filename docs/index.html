@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarify · Trợ lý chất lượng yêu cầu cho BA/PO</title>
+<meta name="description" content="Hướng dẫn sử dụng Clarify: skill cho Claude giúp BA/PO biến ý tưởng thành BRD/PRD ký duyệt được, có điểm số, có truy vết, không bịa nghiệp vụ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens ============ */
+:root{
+  --bg:        oklch(98.6% .004 262);
+  --surface:   oklch(96.4% .009 262);
+  --ink:       oklch(23% .032 262);
+  --muted:     oklch(43% .03 262);
+  --line:      oklch(89% .012 262);
+  --accent:    oklch(50% .21 262);     /* brand blue, AA on bg */
+  --accent-ink:oklch(38% .16 262);
+  --deep:      oklch(25% .06 262);     /* hero / footer drench */
+  --deep-2:    oklch(30% .075 262);
+  --on-deep:   oklch(97% .008 262);
+  --on-deep-2: oklch(81% .035 262);
+  --ok:        oklch(45% .12 155);
+  --warn:      oklch(50% .12 70);
+  --bad:       oklch(48% .16 25);
+  --serif: "Literata", Georgia, "Times New Roman", serif;
+  --sans:  "Be Vietnam Pro", system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono:  ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+  --r-s:8px; --r-m:12px; --r-l:16px;
+  --z-nav:10;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 clamp(1rem,.96rem + .2vw,1.0625rem)/1.7 var(--sans);
+  -webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:var(--accent-ink);text-underline-offset:3px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:3px}
+::selection{background:oklch(88% .07 262)}
+
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.18;
+  letter-spacing:-.015em;text-wrap:balance;margin:0 0 .5em}
+h2{font-size:clamp(1.7rem,1.3rem + 1.8vw,2.4rem)}
+h3{font-size:clamp(1.12rem,1.05rem + .35vw,1.3rem)}
+p{margin:.5em 0;text-wrap:pretty}
+.standfirst{font-size:clamp(1.05rem,1rem + .35vw,1.2rem);color:var(--muted);max-width:62ch;margin:.25em 0 0}
+.maxw{max-width:68ch}
+
+code{font-family:var(--mono);font-size:.86em;background:var(--surface);
+  border:1px solid var(--line);border-radius:5px;padding:.08em .4em;white-space:nowrap}
+pre{font-family:var(--mono);font-size:.84rem;line-height:1.62;
+  background:var(--deep);color:var(--on-deep);border-radius:var(--r-m);
+  padding:18px 20px;overflow-x:auto;margin:14px 0}
+pre code{background:none;border:none;padding:0;color:inherit;white-space:pre}
+pre .c{color:var(--on-deep-2)}
+pre .hl{color:oklch(80% .12 262)}
+
+.wrap{max-width:1060px;margin-inline:auto;padding-inline:clamp(18px,4vw,32px)}
+section{padding-block:clamp(56px,9vw,104px)}
+section + section{border-top:1px solid var(--line)}
+.sect-head{margin-bottom:clamp(26px,4vw,44px)}
+
+/* tables: scroll inside their own container, never the page */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0;
+  border:1px solid var(--line);border-radius:var(--r-m);background:#fff}
+.tscroll table{margin:0;border:none;min-width:660px}
+.tscroll.narrow table{min-width:0}
+table{border-collapse:collapse;width:100%;font-size:.93rem;line-height:1.55}
+th,td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left;vertical-align:top}
+th{font-family:var(--sans);font-weight:600;font-size:.85rem;color:var(--muted);
+  background:var(--surface);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td + td, th + th{border-left:1px solid var(--line)}
+
+/* tags */
+.tag{display:inline-block;font:600 .74rem/1.6 var(--sans);border-radius:99px;
+  padding:.05em .7em;border:1px solid transparent;white-space:nowrap}
+.t-a{background:oklch(95% .035 80);color:var(--warn);border-color:oklch(86% .06 80)}
+.t-q{background:oklch(95% .025 25);color:var(--bad);border-color:oklch(87% .05 25)}
+.t-s{background:oklch(95% .03 155);color:var(--ok);border-color:oklch(86% .06 155)}
+.t-v{background:oklch(94% .03 262);color:var(--accent-ink);border-color:oklch(85% .06 262)}
+
+/* panels (no side stripes) */
+.panel{border:1px solid oklch(85% .06 262);background:oklch(95.5% .02 262);
+  border-radius:var(--r-m);padding:18px 22px;margin:22px 0}
+.panel b:first-child{color:var(--accent-ink)}
+
+/* ============ nav ============ */
+nav{position:sticky;top:0;z-index:var(--z-nav);background:oklch(98.6% .004 262 / .92);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:18px;max-width:1060px;margin-inline:auto;
+  padding:0 clamp(18px,4vw,32px);height:60px}
+.logo{font-family:var(--serif);font-weight:700;font-size:1.12rem;color:var(--ink);
+  text-decoration:none;flex:none}
+.logo b{color:var(--accent)}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;
+  mask:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{flex:none;font-size:.9rem;font-weight:500;color:var(--muted);
+  text-decoration:none;padding:7px 12px;border-radius:99px}
+.nav-links a:hover{color:var(--accent-ink);background:var(--surface)}
+
+/* ============ hero ============ */
+header.hero{background:var(--deep);color:var(--on-deep);overflow:clip}
+.hero-in{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);
+  gap:clamp(32px,5vw,64px);align-items:center;padding-block:clamp(56px,9vw,108px)}
+.hero h1{font-size:clamp(2.1rem,1.3rem + 3.6vw,3.7rem);font-weight:700;margin:0 0 .45em}
+.hero h1 .acc{color:oklch(78% .13 262)}
+.hero .sub{font-size:clamp(1.02rem,.98rem + .3vw,1.15rem);color:var(--on-deep-2);
+  max-width:56ch;margin:0 0 1.6em}
+.hero .who{font:600 .82rem/1 var(--sans);color:var(--on-deep-2);
+  border:1px solid oklch(45% .06 262);border-radius:99px;display:inline-block;
+  padding:.55em 1.1em;margin-bottom:1.6em}
+.cta{display:inline-block;font:600 .98rem/1 var(--sans);text-decoration:none;
+  border-radius:10px;padding:15px 26px;margin:0 12px 12px 0}
+.cta.solid{background:oklch(96% .01 262);color:var(--deep)}
+.cta.solid:hover{background:#fff;color:var(--deep)}
+.cta.line{color:var(--on-deep);border:1.5px solid oklch(52% .07 262)}
+.cta.line:hover{border-color:oklch(70% .1 262);color:#fff}
+
+/* hero facsimile: an Answer Sheet document card (the product itself) */
+.doc{background:#fff;color:var(--ink);border-radius:var(--r-l);
+  box-shadow:0 24px 60px -28px oklch(10% .04 262 / .8);
+  transform:rotate(1.6deg);max-width:430px;justify-self:end;width:100%}
+.doc-bar{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);
+  padding:12px 18px;font:600 .78rem/1 var(--sans);color:var(--muted)}
+.doc-bar .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.doc-bar .ttl{margin-left:auto;font-family:var(--mono);font-weight:400}
+.doc-body{padding:18px 22px 22px;font-family:var(--mono);font-size:.8rem;line-height:1.9}
+.doc-body .row{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.doc-body .ans{color:var(--muted)}
+.doc-foot{border-top:1px dashed var(--line);margin-top:12px;padding-top:12px;
+  font-family:var(--sans);font-size:.78rem;color:var(--muted)}
+
+/* ============ "là gì": intro + divided feature list (no card grid) ============ */
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px)}
+.split .lead-col{position:sticky;top:84px;align-self:start}
+.flist{margin:0;padding:0;list-style:none}
+.flist li{display:grid;grid-template-columns:auto 1fr;gap:16px;
+  padding:20px 4px;border-top:1px solid var(--line)}
+.flist li:first-child{border-top:none;padding-top:4px}
+.flist .gly{font-size:1.3rem;line-height:1.4}
+.flist b{font-family:var(--serif);font-size:1.06rem}
+.flist p{margin:.2em 0 0;color:var(--muted);font-size:.95rem}
+
+/* ============ install ============ */
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.way{border:1px solid var(--line);border-radius:var(--r-l);background:#fff;padding:26px 28px}
+.way h3{display:flex;gap:10px;align-items:baseline}
+.way .k{font:700 .8rem/1 var(--sans);color:var(--accent);white-space:nowrap}
+.way ol{margin:.6em 0 0;padding-left:1.2em}
+.way li{margin:.5em 0}
+.way li::marker{font-weight:600;color:var(--accent-ink)}
+.way .aside{font-size:.88rem;color:var(--muted);margin-top:.9em}
+
+/* ============ pipeline ============ */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:clamp(26px,4vw,40px) 0;
+  counter-reset:pipe}
+.pstep{position:relative;padding:18px 18px 18px 0;margin-right:28px}
+.pstep::before{counter-increment:pipe;content:counter(pipe);
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;font:700 .9rem/1 var(--sans);
+  background:var(--accent);color:#fff;margin-bottom:10px}
+.pstep.opt::before{background:transparent;color:var(--muted);border:1.5px dashed var(--muted)}
+.pstep::after{content:"";position:absolute;top:32px;left:38px;right:-22px;height:2px;
+  background:var(--line)}
+.pstep:last-child::after{display:none}
+.pstep b{display:block;font-family:var(--mono);font-size:.86rem;font-weight:700}
+.pstep small{display:block;color:var(--muted);line-height:1.5;margin-top:4px;font-size:.82rem}
+.pstep .lbl{position:absolute;top:0;right:0;font:600 .66rem/1 var(--sans);color:var(--muted)}
+@media (max-width:860px){
+  .pipe{grid-template-columns:1fr;border-left:2px solid var(--line);margin-left:14px}
+  .pstep{margin:0;padding:14px 0 14px 28px}
+  .pstep::before{position:absolute;left:-16px;top:14px;margin:0}
+  .pstep::after{display:none}
+  .pstep .lbl{right:auto;left:28px;top:50px;position:static;display:inline;margin-left:8px}
+}
+
+/* ============ journey detail ============ */
+.journey{counter-reset:j;margin-top:clamp(30px,5vw,52px)}
+.jstep{display:grid;grid-template-columns:clamp(40px,6vw,52px) minmax(0,1fr);
+  gap:clamp(14px,2.5vw,26px);padding:clamp(26px,4vw,40px) 0;border-top:1px solid var(--line)}
+.jstep > div:empty{display:none}  /* a stray empty div must never collapse the grid */
+.jstep::before{counter-increment:j;content:counter(j);
+  width:clamp(36px,5vw,46px);height:clamp(36px,5vw,46px);border-radius:50%;
+  background:var(--deep);color:var(--on-deep);font:700 1.05rem/1 var(--serif);
+  display:flex;align-items:center;justify-content:center;margin-top:2px}
+.jstep .who{font-size:.85rem;color:var(--muted);margin:0 0 .7em}
+.jstep .who b{color:var(--ink);font-weight:600}
+details{border:1px solid var(--line);border-radius:var(--r-m);background:#fff;margin:14px 0}
+details summary{cursor:pointer;padding:13px 18px;font-weight:600;list-style:none;
+  display:flex;align-items:center;gap:10px}
+details summary::before{content:"+";font-family:var(--mono);color:var(--accent);
+  font-weight:700;width:1em}
+details[open] summary::before{content:"–"}
+details summary::-webkit-details-marker{display:none}
+details > div{padding:2px 18px 16px;color:var(--muted);font-size:.96rem}
+
+/* mini wireframe (the skill's own low-fi language, shown truthfully) */
+.wf-demo{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:20px;margin:16px 0}
+.wf{width:190px;background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:12px;filter:grayscale(1);font-size:.72rem;flex:none}
+.wf .h{display:flex;gap:6px;font-weight:600;border-bottom:1px solid var(--line);
+  padding-bottom:7px;margin-bottom:9px}
+.wf .bar{height:7px;border-radius:4px;background:var(--line);margin:7px 0}
+.wf .in{height:22px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+.wf .btn{height:28px;border-radius:6px;background:oklch(45% 0 0);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:600;margin-top:10px}
+.wf .src{border-top:1px dashed var(--line);margin-top:10px;padding-top:7px;
+  color:var(--muted);font-size:.62rem;line-height:1.5}
+.wf-demo .cap{flex:1;min-width:220px;font-size:.92rem;color:var(--muted);align-self:center}
+
+/* ============ concepts band (deep) ============ */
+.band{background:var(--deep);color:var(--on-deep)}
+.band h2{color:#fff}
+.band .standfirst{color:var(--on-deep-2)}
+.band section{border:none}
+.cgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:34px}
+.cg{grid-column:span 6;background:var(--deep-2);border:1px solid oklch(38% .07 262);
+  border-radius:var(--r-l);padding:24px 26px}
+.cg.w4{grid-column:span 4}
+.cg h3{color:#fff;margin-bottom:.4em}
+.cg p{color:var(--on-deep-2);font-size:.94rem;margin:.4em 0}
+.cg table{font-size:.86rem}
+.cg th{background:oklch(33% .07 262);color:var(--on-deep-2);border-color:oklch(40% .07 262)}
+.cg td{border-color:oklch(38% .07 262);color:var(--on-deep)}
+.cg td+td,.cg th+th{border-left-color:oklch(40% .07 262)}
+.cg code{background:oklch(33% .07 262);border-color:oklch(42% .07 262);color:var(--on-deep)}
+.cg .tag{border:none}
+@media (max-width:860px){ .cg,.cg.w4{grid-column:span 12} }
+
+/* ============ FAQ ============ */
+.faq details{margin:10px 0}
+
+/* ============ footer ============ */
+footer{background:var(--deep);color:var(--on-deep-2);padding:clamp(36px,6vw,56px) 0;
+  font-size:.92rem}
+footer b{color:#fff;font-family:var(--serif)}
+footer .pr{color:#fff;font-style:italic}
+
+/* ============ motion (enhance-only; never gates content) ============ */
+html.js .rv{opacity:0;translate:0 16px;
+  transition:opacity .6s cubic-bezier(.16,1,.3,1),translate .6s cubic-bezier(.16,1,.3,1)}
+html.js .rv.in{opacity:1;translate:0 0}
+html.js .hero .rv{transition-duration:.8s}
+@media (prefers-reduced-motion:reduce){
+  html.js .rv{opacity:1;translate:none;transition:none}
+}
+
+/* ============ responsive ============ */
+@media (max-width:920px){
+  .hero-in{grid-template-columns:1fr}
+  .doc{justify-self:start;transform:rotate(0);max-width:460px}
+  .split{grid-template-columns:1fr}
+  .split .lead-col{position:static}
+}
+@media (max-width:560px){
+  .cta{display:block;text-align:center;margin-right:0}
+  th,td{padding:9px 11px}
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Mục lục trang"><div class="nav-in">
+  <a class="logo" href="#top">Clarify<b>.</b></a>
+  <div class="nav-links">
+    <a href="#what">Là gì</a>
+    <a href="#install">Cài đặt</a>
+    <a href="#journey">Hành trình</a>
+    <a href="#concepts">Khái niệm</a>
+    <a href="#outputs">Đầu ra</a>
+    <a href="#commands">8 lệnh</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap hero-in">
+  <div>
+    <span class="who rv">Agent skill cho Claude · dành cho Business Analyst &amp; Product Owner</span>
+    <h1 class="rv">Từ ý tưởng mơ hồ đến <span class="acc">BRD ký duyệt được</span>, không bịa một dòng nghiệp vụ nào.</h1>
+    <p class="sub rv">Clarify đóng vai một senior BA đồng hành trong Claude: đặt đúng câu hỏi
+    cho đúng người, soạn tài liệu đúng chuẩn, vẽ sơ đồ, dựng wireframe và chấm điểm chất lượng
+    theo 36 anti-pattern. Điều nó chưa chắc, nó hỏi; điều bạn chưa quyết, nó chờ.</p>
+    <p class="rv">
+      <a class="cta solid" href="#install">Cài đặt trong 5 phút</a>
+      <a class="cta line" href="#journey">Xem hành trình 6 bước</a>
+    </p>
+  </div>
+  <div class="doc rv" role="img" aria-label="Minh hoạ Answer Sheet: bảng câu hỏi có mã số để BA trả lời">
+    <div class="doc-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="ttl">brd-draft.md · Answer Sheet</span></div>
+    <div class="doc-body">
+      <div class="row"><span class="tag t-v">V2</span> Tiết kiệm có kỳ hạn <span class="ans">← bạn chọn</span></div>
+      <div class="row"><span class="tag t-a">A1</span> Chỉ KH cá nhân đã KYC <span class="ans">: keep</span></div>
+      <div class="row"><span class="tag t-q">Q1</span> Kỳ hạn hỗ trợ? <span class="ans">: 1/3/6/12 tháng</span></div>
+      <div class="row"><span class="tag t-q">Q4</span> Công thức rút trước hạn? <span class="ans">: hỏi Vận hành</span></div>
+      <div class="row"><span class="tag t-s">S1</span> Màn cấu hình lãi suất <span class="ans">: yes ✓</span></div>
+      <div class="doc-foot">Trả lời tại chỗ, gửi lại. Mọi quyết định được ghi vào Decision Log.</div>
+    </div>
+  </div>
+</div></header>
+
+<!-- ============================ WHAT ============================ -->
+<section id="what"><div class="wrap split">
+  <div class="lead-col rv">
+    <h2>Trợ lý chất lượng yêu cầu, không phải máy sinh PRD</h2>
+    <p class="standfirst">Claude vốn viết được tài liệu. Giá trị của Clarify nằm ở chỗ khác:
+    tài liệu <strong>đúng phương pháp BA</strong>, <strong>tái lập được</strong> (cùng input
+    cho cùng cấu trúc, cùng điểm) và <strong>trung thực</strong> (chưa rõ thì hỏi, không điền đại).</p>
+    <div class="panel" style="margin-top:26px"><b>Nguyên tắc số 1: không bịa.</b>
+      Mọi điều chưa chắc đều mang nhãn: <span class="tag t-a">ASSUMPTION</span> giả định tạm dùng,
+      <span class="tag t-q">OPEN QUESTION</span> chờ người quyết,
+      <span class="tag t-s">SUGGESTION</span> đề xuất chờ duyệt. Tài liệu còn blocker thì
+      không bao giờ được đóng dấu "Approved".</div>
+  </div>
+  <ul class="flist">
+    <li class="rv"><span class="gly" aria-hidden="true">🔍</span><div>
+      <b>Hỏi đúng câu, đúng người</b>
+      <p>Input mỏng thì hỏi 5 câu chặn phạm vi kèm bảng phương án để bạn chọn. Mỗi câu hỏi
+      gắn nhãn <em>hỏi ai</em> (PO, kế toán, vận hành, pháp chế...) và được gom sẵn thành
+      bộ câu hỏi mang đi workshop.</p></div></li>
+    <li class="rv"><span class="gly" aria-hidden="true">📐</span><div>
+      <b>Đúng chuẩn tài liệu</b>
+      <p>BRD viết bằng ngôn ngữ nghiệp vụ, PRD đi sâu chi tiết sản phẩm. Flow tổ chức theo
+      nghiệp vụ: mỗi quy trình giữ trọn bộ step-by-step, activity diagram và sequence diagram
+      của cùng một quy trình.</p></div></li>
+    <li class="rv"><span class="gly" aria-hidden="true">🧭</span><div>
+      <b>Nhìn đủ mọi góc</b>
+      <p>Không dừng ở "user bấm, hệ thống trả lời": tự soi góc vận hành, kế toán, đối soát,
+      đối tác, rủi ro, bảo trì; cấu hình tham số (lãi suất, phí), job chạy nền, cách xử lý
+      user cũ khi đổi rule.</p></div></li>
+    <li class="rv"><span class="gly" aria-hidden="true">📊</span><div>
+      <b>Chấm điểm tái lập</b>
+      <p>100 điểm trên 10 tiêu chí, đối chiếu 36 anti-pattern. Có lỗi mức blocker thì band bị
+      chặn ở "Not ready for handoff": tài liệu không thể tự nhận là xong.</p></div></li>
+    <li class="rv"><span class="gly" aria-hidden="true">🖼️</span><div>
+      <b>Sơ đồ và wireframe xem ngay</b>
+      <p>Review Pack HTML mở ra là thấy: diagram render sẵn trong trình duyệt, wireframe
+      low-fi dạng khung điện thoại với nhãn thật lấy từ tài liệu.</p></div></li>
+    <li class="rv"><span class="gly" aria-hidden="true">📜</span><div>
+      <b>Có vết, có version</b>
+      <p>Mỗi quyết định ghi vào Decision Log. Finalize không đè file: tự lưu bản cũ, tăng
+      version, ghi Change history. Change request được phân tích tác động qua chuỗi truy vết.</p></div></li>
+  </ul>
+</div></section>
+
+<!-- ============================ INSTALL ============================ -->
+<section id="install"><div class="wrap">
+  <div class="sect-head rv">
+    <h2>Cài đặt: hai cách, năm phút</h2>
+    <p class="standfirst">Chọn theo nơi bạn làm việc. Cả hai dùng chung một bộ kiến thức.</p>
+  </div>
+  <div class="duo">
+    <div class="way rv">
+      <h3><span class="k">CÁCH 1</span> Claude Desktop / Claude.ai</h3>
+      <p class="aside" style="margin-top:0">Khuyên dùng cho BA/PO không làm việc trong repo.</p>
+      <ol>
+        <li>Lấy 9 file <code>.zip</code> trong thư mục <code>build/</code> của repo
+          (gói router <code>clarify.zip</code> và 8 gói lệnh chuyên biệt).</li>
+        <li>Mở <strong>Settings → Capabilities → Skills → Upload skill</strong>, tải từng
+          zip (bật Code execution nếu được hỏi).</li>
+        <li>Trong chat, gõ tự nhiên: <em>"clarify: tôi muốn làm BRD cho tính năng gửi tiết
+          kiệm"</em>, hoặc chọn skill từ menu <code>/</code>.</li>
+      </ol>
+      <p class="aside">Không nhớ nên dùng skill nào? Chọn <code>clarify</code> (router):
+      nó tự chẩn đoán nhu cầu và định tuyến.</p>
+    </div>
+    <div class="way rv">
+      <h3><span class="k">CÁCH 2</span> Claude Code</h3>
+      <p class="aside" style="margin-top:0">Cho người làm việc trực tiếp trong repo.</p>
+      <ol>
+        <li>Clone hoặc copy repo sao cho <code>.claude/</code> và <code>.clarify/</code>
+          nằm ở gốc dự án.</li>
+        <li>Claude Code tự nhận 8 slash command:</li>
+      </ol>
+<pre><code>/clarify:from-idea   /clarify:improve
+/clarify:from-spec   /clarify:audit
+/clarify:handoff     /clarify:finalize
+/clarify:export      /clarify:status</code></pre>
+      <p class="aside">Mọi sản phẩm được ghi vào thư mục <code>clarify-output/</code>
+      ở gốc repo.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============================ JOURNEY ============================ -->
+<section id="journey"><div class="wrap">
+  <div class="sect-head rv">
+    <h2>Hành trình của một BA, từ đầu đến cuối</h2>
+    <p class="standfirst">Bốn bước bắt buộc, hai bước tuỳ chọn. Ví dụ xuyên suốt bên dưới:
+    <strong>"tính năng mở sổ tiết kiệm online"</strong> cho ngân hàng.</p>
+  </div>
+
+  <div class="pipe rv" role="list" aria-label="Pipeline 6 bước">
+    <div class="pstep" role="listitem"><b>from-idea</b><small>Ý tưởng thành bản nháp BRD/PRD kèm bộ câu hỏi</small></div>
+    <div class="pstep" role="listitem"><b>improve answers</b><small>Bạn trả lời Answer Sheet, bản nháp được chốt dần</small></div>
+    <div class="pstep opt" role="listitem"><span class="lbl">TUỲ CHỌN</span><b>from-spec</b><small>Thêm lớp build-ready: stories, AC, test, API</small></div>
+    <div class="pstep" role="listitem"><b>finalize</b><small>Tài liệu BRD/PRD cuối, chuẩn ký duyệt</small></div>
+    <div class="pstep" role="listitem"><b>export</b><small>Review Pack HTML: diagram, wireframe xem ngay</small></div>
+    <div class="pstep opt" role="listitem"><span class="lbl">KHI CẦN</span><b>handoff · status</b><small>Gói Dev-QA · xem mình đang ở đâu</small></div>
+  </div>
+
+  <div class="journey">
+
+    <article class="jstep rv"><div>
+      <h3>Định hình ý tưởng · <code>/clarify:from-idea</code></h3>
+      <p class="who"><b>Bạn có:</b> một câu mô tả &nbsp;·&nbsp; <b>Nhận về:</b> bản nháp BRD/PRD, Answer Sheet, Elicitation Pack</p>
+      <p class="maxw">Bạn gõ: <em>"Tôi là BA, làm BRD cho tính năng gửi tiết kiệm online trên
+      mobile banking."</em> Clarify lập <strong>Document Profile</strong> (vai trò BA/PO,
+      chuẩn BRD/PRD, domain, ngôn ngữ output) rồi hỏi tối đa 5 câu chặn phạm vi:</p>
+<pre><code><span class="hl">Q1</span> Kênh áp dụng: mobile app, web, quầy hay cả ba?        <span class="c">→ ask: PO</span>
+<span class="hl">Q2</span> Loại sản phẩm: có kỳ hạn / không kỳ hạn / gửi góp?     <span class="c">→ ask: PO</span>
+<span class="hl">Q3</span> Khách hàng mục tiêu: cá nhân, doanh nghiệp?            <span class="c">→ ask: PO</span>
+<span class="hl">Q4</span> Có gồm tất toán trước hạn, tái tục khi đáo hạn?        <span class="c">→ ask: Vận hành</span>
+<span class="hl">Q5</span> Cần BRD high-level hay PRD chi tiết màn hình?          <span class="c">→ ask: BA</span></code></pre>
+      <p class="maxw">Kèm theo là <strong>Variant Matrix</strong>, bảng phương án để bạn tick
+      chọn thay vì mô tả dài dòng:</p>
+      <div class="tscroll" style="--tmin:560px"><table style="min-width:560px">
+        <tr><th>ID</th><th>Phương án</th><th>Rút tiền</th><th>Lãi suất</th><th>Đáo hạn</th></tr>
+        <tr><td><b>V1</b></td><td>Không kỳ hạn</td><td>Bất kỳ lúc nào</td><td>Thả nổi</td><td>Không áp dụng</td></tr>
+        <tr><td><b>V2</b></td><td>Có kỳ hạn</td><td>Đáo hạn / tất toán sớm</td><td>Cố định ngày mở</td><td>Tái tục / trả về TKTT</td></tr>
+      </table></div>
+      <details><summary>Bản nháp sinh ra có gì?</summary><div>
+        <p>Một BRD draft đúng độ cao nghiệp vụ: bối cảnh và mục tiêu, phạm vi, stakeholder
+        (cả hậu trường: kế toán, vận hành, đối soát), <strong>Customer Journey</strong> đầy đủ
+        (menu → chọn sản phẩm → xem lãi suất → nhập tiền → xác nhận → <b>OTP</b> → kết quả),
+        bảng màn hình, business rules có cột hiệu lực và phạm vi áp dụng cho user cũ/mới,
+        bảng lỗi với thông điệp khách hàng, edge cases, cùng các đề xuất
+        <span class="tag t-s">SUGGESTION</span> như màn cấu hình lãi suất, job tính lãi,
+        báo cáo cho kế toán. Chi tiết kỹ thuật sâu (ledger, idempotency...) được dồn vào mục
+        "Downstream Technical Notes" để không làm rối người đọc nghiệp vụ.</p></div></details>
+    </div></article>
+
+    <article class="jstep rv"><div>
+      <h3>Trả lời và chốt · <code>/clarify:improve answers</code></h3>
+      <p class="who"><b>Bạn làm:</b> copy Answer Sheet, điền, dán lại &nbsp;·&nbsp; <b>Nhận về:</b> bản nháp đã chốt, Decision Log</p>
+      <p class="maxw">Cuối bản nháp luôn có khối <strong>Answer Sheet</strong> copy được.
+      Mỗi mục cần bạn quyết có ID riêng:</p>
+<pre><code><span class="c"># Copy khối này, điền sau mỗi ID, gửi lại.</span>
+Variant: V2
+A1: keep                              <span class="c"># giữ giả định "chỉ KH cá nhân đã KYC"</span>
+A2: override -> hỗ trợ cả VND và USD
+Q1: 1/3/6/12 tháng, lãi suất theo biểu hiện hành
+Q2: tối thiểu 1.000.000đ
+S1: yes                               <span class="c"># duyệt: màn cấu hình lãi suất, phê duyệt 4-eyes</span>
+S2: later                             <span class="c"># để sau: dashboard huy động</span></code></pre>
+      <p class="maxw">Gửi kèm lệnh <code>/clarify:improve answers</code>. Clarify áp từng quyết
+      định theo ID: câu trả lời thành rule đã chốt, suggestion được duyệt vào phạm vi, phương án
+      V2 được cố định. Mọi quyết định tự ghi vào <strong>Decision Log</strong> (ai quyết, khi
+      nào, ảnh hưởng mục nào); ba tuần sau sếp hỏi "sao chọn V2?" là có vết. Các câu hỏi còn lại
+      được gom theo <em>người cần hỏi</em> trong <code>elicitation-pack.md</code> để bạn mang
+      đi họp. Lặp bước này đến khi hết câu hỏi lớn.</p>
+    </div></article>
+
+    <article class="jstep rv"><div>
+      <h3>Lớp build-ready (tuỳ chọn) · <code>/clarify:from-spec</code></h3>
+      <p class="who"><b>Khi nào:</b> cần bàn giao Dev/QA. Bỏ qua nếu chỉ cần ký duyệt nghiệp vụ.</p>
+      <p class="maxw">Bổ sung những thứ bản nháp không có: <strong>điểm audit</strong>, user
+      stories, acceptance criteria dạng Given/When/Then (gồm cả case biên hiệu lực lãi suất và
+      case "trừ tiền rồi nhưng tạo sổ lỗi"), kịch bản test, phân tích API/dữ liệu, ma trận truy
+      vết Requirement → Flow → Rule → Error → Story → Test. Nó tái dùng edge case, bảng lỗi,
+      sơ đồ đã có chứ không làm lại từ đầu.</p>
+    </div></article>
+
+    <article class="jstep rv"><div>
+      <h3>Chốt tài liệu · <code>/clarify:finalize brd</code></h3>
+      <p class="who"><b>Nhận về:</b> <code>final-brd.md</code> chuẩn ký duyệt</p>
+      <p class="maxw">Biên soạn tài liệu cuối: Document control với Change history, Executive
+      summary, mục tiêu, phạm vi, stakeholder, <strong>Functional Flows tổ chức theo nghiệp
+      vụ</strong> (Flow Catalog rồi từng quy trình: mở sổ, tất toán sớm, đáo hạn và tái tục;
+      mỗi flow đủ bộ step-by-step, activity, sequence), bảng lỗi và thông điệp khách hàng,
+      state model, truy vết, cùng mục <strong>Sign-off blockers</strong> gom mọi điểm chưa chốt.</p>
+      <p class="maxw">Chạy lại finalize sau khi sửa? Bản cũ tự lưu thành
+      <code>final-brd.v1.md</code>, version tăng, Change history thêm dòng. Không bao giờ
+      đè mất.</p>
+    </div></article>
+
+    <article class="jstep rv"><div>
+      <h3>Đóng gói review · <code>/clarify:export</code></h3>
+      <p class="who"><b>Nhận về:</b> <code>review-pack/index.html</code>, mở bằng trình duyệt là xem được</p>
+      <p class="maxw">Hết cảnh copy code PlantUML/Mermaid sang web để xem sơ đồ. Review Pack
+      là một trang HTML có mục lục: journey, từng flow với diagram render sẵn, sơ đồ điều hướng
+      màn hình, wireframe low-fi, bảng lỗi, truy vết, checklist review và danh sách câu hỏi tồn.
+      Gửi một file cho cả PO, Design, Dev, QA.</p>
+      <div class="wf-demo">
+        <div class="wf" role="img" aria-label="Wireframe low-fi màn xác nhận mở sổ">
+          <div class="h">‹ <span>Xác nhận mở sổ</span></div>
+          <div class="bar" style="width:85%"></div>
+          <div class="bar" style="width:60%"></div>
+          <div class="in"></div>
+          <div class="bar" style="width:70%"></div>
+          <div class="btn">Xác nhận &amp; nhập OTP</div>
+          <div class="src">S03 · Flow F01 bước 5 · BR2 · SAV_002</div>
+        </div>
+        <div class="wf" role="img" aria-label="Wireframe low-fi màn kết quả">
+          <div class="h">‹ <span>Kết quả</span></div>
+          <div class="bar" style="width:50%"></div>
+          <div class="in"></div>
+          <div class="bar" style="width:80%"></div>
+          <div class="bar" style="width:65%"></div>
+          <div class="btn">Xem chi tiết sổ</div>
+          <div class="src">S04 · Flow F01 bước 7 · trace về R1</div>
+        </div>
+        <p class="cap">Wireframe trong Review Pack: khung điện thoại grayscale, đánh số theo
+        flow, nhãn thật từ BRD, mỗi màn ghi rõ nguồn truy vết. Được đóng dấu "low-fi, not
+        final UI" vì nó phục vụ chốt nội dung, không thay designer.</p>
+      </div>
+    </div></article>
+
+    <article class="jstep rv"><div>
+      <h3>Vòng đời tiếp theo · <code>status</code>, <code>handoff</code>, <code>change-request</code></h3>
+      <p class="who"><b>Khi nào:</b> quay lại sau vài ngày · bàn giao · có thay đổi sau ký duyệt</p>
+      <p class="maxw"><code>/clarify:status</code>: quên mất đang làm tới đâu? Một lệnh cho biết
+      artifact nào có hay thiếu, còn bao nhiêu câu chưa trả lời, nên chạy gì tiếp.<br>
+      <code>/clarify:handoff</code>: gói Dev (yêu cầu build-ready, thứ tự làm) và gói QA
+      (AC, test, bảng lỗi với thông điệp kỳ vọng).<br>
+      <code>/clarify:improve change-request</code>: mô tả thay đổi, Clarify dò chuỗi truy vết
+      và liệt kê mọi flow, màn hình, rule, lỗi, test bị ảnh hưởng trước khi bạn quyết sửa.</p>
+    </div></article>
+
+  </div>
+</div></section>
+
+<!-- ============================ CONCEPTS (deep band) ============================ -->
+<div class="band" id="concepts"><section><div class="wrap">
+  <div class="sect-head rv">
+    <h2>Năm khái niệm, đọc trong ba phút</h2>
+    <p class="standfirst">Hiểu năm thứ này là dùng mượt toàn bộ skill.</p>
+  </div>
+  <div class="cgrid">
+    <div class="cg rv"><h3>1 · Document Profile</h3>
+      <p>Hồ sơ định hình toàn bộ output, lập ngay đầu <code>from-idea</code>:
+      <b>Role</b> (BA mặc định ra BRD, PO ra PRD), <b>chuẩn tài liệu</b>, <b>domain</b>
+      (có gói kiến thức fintech, ecommerce, SaaS; không có pack thì suy luận có gắn nhãn),
+      và <b>Language</b>: bạn viết tiếng Việt thì tài liệu ra tiếng Việt, riêng nhãn
+      ASSUMPTION cùng các ID giữ tiếng Anh để máy đọc.</p></div>
+    <div class="cg rv"><h3>2 · Bốn loại nhãn có ID</h3>
+      <p><span class="tag t-a">A#</span> giả định đang dùng, giữ hoặc sửa.<br>
+      <span class="tag t-q">Q#</span> câu hỏi chỉ con người quyết được, kèm <em>hỏi ai</em>.<br>
+      <span class="tag t-s">S#</span> đề xuất cho sản phẩm hoàn chỉnh, duyệt yes / no / later.<br>
+      <span class="tag t-v">V#</span> phương án trong bảng lựa chọn.<br>
+      Tất cả trả lời một chỗ: <b>Answer Sheet</b>.</p></div>
+    <div class="cg w4 rv"><h3>3 · Điểm số và band</h3>
+      <p>100 điểm trên 10 tiêu chí; mỗi anti-pattern phát hiện trừ điểm tiêu chí tương ứng.</p>
+      <table>
+        <tr><th>Band</th><th>Điểm</th></tr>
+        <tr><td>Build-ready</td><td>90–100</td></tr>
+        <tr><td>Good, minor gaps</td><td>75–89</td></tr>
+        <tr><td>Needs clarification</td><td>60–74</td></tr>
+        <tr><td>Not ready</td><td>&lt; 60 / có blocker</td></tr>
+      </table></div>
+    <div class="cg w4 rv"><h3>4 · 36 anti-pattern</h3>
+      <p>Danh mục lỗi spec mà audit soi: từ kinh điển (thiếu actor, AC chỉ có happy path)
+      đến các lỗi tài liệu "user-flow" hay quên: tham số không ai sở hữu, rule đổi không có
+      ngày hiệu lực, không nói user cũ xử lý sao, job chạy nền mơ hồ, thiếu bước OTP,
+      lỗi không có thông điệp khách hàng, jargon kỹ thuật trong BRD.</p></div>
+    <div class="cg w4 rv"><h3>5 · Truy vết hai chiều</h3>
+      <p>Mỗi yêu cầu nối tới Flow → Màn hình → Rule → Lỗi/State → Story → Test. Yêu cầu
+      không có flow, flow không có yêu cầu, ID được nhắc mà không tồn tại: đều bị gắn cờ.
+      Đây là lưới an toàn khi tài liệu lớn dần.</p></div>
+    <div class="cg rv" style="grid-column:span 12"><h3>Mặc định nhìn đa stakeholder</h3>
+      <p>Mọi phân tích đi qua các lăng kính: vận hành, kế toán/tài chính, đối soát, đối tác,
+      rủi ro/pháp chế, bảo trì, dữ liệu, bảo mật. Một stakeholder không có nhu cầu nào được
+      ghi nhận được tính là một phát hiện thiếu sót, không phải "chắc không cần".</p></div>
+  </div>
+</div></section></div>
+
+<!-- ============================ OUTPUTS ============================ -->
+<section id="outputs"><div class="wrap">
+  <div class="sect-head rv">
+    <h2>Sản phẩm đầu ra</h2>
+    <p class="standfirst">Mọi thứ nằm trong thư mục <code>clarify-output/</code>.</p>
+  </div>
+  <div class="tscroll rv"><table>
+    <tr><th>File</th><th>Là gì</th><th>Sinh bởi</th></tr>
+    <tr><td><code>brd-draft.md</code> / <code>prd-draft.md</code></td><td>Bản nháp kèm Answer Sheet</td><td>from-idea</td></tr>
+    <tr><td><code>elicitation-pack.md</code></td><td>Câu hỏi gom theo người cần hỏi, mang đi workshop</td><td>from-idea</td></tr>
+    <tr><td><code>edge-case-matrix.md</code> · <code>error-handling.md</code> · <code>model-suggestions.md</code></td><td>Edge case · bảng mã lỗi với thông điệp khách và hành động · flow, sơ đồ, state theo từng nghiệp vụ</td><td>from-idea / from-spec</td></tr>
+    <tr><td><code>audit-report.md</code></td><td>Điểm /100, band, findings kèm cách sửa</td><td>audit / from-spec</td></tr>
+    <tr><td><code>stories.md</code> · <code>test-scenarios.md</code> · <code>api-data-impact.md</code> · <code>traceability-matrix.md</code></td><td>Lớp build-ready cho Dev/QA</td><td>from-spec</td></tr>
+    <tr><td><code>decision-log.md</code></td><td>Nhật ký quyết định (chỉ ghi thêm, không sửa cũ)</td><td>improve answers</td></tr>
+    <tr><td><code>change-impact.md</code></td><td>Phân tích tác động change request</td><td>improve change-request</td></tr>
+    <tr><td><code>final-brd.md</code> / <code>final-prd.md</code> (+ <code>.v1, .v2…</code>)</td><td>Tài liệu ký duyệt, có version</td><td>finalize</td></tr>
+    <tr><td><code>wireframes.html</code></td><td>Wireframe low-fi HTML</td><td>finalize / export</td></tr>
+    <tr><td><code>review-pack/index.html</code></td><td>Gói review mở là xem: diagram, wireframe, truy vết, checklist</td><td>export</td></tr>
+    <tr><td><code>handoff-pack.md</code></td><td>Gói Dev và gói QA</td><td>handoff</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================ COMMANDS ============================ -->
+<section id="commands" style="background:var(--surface)"><div class="wrap">
+  <div class="sect-head rv">
+    <h2>8 lệnh, chọn theo tình huống</h2>
+    <p class="standfirst">Bảng tra cứu nhanh khi bạn biết mình đang cần gì.</p>
+  </div>
+  <div class="tscroll rv"><table>
+    <tr><th>Bạn đang…</th><th>Dùng lệnh</th></tr>
+    <tr><td>Chỉ có một ý tưởng / mô tả ngắn</td><td><code>/clarify:from-idea</code></td></tr>
+    <tr><td>Vừa điền xong Answer Sheet</td><td><code>/clarify:improve answers</code></td></tr>
+    <tr><td>Có sẵn PRD/BRD muốn chấm điểm nhanh</td><td><code>/clarify:audit</code></td></tr>
+    <tr><td>Cần stories, AC, test, API cho Dev/QA</td><td><code>/clarify:from-spec</code></td></tr>
+    <tr><td>Muốn sửa một mục yếu (edge case, sơ đồ, NFR…)</td><td><code>/clarify:improve &lt;mode&gt;</code></td></tr>
+    <tr><td>Spec ổn rồi, bàn giao Dev/QA</td><td><code>/clarify:handoff</code></td></tr>
+    <tr><td>Mọi thứ đã chốt, cần bản ký duyệt</td><td><code>/clarify:finalize brd|prd</code></td></tr>
+    <tr><td>Cần gói review trực quan gửi stakeholder / Design</td><td><code>/clarify:export</code></td></tr>
+    <tr><td>Quay lại sau vài ngày, quên đang ở đâu</td><td><code>/clarify:status</code></td></tr>
+    <tr><td>Có change request sau ký duyệt</td><td><code>/clarify:improve change-request</code></td></tr>
+    <tr><td>Không biết dùng cái gì 🤷</td><td>skill <code>clarify</code> (router): mô tả nhu cầu bằng lời</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================ FAQ ============================ -->
+<section id="faq"><div class="wrap">
+  <div class="sect-head rv">
+    <h2>Câu hỏi thường gặp</h2>
+  </div>
+  <div class="faq maxw" style="max-width:76ch">
+  <details class="rv"><summary>Tài liệu ra tiếng Việt hay tiếng Anh?</summary><div>
+    <p>Theo ngôn ngữ bạn dùng khi chat (ghi trong Document Profile, đổi được). Bạn viết tiếng
+    Việt thì toàn bộ heading và nội dung ra tiếng Việt. Riêng các nhãn <code>ASSUMPTION /
+    OPEN QUESTION / SUGGESTION</code> và ID (<code>A1, Q2, F01, BR3…</code>) giữ tiếng Anh:
+    chúng là "mỏ neo" để các lệnh sau parse chính xác.</p></div></details>
+  <details class="rv"><summary>Clarify có tự bịa lãi suất, phí, quy tắc giúp tôi không?</summary><div>
+    <p><strong>Không, và đây là tính năng chứ không phải hạn chế.</strong> Con số và quy tắc
+    nghiệp vụ là quyết định của tổ chức bạn. Clarify đề xuất khung, gắn nhãn ASSUMPTION /
+    OPEN QUESTION và chỉ ra cần hỏi ai. Chất lượng tài liệu cuối phụ thuộc nhiều nhất vào
+    việc bạn trả lời Answer Sheet đầy đủ.</p></div></details>
+  <details class="rv"><summary>Tôi đã có PRD do team khác viết, bắt đầu từ đâu?</summary><div>
+    <p>Đưa file cho <code>/clarify:audit</code> để có điểm và danh sách lỗi trước (5 phút).
+    Nếu muốn nâng cấp hẳn, dùng <code>/clarify:from-spec</code>: nó nhận cả PRD lẫn BRD,
+    tự phát hiện chuẩn tài liệu.</p></div></details>
+  <details class="rv"><summary>BRD và PRD khác nhau thế nào trong Clarify?</summary><div>
+    <p>BRD trả lời "doanh nghiệp cần gì, vì sao, ai liên quan, quy tắc là gì", viết bằng ngôn
+    ngữ nghiệp vụ, chi tiết kỹ thuật bị đẩy xuống mục Downstream Technical Notes. PRD trả lời
+    "sản phẩm hoạt động ra sao": flow, màn hình, state, AC chi tiết. Chọn một lần ở Document
+    Profile, mọi template tự theo.</p></div></details>
+  <details class="rv"><summary>Sơ đồ vẽ bằng gì? Tôi có phải cài thêm gì không?</summary><div>
+    <p>Activity dùng PlantUML; Sequence và State dùng Mermaid (quy ước cố định). Trong Review
+    Pack, Mermaid render ngay trong trình duyệt (không cần mạng, không gửi dữ liệu đi đâu);
+    PlantUML có ảnh kèm hoặc fallback code với link viewer. Không phải cài gì.</p></div></details>
+  <details class="rv"><summary>Wireframe có thay được designer không?</summary><div>
+    <p>Không, và nó được đóng dấu rõ "BA low-fi wireframe, not final UI". Mục đích là chốt
+    màn hình nào có thông tin gì, nút gì, lỗi hiện ra sao trước khi Design vào việc; mỗi
+    phần tử đều truy vết về flow, step, rule, mã lỗi nguồn.</p></div></details>
+  <details class="rv"><summary>Lỡ chạy finalize nhiều lần có mất bản cũ không?</summary><div>
+    <p>Không. Bản cũ tự lưu thành <code>final-brd.v1.md</code>, version tăng, Change history
+    ghi lý do. Quyết định nào dẫn đến thay đổi đều nằm trong <code>decision-log.md</code>.</p></div></details>
+  <details class="rv"><summary>Một phiên from-idea mất bao lâu? Có mẹo gì không?</summary><div>
+    <p>Vài phút sinh nháp; phần tốn thời gian (xứng đáng) là bạn trả lời câu hỏi. Mẹo:
+    (1) trả lời 5 câu chặn phạm vi càng cụ thể thì nháp đầu càng sát; (2) chưa chắc thì ghi
+    <code>skip</code>, đừng đoán bừa: câu hỏi sẽ nằm trong elicitation pack để hỏi đúng người;
+    (3) <code>S#: later</code> giúp giữ ý tưởng hay mà không phình phạm vi; (4) quay lại sau
+    kỳ nghỉ thì chạy <code>status</code> trước tiên.</p></div></details>
+  <details class="rv"><summary>Skill có gửi tài liệu của tôi lên server bên ngoài không?</summary><div>
+    <p>Sơ đồ Mermaid render client-side trong trình duyệt của bạn. Việc dùng server render
+    bên thứ ba (PlantUML server) chỉ xảy ra ở chế độ online và được ghi rõ trong manifest.
+    Với tài liệu nhạy cảm, cứ dùng chế độ mặc định.</p></div></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>Clarify</b> · requirement-quality skill pack · 8 lệnh · 16 engine · 36 anti-pattern ·
+  rubric 100 điểm / 10 tiêu chí · MIT License.</p>
+  <p class="pr">Nguyên tắc bất biến: không bịa nghiệp vụ. Chưa rõ thì gắn nhãn và hỏi đúng người.</p>
+</div></footer>
+
+<script>
+/* enhance-only reveal: content is visible without JS; reduced-motion disables */
+document.documentElement.classList.add('js');
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.rv'));
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)} });
+  },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+  els.forEach(function(e,i){
+    if(e.closest('.hero')) e.style.transitionDelay=(i*90)+'ms';
+    io.observe(e);
+  });
+})();
+</script>
+</body>
+</html>

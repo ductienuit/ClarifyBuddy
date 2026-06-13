@@ -1,0 +1,102 @@
+# Clarify scoring rubric — SINGLE SOURCE OF TRUTH for scoring.
+# 100 points across 10 weighted dimensions. Each dimension has full/half/zero
+# anchors. Detected anti-patterns deduct from the dimension named in their
+# `dimension` field (see anti-patterns.yaml and requirement-quality-score.md).
+
+total: 100
+
+bands:
+  - name: "Build-ready"
+    min: 90
+    max: 100
+  - name: "Good, minor gaps"
+    min: 75
+    max: 89
+  - name: "Needs major clarification"
+    min: 60
+    max: 74
+  - name: "Not ready for handoff"
+    min: 0
+    max: 59
+
+# Any detected anti-pattern with severity `blocker` caps the band at
+# "Not ready for handoff" regardless of total points.
+blocker_caps_band: "Not ready for handoff"
+
+# Deduction per detected anti-pattern occurrence, capped per dimension at the
+# dimension's weight (a dimension cannot go below 0).
+deductions:
+  blocker: 6
+  major: 3
+  minor: 1
+
+dimensions:
+  - id: clarity
+    weight: 12
+    anchors:
+      full: "Every requirement has a clear actor, trigger, and outcome; no ambiguous terms; business-facing requirements use business language before technical mechanics; Functional Flows are process-centric (Flow Catalog, then one block per process with step-by-step + activity + sequence for the SAME process, Screen Matrix after the flows) so the process narrative reads coherently."
+      half: "Actors/triggers present but some vague terms ('manage', 'handle', 'support'), technical jargon in business-facing sections, or flows organized by diagram type with occasional mixed-process blocks / Screen Matrix before the flows / missing Flow Catalog."
+      zero: "Reader cannot tell who does what, when, or to what effect; business reviewers cannot validate the requirement language; diagrams of different processes are mixed with no Flow Catalog."
+
+  - id: completeness
+    weight: 12
+    anchors:
+      full: "Scope, out-of-scope, business rules, and dependencies are all stated; non-user/back-office actors and existing-vs-new (cohort) treatment are covered; no obvious gaps."
+      half: "Core behavior covered but scope boundaries, non-user actors, cohort treatment, or rules are partially missing."
+      zero: "Major sections absent; large unstated gaps."
+
+  - id: testability
+    weight: 10
+    anchors:
+      full: "Every requirement has observable pass/fail acceptance criteria covering happy, negative, and boundary paths."
+      half: "Some acceptance criteria exist but are vague or only cover the happy path."
+      zero: "No acceptance criteria; cannot determine when a requirement is met."
+
+  - id: traceability
+    weight: 10
+    anchors:
+      full: "Each requirement links to stories and tests; each story/test links back to a requirement."
+      half: "Partial linking; some orphan requirements or untraced tests."
+      zero: "No traceability between requirements, stories, and tests."
+
+  - id: edge-coverage
+    weight: 10
+    anchors:
+      full: "Negative paths, boundaries, exception flows, empty/error states, and applicable entity vs transaction/operation states are all covered."
+      half: "Some edge cases noted but coverage is incomplete or shallow, or only entity state is modeled for a process/transaction."
+      zero: "Only the happy path is described."
+
+  - id: business-rule-quality
+    weight: 10
+    anchors:
+      full: "Business rules are explicit, unambiguous, non-conflicting, and attributed (not invented); tunable parameters have a config owner; rules that change carry effective dates/versions."
+      half: "Rules present but some are vague, conflicting, unattributed, or lack config ownership / effective dating."
+      zero: "Rules missing or silently assumed without flagging."
+
+  - id: api-data-impact
+    weight: 10
+    anchors:
+      full: "API contracts, data model changes, source of truth, and side effects are identified."
+      half: "Some API/data impact noted but incomplete (e.g. no source of truth)."
+      zero: "No analysis of API or data impact."
+
+  - id: risk-control
+    weight: 10
+    anchors:
+      full: "Risks, permissions, audit logging, idempotency, timeouts/retries, and compensation are addressed where relevant; scheduled/batch jobs are idempotent with defined outputs and downstream consumers."
+      half: "Some controls present but key ones (e.g. idempotency, audit, batch-job spec) missing."
+      zero: "No risk or control consideration."
+
+  - id: nfr
+    weight: 8
+    anchors:
+      full: "Relevant non-functional requirements (performance, security, availability, accessibility, compliance) are stated and measurable."
+      half: "NFRs mentioned but not measurable or only partially covered."
+      zero: "No non-functional requirements considered."
+
+  - id: handoff-readiness
+    weight: 8
+    anchors:
+      full: "A Dev and QA engineer could build and test from this with no further clarification, including mapped error messages and user actions."
+      half: "Mostly actionable but some open questions, missing message mapping, or unclear state handling would block a clean handoff."
+      zero: "Not actionable; significant clarification required before any work."

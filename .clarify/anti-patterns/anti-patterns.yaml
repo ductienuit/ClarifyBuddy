@@ -1,0 +1,441 @@
+# Clarify anti-pattern catalog — SINGLE SOURCE OF TRUTH.
+# Exactly 36 entries. Each `dimension` MUST match a dimension id in
+# evaluators/scoring-rubric.yaml. anti-patterns.md is a human rendering of this.
+# severity: blocker | major | minor
+
+anti_patterns:
+  - id: ambiguous-actor
+    name: Ambiguous Actor
+    severity: major
+    dimension: clarity
+    definition: The requirement does not say who performs the action.
+    bad_example: "The order can be cancelled."
+    why_dangerous: "Dev cannot wire permissions; QA cannot pick a test user."
+    detect:
+      missing_any: ["user", "admin", "system", "actor", "role"]
+      passive_voice: true
+    fix: "Name the actor/role responsible for the action."
+    good_example: "A customer with a pending order can cancel that order."
+
+  - id: missing-trigger
+    name: Missing Trigger
+    severity: major
+    dimension: clarity
+    definition: The requirement states an outcome but not what initiates it.
+    bad_example: "Inventory is updated."
+    why_dangerous: "Unclear event means unclear timing and missed sequencing."
+    detect:
+      missing_any: ["when", "after", "on", "upon", "trigger"]
+    fix: "State the triggering event or condition (When ...)."
+    good_example: "When an order is confirmed, inventory for each line item is decremented."
+
+  - id: missing-outcome
+    name: Missing Outcome
+    severity: major
+    dimension: clarity
+    definition: The requirement names an action but no observable result.
+    bad_example: "The user submits the form."
+    why_dangerous: "No outcome means nothing to verify or build toward."
+    detect:
+      missing_any: ["then", "result", "so that", "outcome", "system shall"]
+    fix: "State the observable result of the action."
+    good_example: "When the user submits the form, the system persists the record and shows a confirmation."
+
+  - id: hidden-assumption
+    name: Hidden Assumption
+    severity: major
+    dimension: completeness
+    definition: The requirement relies on an unstated precondition or rule.
+    bad_example: "Refund the customer."
+    why_dangerous: "Unstated conditions (window, eligibility) surface as bugs later."
+    detect:
+      implied_precondition: true
+    fix: "Make preconditions explicit, or mark them ASSUMPTION / OPEN QUESTION."
+    good_example: "ASSUMPTION: refunds allowed within 30 days. Within that window, refund the customer to the original payment method."
+
+  - id: missing-scope
+    name: Missing Scope
+    severity: major
+    dimension: completeness
+    definition: The document does not state what is in scope.
+    bad_example: "Build the checkout."
+    why_dangerous: "Scope ambiguity drives rework and disagreement."
+    detect:
+      missing_any: ["in scope", "scope", "covers"]
+    fix: "Add an explicit in-scope section."
+    good_example: "In scope: single-currency card checkout for logged-in users."
+
+  - id: missing-out-of-scope
+    name: Missing Out-of-Scope
+    severity: minor
+    dimension: completeness
+    definition: The document never states what is deliberately excluded.
+    bad_example: "(no out-of-scope section)"
+    why_dangerous: "Without exclusions, scope silently creeps."
+    detect:
+      missing_any: ["out of scope", "not included", "excluded"]
+    fix: "Add an out-of-scope section listing deliberate exclusions."
+    good_example: "Out of scope: multi-currency, gift cards, guest checkout."
+
+  - id: non-testable-requirement
+    name: Non-Testable Requirement
+    severity: major
+    dimension: testability
+    definition: The requirement cannot be verified objectively.
+    bad_example: "The page should be fast."
+    why_dangerous: "Subjective wording cannot pass or fail a test."
+    detect:
+      vague_terms: ["fast", "easy", "intuitive", "robust", "user-friendly"]
+    fix: "Replace subjective terms with measurable thresholds."
+    good_example: "The page renders its first contentful paint within 1.5s on 4G."
+
+  - id: missing-acceptance-criteria
+    name: Missing Acceptance Criteria
+    severity: major
+    dimension: testability
+    definition: Requirement describes behavior but defines no observable pass/fail.
+    bad_example: "User can manage their account settings."
+    why_dangerous: "Dev and QA cannot tell when the requirement is done."
+    detect:
+      missing_any: ["Given", "When", "Then", "Acceptance Criteria"]
+    fix: "Add testable AC covering happy, negative, and boundary paths."
+    good_example: |
+      Given the user is logged in
+      When they update email with a valid address
+      Then the system saves it and sends a verification message
+
+  - id: weak-acceptance-criteria
+    name: Weak Acceptance Criteria
+    severity: minor
+    dimension: testability
+    definition: Acceptance criteria exist but only cover the happy path.
+    bad_example: "Given valid input, when submitted, then it saves."
+    why_dangerous: "Negative and boundary behavior is left undefined."
+    detect:
+      happy_path_only: true
+    fix: "Add negative and boundary AC alongside the happy path."
+    good_example: "Includes AC for invalid input, duplicate submission, and max-length boundaries."
+
+  - id: missing-business-rule
+    name: Missing Business Rule
+    severity: major
+    dimension: business-rule-quality
+    definition: A decision depends on a rule that is never stated.
+    bad_example: "Apply the discount."
+    why_dangerous: "The rule gets invented inconsistently across the team."
+    detect:
+      decision_without_rule: true
+    fix: "State the rule explicitly, or mark it OPEN QUESTION."
+    good_example: "Apply a 10% discount when cart subtotal exceeds $100 (excluding tax)."
+
+  - id: missing-edge-case
+    name: Missing Edge Case
+    severity: major
+    dimension: edge-coverage
+    definition: Boundary or unusual inputs are not addressed.
+    bad_example: "Add items to the cart."
+    why_dangerous: "Empty, max, and concurrent cases break in production."
+    detect:
+      missing_any: ["empty", "maximum", "zero", "boundary", "concurrent"]
+    fix: "Enumerate boundary and unusual-input cases."
+    good_example: "Defines behavior for empty cart, max 100 line items, and out-of-stock items."
+
+  - id: missing-exception-flow
+    name: Missing Exception Flow
+    severity: major
+    dimension: edge-coverage
+    definition: Only the success path is described; failures are undefined.
+    bad_example: "Charge the card and confirm the order."
+    why_dangerous: "Payment/network failures have undefined behavior."
+    detect:
+      missing_any: ["fails", "error", "exception", "declined", "timeout"]
+    fix: "Define behavior for each failure mode."
+    good_example: "If the charge is declined, the order stays pending and the user is prompted to retry."
+
+  - id: undefined-state
+    name: Undefined State
+    severity: major
+    dimension: edge-coverage
+    definition: An entity's states and legal transitions are not defined.
+    bad_example: "The order is processed."
+    why_dangerous: "Illegal transitions and stuck states become bugs."
+    detect:
+      mentions_lifecycle_without_states: true
+    fix: "Define the state set and allowed transitions."
+    good_example: "Order states: pending -> paid -> shipped -> delivered; cancellation allowed only from pending or paid."
+
+  - id: missing-operation-state
+    name: Missing Transaction / Operation State
+    severity: major
+    dimension: edge-coverage
+    definition: A feature with a process, async action, risky action, external call, or transaction defines only the business entity state and omits the state of the operation being processed.
+    bad_example: "Deposit account states are pending, active, matured, closed. The opening flow succeeds or fails."
+    why_dangerous: "In-flight, authentication, timeout, duplicate, reversal, and unknown-result states are hidden, so FE, BE, QA, Ops, and CS handle the same operation differently."
+    detect:
+      only_entity_state_without_operation_state: true
+    fix: "Add a separate transaction/operation state model such as initiated -> pending-auth -> processing -> success / failed / timeout / reversed / unknown, and map errors to those states."
+    good_example: "Entity state: pending -> active -> closed. Operation state: initiated -> pending-auth -> processing -> success/failed/timeout/unknown; timeout tells the user to check status instead of retrying blindly."
+
+  - id: missing-permission
+    name: Missing Permission
+    severity: major
+    dimension: risk-control
+    definition: Authorization for an action is not specified.
+    bad_example: "Allow editing the invoice."
+    why_dangerous: "Unbounded access is a security and compliance risk."
+    detect:
+      action_without_authz: true
+    fix: "State who is authorized and under what conditions."
+    good_example: "Only Finance-role users may edit an invoice, and only while it is in draft."
+
+  - id: missing-audit-log
+    name: Missing Audit Log
+    severity: minor
+    dimension: risk-control
+    definition: A sensitive action does not record an audit trail.
+    bad_example: "Admin deletes a user."
+    why_dangerous: "No accountability for sensitive or destructive actions."
+    detect:
+      sensitive_action_without_audit: true
+    fix: "Specify what is logged: who, what, when, before/after."
+    good_example: "Deleting a user records actor, target, timestamp, and reason in the audit log."
+
+  - id: missing-notification
+    name: Missing Notification
+    severity: minor
+    dimension: completeness
+    definition: A state change that should notify someone does not.
+    bad_example: "The order ships."
+    why_dangerous: "Stakeholders are left uninformed of relevant changes."
+    detect:
+      state_change_without_notification: true
+    fix: "Specify who is notified, through which channel, and when."
+    good_example: "When the order ships, the customer receives a shipping email with tracking."
+
+  - id: missing-api-data-impact
+    name: Missing API/Data Impact
+    severity: major
+    dimension: api-data-impact
+    definition: A change's effect on APIs or data model is not analyzed.
+    bad_example: "Store the user's preferred language."
+    why_dangerous: "Schema/contract changes get discovered mid-build."
+    detect:
+      data_change_without_impact: true
+    fix: "Identify affected endpoints, schema changes, and migrations."
+    good_example: "Adds users.locale column (migration), extends GET/PATCH /users contract."
+
+  - id: missing-source-of-truth
+    name: Missing Source of Truth
+    severity: major
+    dimension: api-data-impact
+    definition: Data exists in multiple places with no authoritative owner.
+    bad_example: "Price shown on the product page and in the cart."
+    why_dangerous: "Divergent copies cause inconsistency and disputes."
+    detect:
+      duplicated_data_without_owner: true
+    fix: "Name the authoritative source and how others derive from it."
+    good_example: "Pricing service is the source of truth; cart caches price at add-time and revalidates at checkout."
+
+  - id: missing-idempotency
+    name: Missing Idempotency
+    severity: major
+    dimension: risk-control
+    definition: An operation that may be retried is not idempotent.
+    bad_example: "POST /charge to bill the customer."
+    why_dangerous: "Retries cause double charges or duplicate records."
+    detect:
+      mutating_retryable_without_idempotency: true
+    fix: "Require an idempotency key or define dedup semantics."
+    good_example: "POST /charge accepts an Idempotency-Key; repeated keys return the original result."
+
+  - id: missing-timeout-retry
+    name: Missing Timeout/Retry
+    severity: minor
+    dimension: risk-control
+    definition: External calls lack timeout and retry policy.
+    bad_example: "Call the payment gateway."
+    why_dangerous: "Hung calls and unbounded retries degrade reliability."
+    detect:
+      external_call_without_timeout_retry: true
+    fix: "Specify timeout, retry count, and backoff."
+    good_example: "Gateway call: 5s timeout, 3 retries with exponential backoff."
+
+  - id: missing-reconciliation-compensation
+    name: Missing Reconciliation/Compensation
+    severity: major
+    dimension: risk-control
+    definition: A multi-step operation has no rollback or reconciliation path.
+    bad_example: "Reserve inventory, then charge the card."
+    why_dangerous: "Partial failure leaves the system in an inconsistent state."
+    detect:
+      multistep_without_compensation: true
+    fix: "Define compensation/reconciliation for partial failure."
+    good_example: "If the charge fails after reservation, release the reserved inventory (compensating action)."
+
+  - id: duplicate-conflicting-requirement
+    name: Duplicate/Conflicting Requirement
+    severity: major
+    dimension: business-rule-quality
+    definition: Two requirements overlap or contradict each other.
+    bad_example: "Refunds within 30 days. / No refunds after 14 days."
+    why_dangerous: "Ambiguous which rule wins; inconsistent implementation."
+    detect:
+      contradictory_statements: true
+    fix: "Reconcile into a single authoritative statement."
+    good_example: "Refunds allowed within 30 days; the 14-day note is removed as outdated."
+
+  - id: scope-creep-disguised-as-requirement
+    name: Scope Creep Disguised as Requirement
+    severity: minor
+    dimension: completeness
+    definition: An item expands scope beyond the stated goal.
+    bad_example: "Also add a recommendation engine to the checkout."
+    why_dangerous: "Hidden scope inflates effort and risk."
+    detect:
+      out_of_goal_addition: true
+    fix: "Move to out-of-scope or a separate initiative unless justified."
+    good_example: "Recommendations moved to a future initiative; checkout scope unchanged."
+
+  - id: ui-only-requirement
+    name: UI-Only Requirement
+    severity: minor
+    dimension: api-data-impact
+    definition: Describes UI without backend/data behavior.
+    bad_example: "Add a 'Save for later' button."
+    why_dangerous: "Backend persistence and rules are left undefined."
+    detect:
+      ui_without_backend: true
+    fix: "Specify the backend behavior, persistence, and rules behind the UI."
+    good_example: "'Save for later' moves the item to a saved list (new table), removable, persists across sessions."
+
+  - id: api-only-requirement
+    name: API-Only Requirement
+    severity: minor
+    dimension: handoff-readiness
+    definition: Describes an endpoint with no user-facing context or AC.
+    bad_example: "Expose GET /recommendations."
+    why_dangerous: "Unclear who consumes it, why, or how success is measured."
+    detect:
+      api_without_consumer_context: true
+    fix: "State the consumer, the user value, and acceptance criteria."
+    good_example: "GET /recommendations powers the homepage rail; returns <=10 items in <300ms; AC defined."
+
+  - id: technical-jargon-in-business-requirement
+    name: Technical Jargon in Business Requirement
+    severity: major
+    dimension: clarity
+    definition: A BRD or business-facing requirement is written primarily in implementation, accounting-system, or integration jargon instead of business language.
+    bad_example: "The service writes idempotent double-entry ledger postings to GL and accrual tables for each cohort."
+    why_dangerous: "Business reviewers cannot validate intent, while technical details crowd out journey, decisions, and user outcomes."
+    detect:
+      business_requirement_contains_technical_jargon: ["ledger", "double-entry", "GL", "accrual", "posting", "idempotency", "schema", "API", "cohort", "grandfathered", "batch resume"]
+    fix: "Rewrite the body requirement in business language and move implementation mechanics to Downstream Technical Notes or a technical appendix."
+    good_example: "The system records the customer's funds movement and calculates earned interest accurately; technical posting and retry mechanics are captured in Downstream Technical Notes."
+
+  - id: missing-analytics-success-measurement
+    name: Missing Analytics / Success Measurement
+    severity: minor
+    dimension: nfr
+    definition: No metric defines whether the feature succeeds.
+    bad_example: "Launch the new onboarding flow."
+    why_dangerous: "No way to know if the feature achieved its goal."
+    detect:
+      missing_any: ["metric", "success", "KPI", "measure", "analytics"]
+    fix: "Define the success metric, event tracking, and target."
+    good_example: "Success: +10% activation within 14 days; track onboarding_completed events."
+
+  - id: missing-system-actor
+    name: Missing System / Back-Office Actor
+    severity: major
+    dimension: completeness
+    definition: The spec models only the end user and omits back-office, operations, accounting, external-system, or scheduled-job actors.
+    bad_example: "The user opens a savings deposit and the system confirms it."
+    why_dangerous: "Whole actor classes (config admin, ops, accounting, integrations, jobs) go unowned and unbuilt."
+    detect:
+      actors_user_only: true
+    fix: "Enumerate non-user actors (admin/configurator, operations, accounting/back-office, external systems, scheduled jobs) and their responsibilities."
+    good_example: "Actors: Customer; Rate Administrator (configures rates); Operations; Accounting/GL; Interest-Accrual Job; Core-Banking System."
+
+  - id: missing-configuration-ownership
+    name: Missing Configuration Ownership
+    severity: major
+    dimension: business-rule-quality
+    definition: A tunable parameter (rate, fee, limit, threshold) is used but the spec never says where it is configured, who configures it, how it is validated, or how the change propagates.
+    bad_example: "Apply a 2% monthly interest rate."
+    why_dangerous: "The value gets hard-coded; nobody owns changes; no validation or propagation path exists."
+    detect:
+      tunable_param_without_config_owner: true
+    fix: "State the config store/screen, the owning role, validation rules, and how the change propagates to runtime."
+    good_example: "Interest rate is set in Rate Config by a Rate Administrator (0–10%, two decimals); changes propagate to the accrual job on the effective date."
+
+  - id: missing-effective-dating
+    name: Missing Effective Dating / Versioning
+    severity: major
+    dimension: business-rule-quality
+    definition: A rule or configuration can change over time but the spec gives no effective date or version, so it is unclear which value applies when.
+    bad_example: "The fee can be updated by an admin."
+    why_dangerous: "Past events get recomputed with new values; disputes and reconciliation breaks ensue."
+    detect:
+      rule_change_without_effective_date: true
+    fix: "Require an effective-from (and optional end) date and a version; define which version applies to a given event date."
+    good_example: "Fee changes carry an effective-from date; a transaction uses the fee version in effect on its date; prior versions are retained."
+
+  - id: missing-cohort-treatment
+    name: Missing Existing-vs-New Treatment
+    severity: major
+    dimension: completeness
+    definition: When a rule or configuration changes, the spec does not say whether existing entities are grandfathered or have the new value applied forward, nor define any migration/backfill.
+    bad_example: "Raise the minimum balance to $500."
+    why_dangerous: "Existing records are silently re-evaluated (or silently skipped); behavior diverges per developer."
+    detect:
+      rule_change_without_cohort_strategy: true
+    fix: "State the cohort strategy (grandfather vs apply-forward) and any migration/backfill, with timing and notification."
+    good_example: "New minimum applies to accounts opened on/after the effective date; existing accounts grandfathered; no backfill; holders notified 30 days ahead."
+
+  - id: missing-batch-job-spec
+    name: Missing Scheduled-Job / Batch Spec
+    severity: major
+    dimension: risk-control
+    definition: A scheduled or batch operation is implied or named but its trigger/schedule, idempotency/resume, outputs, and downstream consumers are not specified.
+    bad_example: "An interest-accrual job runs to update balances."
+    why_dangerous: "Reruns double-post; partial failures leave gaps; accounting consumers receive incomplete data."
+    detect:
+      batch_job_underspecified: true
+    fix: "Specify schedule/trigger, idempotency and resume-on-failure, the outputs produced, and every downstream consumer."
+    good_example: "Interest-Accrual Job runs daily 02:00 UTC; idempotent per (account, accrual-date); outputs accrual ledger entries; consumed by GL posting and daily reconciliation."
+
+  - id: missing-error-message-mapping
+    name: Missing Error / Message Mapping
+    severity: major
+    dimension: handoff-readiness
+    definition: A user-facing or transactional flow lists failures only vaguely, with no mapping of each error scenario to a code, a user-facing message, and a follow-up action.
+    bad_example: "Show an error if opening the account fails."
+    why_dangerous: "FE, BE, QA, and support each invent different codes and wording; users get unclear or wrong guidance, especially when money was already moved."
+    detect:
+      errors_without_message_mapping: true
+    fix: "Add an error table: scenario, error code, transaction status after the error, internal message, user-facing message, retryable?, required action, needs-ops?."
+    good_example: "TD_OPEN_002 / insufficient balance / status Failed / user message 'Số dư không đủ để mở sổ' / retryable yes / action: choose another account."
+
+  - id: missing-authentication-step
+    name: Missing Authentication / Confirmation Step
+    severity: major
+    dimension: risk-control
+    definition: A sensitive or financial action proceeds without specifying strong authentication and explicit user confirmation (and their failure handling).
+    bad_example: "The customer opens the deposit and the system debits the source account."
+    why_dangerous: "A money-moving action can run without verifying the user; OTP/PIN/biometric failure, expiry, retry-limit, and cancel are undefined."
+    detect:
+      sensitive_action_without_authentication: true
+    fix: "Require step-up authentication (OTP/PIN/biometric) and a confirmation screen before the mutation; define handling for wrong/expired code, retry limit, and user cancel."
+    good_example: "Before debiting, the customer confirms the summary and authenticates with OTP; 3 wrong attempts lock the transaction; cancel creates no account and no debit."
+
+  - id: mixed-process-diagram-block
+    name: Mixed-Process Diagram Block
+    severity: minor
+    dimension: clarity
+    definition: Within one flow/use-case block, the activity diagram describes one business process while the adjacent sequence diagram describes a different process, breaking the reader's process narrative.
+    bad_example: "7.3 Activity diagram = Open deposit; 7.4 Sequence diagram = Early withdrawal — presented as one block."
+    why_dangerous: "Readers lose the process narrative; reviewers cannot tell which diagram belongs to which flow; the section reads as decoration, not a coherent process spec."
+    detect:
+      mixed_process_diagram_block: true
+    fix: "Organize §7 process-centric: a Flow Catalog, then one block per process with step-by-step + activity + sequence all for the SAME process. Place the Screen Matrix after the flows."
+    good_example: "Flow F01 Open deposit: step-by-step + its PlantUML activity + its Mermaid sequence; Flow F02 Early withdrawal in its own block."

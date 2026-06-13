@@ -1,0 +1,13 @@
+# Clarify generated artifacts (a user's own output, not part of the skill)
+clarify-output/
+
+# Build staging folders — redundant extracted copies of each zip.
+# The installable .zip files beside them ARE committed (see build/*.zip).
+build/*/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

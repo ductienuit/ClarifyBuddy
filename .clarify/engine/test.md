@@ -8,7 +8,7 @@ matrix.
    expected result.
 2. Cover types: functional, negative, boundary, integration, and (where
    relevant) security and performance.
-3. Pull every uncovered row from the edge-case-matrix into a test.
+3. Pull every uncovered case from the doc's Edge cases section into a test.
 4. For every error/message mapping row, add or link a negative test that verifies:
    code/status, entity state, transaction/operation state, user-facing message,
    retryability, required action, and Ops/CS flag where applicable.

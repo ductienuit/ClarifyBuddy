@@ -7,8 +7,8 @@ description: >-
   PRD/BRD", "finalize as BRD", "export the sign-off doc"). Includes a document
   control block, an audit score/band stamp when available, embedded
   PlantUML/Mermaid diagrams with viewer links, Customer/User Journey, Screen
-  Information / Display Matrix, Error Handling & Message Mapping, optional
-  traceability summary, and a Sign-off blockers section.
+  Information / Display Matrix, an Error code & message table, Test scenarios (one
+  numbered table), a Decisions & open items section, and a Sign-off blockers section.
   Part of the Clarify requirement-quality pack.
 ---
 
@@ -23,16 +23,20 @@ Compile prior Clarify outputs into a PRD or BRD for sign-off (the file is named
 2. Decide the standard: explicit `prd`/`brd` from the user → else the **Document
    Profile** heading in `clarify-output/brd-draft.md` / `prd-draft.md` → else ask
    (default BA→BRD, PO→PRD, labeled ASSUMPTION).
-3. Run the workflow `.clarify/workflows/finalize.md` (include traceability only
-   when stories/AC/tests exist or Dev/QA handoff readiness was requested; then
-   assemble with the `finalize` engine).
+3. Run the workflow `.clarify/workflows/finalize.md` (verify in-document
+   traceability — Requirements ↔ Flow Catalog ↔ Test scenarios; no separate matrix
+   file; then assemble with the `finalize` engine).
 4. Write `clarify-output/brd.md` (template `final-brd-template.md`) or
-   `clarify-output/prd.md` (template `final-prd-template.md`) — section order per
-   Principle 13: Summary → §0 (how-to-read + symbols + glossary) → context →
-   objectives → scope → how-it-works → stakeholders → requirements (one grouped
-   table) → rules → flows (`F0n-Name`) → screens → data → errors →
-   constraints/risks/NFR → traceability (with Source) → open items → sign-off
-   blockers → approval → artifact index.
+   `clarify-output/prd.md` (template `final-prd-template.md`). **Numbers auto-follow
+   the template skeleton — do not hardcode/renumber.** Order: front matter (title →
+   Document control + Change history → Summary) → §0 how-to-read (symbols + glossary +
+   diagram-render note) → §1 context → §2 objectives → §3 scope → §4 how-it-works →
+   §5 stakeholders (RACI, ≥1 (A)) → §6 requirements (one grouped table) → §7 rules →
+   §8 flows (`F0n-Name`; Flow Catalog lists every R#) → §9 screens & wireframe → §10
+   data → §11 edge cases (Error code & message table + "Edge cases without errors") →
+   §12 constraints & dependencies → §13 risks & compliance → §14 NFR & legal → §15
+   Test scenarios (numbered table) + Coverage → §16 Decisions & open items → §17
+   sign-off blockers → §18 approval → artifact index (lean set, "Used when" column).
 5. Render the companion `clarify-output/brd.html` / `prd.html` **from** the Markdown
    (best-effort, per `export` / Principle 13.2); never fail finalize if the render
    toolchain is missing. If the target file already exists, archive it as
@@ -42,10 +46,13 @@ Compile prior Clarify outputs into a PRD or BRD for sign-off (the file is named
 - Compose from prior outputs; never invent business rules or fabricate missing
   sections (mark them OPEN QUESTION). If an input is missing, name the
   command/skill that produces it.
-- Embed the PlantUML activity + Mermaid sequence diagrams from
-  `model-suggestions.md`, each with its viewer link.
-- Carry over journey, screen matrix, error/message map, and entity vs
-  transaction/operation state summary; mark missing sources OPEN QUESTION.
+- Embed the PlantUML activity + Mermaid sequence diagrams from the draft's flow
+  analysis, each with its viewer link.
+- Carry over journey, screen matrix, the Error code & message table (no entity-state
+  column), the "Edge cases without errors" subsection, and entity vs
+  transaction/operation state summary; mark missing sources OPEN QUESTION. Emit only
+  the lean deliverable set — no edge-case-matrix / error-handling / model-suggestions /
+  traceability-matrix / decision-log files (Principle 13.11).
 - When screen/flow requirements exist, add low-fidelity screen wireframes as an
   inline HTML widget after the Screen Matrix, or write `clarify-output/wireframes.html`
   and link it when inline HTML is unavailable. Use real BRD/PRD labels, grayscale

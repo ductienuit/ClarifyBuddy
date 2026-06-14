@@ -4,13 +4,16 @@
 The spec is in good shape and you need Dev + QA packs to start work.
 
 ## Inputs
-- Prior outputs in `clarify-output/`: prd-draft, audit-report,
-  edge-case-matrix, error-handling, model-suggestions, stories, test-scenarios,
-  api-data-impact, traceability-matrix. Read them; do not re-derive.
+- Prior outputs in `clarify-output/`: the draft / sign-off doc (which carries the
+  edge / error / model / flow / traceability content inline), audit-report, stories,
+  test-scenarios, api-data-impact. Read them; do not re-derive. There are no separate
+  edge-case-matrix / error-handling / model-suggestions / traceability-matrix files
+  (Principle 13.11).
 - `$ARGUMENTS`: optional override path to a primary spec.
 
 ## Engine sequence (ordered)
-1. `trace` — ensure traceability matrix is current (build if missing).
+1. `trace` — verify in-document traceability (Requirements ↔ Flow Catalog ↔ Test
+   scenarios); writes no separate file.
 2. `handoff` — assemble Dev pack + QA pack from prior outputs.
 
 ## Templates to fill

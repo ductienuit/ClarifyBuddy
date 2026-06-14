@@ -16,11 +16,12 @@ Emit a Dev pack and a QA pack from prior Clarify outputs.
 
 ## Steps
 1. Read `.clarify/principles.md`.
-2. Run the workflow `.clarify/workflows/handoff.md` (ensure traceability is
-   current via `trace`, then assemble with `handoff`).
-3. Read prior outputs from `clarify-output/` (prd-draft, audit-report,
-   edge-case-matrix, error-handling, model-suggestions, stories, test-scenarios,
-   api-data-impact, traceability).
+2. Run the workflow `.clarify/workflows/handoff.md` (verify in-document
+   traceability via `trace`, then assemble with `handoff`).
+3. Read prior outputs from `clarify-output/`: the draft / sign-off doc (carrying the
+   edge / error / model / flow / traceability content inline), audit-report, stories,
+   test-scenarios, api-data-impact. No separate edge / error / model / traceability
+   files (Principle 13.11).
 4. Write `clarify-output/handoff-pack.md` per `.clarify/output-conventions.md`.
 
 ## Rules

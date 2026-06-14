@@ -21,10 +21,13 @@ Upgrade a single requested section from prior Clarify output.
    `clarity`, `scope`, `business-rules`, `edge`, `acceptance-criteria`, `stories`,
    `api-data`, `risk`, `traceability`, `nfr`, `model`). For `answers`, the user
    pastes a filled **Answer Sheet**; apply each `A/Q/S/V` decision to the draft by
-   ID and resolve the draft, not just the answer list — then append the decisions
-   to `decision-log.md` and refresh `elicitation-pack.md`. For `change-request`,
-   the user describes the change; walk the traceability chain and write
-   `change-impact.md` (analysis only — applying is a separate confirmed step).
+   ID and resolve the draft, not just the answer list — then record the decisions in
+   the draft's **Decisions made** table + a **Change history** row (no
+   `decision-log.md`), and keep open questions grouped by owner in the draft's Open
+   items section (no `elicitation-pack.md`). For `change-request`, the user describes
+   the change; walk the in-document trace spine (Requirements ↔ Flow Catalog ↔ Test
+   scenarios) and write `change-impact.md` (analysis only — applying is a separate
+   confirmed step).
 3. Run the workflow `.clarify/workflows/improve.md` for that mode (it names the
    engine to run, e.g. `model` → `modeling`).
 4. Overwrite the relevant file in `clarify-output/`; warn before overwriting a

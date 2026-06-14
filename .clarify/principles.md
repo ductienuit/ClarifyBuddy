@@ -176,3 +176,63 @@ belong in **Traceability**, which carries a **Source** column (`← A#/BR#/S#/Q#
 produced the requirement). Every requirement (including deferred — keep the row,
 mark Status = Deferred) appears once and stays mapped in Traceability. A flat
 one-liner dump with no grouping / no Why is a clarity finding.
+
+**13.8 Error section = "Error code & message table"; edge analysis lives in the doc.**
+In the sign-off document the error section is titled **Error code & message table**
+(not "Error Handling & Message Mapping"). Drop the low-signal **entity-state** column
+(it is almost always `unchanged`); transaction state carries the meaning. Columns:
+`Error code | Flow / Step (F0n-Name) | Scenario | Transaction state
+(rejected/throttled/refresh_required) | User-facing message | Retryable? | Required
+action | Needs Ops/CS?` — a PRD may keep `HTTP / API status`. The **whole edge-case
+analysis lives inside the document, not in a separate `edge-case-matrix.md` file**:
+edges that *produce* an error are rows in this table; edges that *do not produce* an
+error (idempotency/replay, TTL/expiry boundaries, sandbox-vs-production isolation,
+cross-app linkability, …) go in a sibling subsection **"Edge cases without errors"**.
+The edge-section intro lists the edge groups; it points to no file.
+
+**13.9 Body test scenarios = one numbered table; traceability is in-document.**
+The body section is **Test scenarios (by context)** (replacing "Traceability
+summary"): **one numbered table** so the total case count is visible at a glance, rows
+grouped by flow (`F0n-Name`), columns `# | Flow (F0n-Name) | Scenario (precondition +
+action) | Expected result | Test (T-xx)` — **not** a bullet list. Close it with one
+self-standing **Coverage & traceability** paragraph stating the case count and
+coverage (e.g. "12 scenarios across 4 flows; 15/15 requirements have a flow + test; no
+orphans"). **There is no `traceability-matrix.md` file**: requirement ↔ flow ↔ rule ↔
+error traceability is expressed *in the document* via the Requirements table ↔ the
+**Flow Catalog** (whose rule / error-code / requirement columns carry the links) ↔
+this test table; step-level detail is in the kept `test-scenarios.md`. The coverage
+paragraph points to the Flow Catalog + `test-scenarios.md`, **never** to a
+traceability-matrix file. The Requirements section stays the four columns of 13.7
+(`ID | Requirement | Why | Priority`). 13.9 supersedes any earlier rule that put a
+code grid (in a body table OR a separate file) anywhere.
+
+**13.10 Post-finalize decisions = "Decisions & open items"; no `decision-log.md`.**
+The closing section is **Decisions & open items** (replacing "Open items /
+Assumptions / Open Questions / Suggestions"): (a) **Decisions made** — a **three-column**
+table `Topic | Decision | Reflected in (BR/R)` (no "decision-log ref" column); (b)
+**Suggestions — dispositioned** — Accepted → `<R..>` / Won't do / Awaiting
+confirmation; (c) **Open items** that do not block sign-off (blocking ones go to
+Sign-off blockers). Internal codes (`A#`/`S#`) are **hidden from the displayed
+tables**. **There is no separate `decision-log.md` file** — the dated history of
+applied decisions/CRs lives in **Document control → Change history**, and the
+decisions themselves in this section. (IDs still stay English and stable — 13.3.)
+
+**13.11 Lean deliverable set; artifact index has a "Used when" column.**
+`finalize`/`export` leave only this set in `clarify-output/`: the source
+`brd.md`/`prd.md`, the HTML rendering `brd.html`/`prd.html`, `stories.md`,
+`test-scenarios.md`, `api-data-impact.md`, `wireframes.html`, `audit-report.md`, and
+the version archive `brd.v<semver>.md`/`prd.v<semver>.md`. Analysis that used to be
+its own file is folded into the document and **no file is emitted** for it:
+`edge-case-matrix.md` (→ edge section, 13.8), `error-handling.md` (→ error table,
+13.8), `model-suggestions.md` (→ embedded flow diagrams), `traceability-matrix.md` (→
+in-document, 13.9), `decision-log.md` (→ Decisions + Change history, 13.10),
+`elicitation-pack.md` (→ Open items), and the `brd-draft.md` working draft (superseded
+by the final). The Appendix **Artifact index** lists only the kept set above, each
+with a **Used when (who / when)** column, and never links to a dropped file.
+
+**13.12 Markdown→HTML: blank line between a label/paragraph and a table.**
+Always leave **one blank line** between a bold label (e.g. `**Step-by-step**`) or any
+paragraph text and a pipe table directly below it. Without it, pandoc folds the label
+and the table into a single paragraph and the table breaks in the HTML render. Applies
+everywhere a label or sentence precedes a table (step-by-step, screen matrix, symbol
+table, glossary, requirements, artifact index, …).

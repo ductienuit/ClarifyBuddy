@@ -2,7 +2,9 @@
 
 Purpose: expose missing behavior through models, organized **by business
 process** (use case), not by diagram type. Models are a gap-finding tool, not
-decoration. Output is `model-suggestions.md` using its template.
+decoration. The diagrams are written **into the document's Functional Flows section**
+— there is no separate `model-suggestions.md` file (Principle 13.11). Use
+`templates/model-suggestions-template.md` as the working structure.
 
 ## Tool conventions (fixed — never ambiguous)
 - **Activity diagram = PlantUML** — viewer `https://www.plantuml.com/plantuml`
@@ -50,7 +52,7 @@ Always attach the matching viewer link directly beneath each fenced block.
 - If a domain pack is selected, reuse its `common-flows.md` / `state-models.md`.
 
 ## Output
-Write `clarify-output/model-suggestions.md` using
-`templates/model-suggestions-template.md`: a **Flow Catalog**, then one block per
-flow (step-by-step + activity + sequence + gaps, all for the same process), then
-the entity and transaction/operation state models.
+Write **into the document's Functional Flows section** (no separate file): a **Flow
+Catalog** (with rule / error-code / requirement columns — the in-document traceability
+spine), then one block per flow (step-by-step + activity + sequence + gaps, all for the
+same process), then the entity and transaction/operation state summary.

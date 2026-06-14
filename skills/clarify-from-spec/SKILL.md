@@ -22,16 +22,18 @@ Dev/QA handoff readiness.
 3. Run the workflow `.clarify/workflows/from-spec.md` (engines: audit → edge →
    error-handling → modeling → data → api → story → acceptance-criteria → test →
    trace).
-4. Write artifacts per `.clarify/output-conventions.md` (audit-report,
-   edge-case-matrix, error-handling, model-suggestions, api-data-impact, stories,
-   test-scenarios, traceability-matrix).
+4. Write artifacts per `.clarify/output-conventions.md`: the build-ready companions
+   `audit-report.md`, `api-data-impact.md`, `stories.md`, `test-scenarios.md`, and
+   fold the edge / error / model / flow / state / traceability analysis **into the
+   draft** (`brd-draft.md` / `prd-draft.md`). No separate edge-case-matrix /
+   error-handling / model-suggestions / traceability-matrix files (Principle 13.11).
 
 ## Rules
 - Accepts a PRD **or** a BRD — including a Clarify draft already in
-  `clarify-output/` (`prd-draft.md` / `brd-draft.md`). If companions
-  (`edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`) already
-  exist, **reuse** them and add only the build-ready layer (audit score, stories,
-  AC, tests, API/data, traceability) — do not regenerate from scratch.
+  `clarify-output/` (`prd-draft.md` / `brd-draft.md`). If the draft already carries
+  its edge / error / model / state sections, **reuse** them and add only the
+  build-ready layer (audit score, stories, AC, tests, API/data, in-document
+  traceability) — do not regenerate from scratch or re-emit dropped files.
 - Detect or ask the target standard — never assume it.
 - Do not describe this as required to make a `from-idea` BRD readable or
   business-complete.

@@ -4,8 +4,9 @@ Purpose: assemble build-ready Dev and QA packs from prior Clarify outputs. Do
 not re-derive — read `clarify-output/`.
 
 ## Do
-1. Read available outputs: prd-draft / brd-draft, audit-report, edge-case-matrix,
-   error-handling, stories, test-scenarios, api-data-impact, traceability-matrix.
+1. Read available outputs: prd-draft / brd-draft (carrying the edge / error / model /
+   flow / traceability sections inline), audit-report, stories, test-scenarios,
+   api-data-impact. There are no separate edge / error-handling / traceability files.
 2. **Dev pack:** scope, build-ready requirements table (with business rules and
    API/data impact), the **error → code → message → action** map, the
    authentication/confirmation step, sequencing/dependencies, and open questions

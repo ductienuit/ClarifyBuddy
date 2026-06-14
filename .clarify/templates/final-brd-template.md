@@ -2,6 +2,8 @@
 <!-- HEADINGS render in the Document Profile Language (Principle 13.3): when Language=vi, render each
      heading as "Vietnamese (English term)", e.g. "Yêu cầu nghiệp vụ (Business requirements)"; when
      Language=en, the English term only. IDs / labels / error codes / file names ALWAYS stay English. -->
+<!-- Section numbers AUTO-FOLLOW this skeleton order; never hardcode/renumber by hand. With §0 + §4
+     present, edge=§11, test=§15, decisions=§16 fall out naturally. -->
 
 # <Initiative Name> — Business Requirements Document (BRD)
 
@@ -34,17 +36,20 @@ sections below — do not introduce new claims.
 - Target users / audience: <…>
 - Scope of this phase: <…>
 - Expected business outcome: <…>
-- Key open items / blockers: <…> (full list in §13–§14)
+- Key open items / blockers: <…> (full list in §16–§17)
 
 ## 0. How to read this document
 ### 0.1 What this is
 <One or two sentences: what this document covers and who it is for.> **Quick read:**
 skim the Executive summary, then §4 "How the system works", §6 "Business
-requirements", and §14 "Sign-off blockers".
+requirements", and §17 "Sign-off blockers". **Diagrams** in §4 and §8 are kept as
+source code here; they render visually in the `brd.html` export (Mermaid client-side,
+PlantUML via the linked viewer).
 
 ### 0.2 Symbol conventions
 Codes are **stable across versions**; the names beside them are only to make the
 document readable.
+
 | Symbol | Means | Example |
 | --- | --- | --- |
 | `F0n-Name` | A functional flow (number is the stable anchor; name is for reading) | `F02-Login` |
@@ -55,6 +60,7 @@ document readable.
 
 ### 0.3 Glossary
 Each core term defined once (only terms the requirements actually use).
+
 | Term | Plain meaning |
 | --- | --- |
 | <core term> | <one-line plain meaning> |
@@ -82,21 +88,28 @@ told as prose. Compose from the journey; do not invent steps.>
 **Main flow diagram** — one representative diagram for the end-to-end journey
 (detailed per-flow diagrams are in §8).
 ```mermaid
-<the single overview diagram from model-suggestions.md — e.g. the primary journey>
+<the single overview diagram from the draft's flow analysis — e.g. the primary journey>
 ```
 **View / edit:** https://mermaid.live/
 
 ## 5. Stakeholders
-| Stakeholder | Role / interest | Responsibility (RACI) |
+Use **RACI**; **at least one row must be (A) Accountable** (the single owner who signs
+off). One row per relevant stakeholder.
+
+| Stakeholder | Role / interest | Responsibility (R/A/C/I) |
 | --- | --- | --- |
+| <business owner> | <…> | A |
+| <…> | <…> | R / C / I |
 
 ## 6. Business requirements
 **One grouped table (Principle 13.7).** Requirements are grouped by capability in
 journey order; within a group **Must → Should → Could**. Each requirement is a
 self-standing business sentence; **Why** gives the business reason (a cross-reference
-like `Source: BR2` is **not** a Why). Flow / rule / test / source links live in §12
-Traceability — not here. Every requirement (including deferred — mark Priority and
-keep the row) appears once; IDs are stable (append, never renumber).
+like `Source: BR2` is **not** a Why). Flow / rule / test links live in §8.1 (Flow
+Catalog) + §15 (Test scenarios) — not here. Every requirement (including deferred —
+mark Priority and keep the row) appears once; IDs are stable (append, never renumber).
+(Leave a blank line between this paragraph and the table — Principle 13.12.)
+
 | ID | Requirement | Why | Priority |
 | --- | --- | --- | --- |
 | **Group A — <capability name>** | | | |
@@ -118,29 +131,34 @@ BEFORE (the one-liner this replaces — do not ship): "BRD-R01 | Operations cấ
 ## 8. Functional Flows (process-centric)
 Organized **by business process** (use case), not by diagram type. Each flow keeps
 its step-by-step, activity, and sequence together for the SAME process. Composed
-from `model-suggestions.md`; do not invent steps/rules/errors. Flow IDs are
+from the draft's flow analysis; do not invent steps/rules/errors. Flow IDs are
 `F0n-Name` (number stable, name appended).
 
 ### 8.1 Flow Catalog
+This is the in-document traceability spine: the **Requirement** column must list
+**every** `BRD-R#` from §6 (no requirement left unmapped; an unmapped requirement or
+an orphan flow is a finding).
+
 | Flow ID | Business name | Actor(s) | Goal | Diagrams | Related rules (BR) | Related error codes | Requirement (BRD-Rxx) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| F01-<Name> | <…> | <…> | <…> | activity + sequence | <…> | <…> | <BRD-R01> |
+| F01-<Name> | <…> | <…> | <…> | activity + sequence | <…> | <…> | <BRD-R01, BRD-R02> |
 
 ### 8.2 Flow F01-<Name> — <Business name>
 **8.2.1 Step-by-step**
+
 | # | Actor | Action | System response | Rule / validation / error code |
 | --- | --- | --- | --- | --- |
 | 1 | <…> | <…> | <…> | <…> |
 
 **8.2.2 Activity diagram (PlantUML)** — process flow + decisions
 ```plantuml
-<from model-suggestions.md — THIS flow; label nodes with the F0n-Name where relevant>
+<from the draft's flow analysis — THIS flow; label nodes with the F0n-Name where relevant>
 ```
 **View / edit:** https://www.plantuml.com/plantuml — ref: https://plantuml.com/
 
 **8.2.3 Sequence diagram (Mermaid)** — system interaction for the **same** flow
 ```mermaid
-<from model-suggestions.md — THIS flow>
+<from the draft's flow analysis — THIS flow>
 ```
 **View / edit:** https://mermaid.live/
 <!-- Simple/single-system flow: replace with "Sequence diagram not required — <reason>". -->
@@ -152,95 +170,142 @@ from `model-suggestions.md`; do not invent steps/rules/errors. Flow IDs are
 <repeat 8.x.1–8.x.4; activity and sequence in one block must be the SAME process —
 never mix process A's activity with process B's sequence>
 
-### 8.4 Screen / Display Matrix
-Placed **after** the flows. Reference each screen's flow as `F0n-Name / step`.
+## 9. Screens & wireframe
+### 9.1 Screen / Display Matrix
+Reference each screen's flow as `F0n-Name / step`.
+
 | Screen | Flow / Step | Purpose | Display fields | User actions | Validation | Error / empty / loading states | UX / content notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 
-### 8.5 Screen Wireframes (low-fidelity HTML)
+### 9.2 Screen Wireframes (low-fidelity HTML)
 Render an inline HTML visualization widget here when the target Markdown renderer
 supports it; otherwise write `clarify-output/wireframes.html` and link it here.
 Use `templates/wireframe-template.html`. The widget is grayscale, derive-only, and
 maps every screen back to its source flow/step and requirement. Do not use ASCII
 wireframes as the primary screen artifact.
 
-## 9. Data & systems impact
+## 10. Data & systems impact
 <From api-data-impact.md when build-ready layer exists; otherwise summarize
 business-level affected systems from the draft and mark detailed API/data impact
 as optional for Dev/QA handoff.>
 
-## 10. Edge cases, exception handling & messages
-<Summary from edge-case-matrix.md.>
+## 11. Edge cases, exception handling & messages
+The edge analysis lives here in full (no separate matrix file). Edges that **produce
+an error** are in §11.1; edges that **do not produce an error** are in §11.3. Groups
+covered: boundary, negative/invalid, exception/failure, illegal state, concurrency,
+permission, empty/null, temporal/rule-change, batch/schedule.
 
-### 10.1 Error Handling & Message Mapping
+### 11.1 Error code & message table
 Each error maps back to the `F0n-Name / step` it occurs in (from §8), so design/QA/CS
-do not have to guess where it happens.
-| Error code | Flow / Step | Scenario | Entity state | Transaction / operation state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+do not have to guess where it happens. The entity-state column is intentionally
+dropped (it is almost always `unchanged`); transaction state carries the meaning.
 
-### 10.2 State summary
+| Error code | Flow / Step | Scenario | Transaction state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <CODE> | F0n-Name / step | <…> | rejected / throttled / refresh_required | <message the user sees> | <yes/no> | <…> | <yes/no> |
+
+### 11.2 State summary
 | Model type | State set | Trigger / event | Owner system | Terminal states | Gaps |
 | --- | --- | --- | --- | --- | --- |
-| Entity state | <from model-suggestions.md> | <who/what moves it> | <source of truth> | <…> | <…> |
-| Transaction / operation state | <from model-suggestions.md> | <…> | <…> | <…> | <…> |
+| Entity state | <from the flow/state analysis> | <who/what moves it> | <source of truth> | <…> | <…> |
+| Transaction / operation state | <from the flow/state analysis> | <…> | <…> | <…> | <…> |
 
-## 11. Constraints, dependencies, risks & NFR
-### 11.1 Constraints & dependencies
+### 11.3 Edge cases without errors
+Boundary / temporal / concurrency / batch behaviours that are **handled silently or
+by design** (no user-facing error code), so they are not lost just because they have
+no row in §11.1. Examples to cover when relevant:
+
+| Edge | Expected behaviour | Source flow (F0n-Name) |
+| --- | --- | --- |
+| Idempotency / replay (duplicate request, retry) | <e.g. second identical call returns the first result, no double effect> | <F0n-Name> |
+| TTL / expiry boundary | <e.g. token valid up to its TTL; on/after expiry it must be refreshed> | <F0n-Name> |
+| Sandbox vs production isolation | <e.g. sandbox data and credentials never reach production> | <F0n-Name> |
+| Cross-app linkability | <accepted risk — see §13 Risks & compliance> | <F0n-Name> |
+
+## 12. Constraints & dependencies
 - Constraint: <regulatory / budget / timeline>
 - Dependency: <…>
-<!-- Assumptions are consolidated in §13 Open items. -->
+<!-- Assumptions are consolidated in §16 Decisions & open items. -->
 
-### 11.2 Risks & compliance
+## 13. Risks & compliance
 <From risk/compliance analysis: risk, impact, control, owner.>
 
-### 11.3 Non-functional & regulatory requirements
+## 14. Non-functional & regulatory requirements
 - <security / privacy / availability / compliance (e.g. KYC, GDPR)>
+<!-- If an NFR target is deferred, name the metric here (e.g. "availability target —
+     OPEN QUESTION") and record the open decision in §16.3 — never drop it silently. -->
 
-## 12. Traceability summary
-<Include when `traceability-matrix.md` exists. If not, state: "Detailed
-story/AC/test traceability was not generated; run `/clarify:from-spec` only if
-Dev/QA build-ready handoff is needed.">
-Every requirement (including deferred) appears once and links to the flow that
-realizes it, its rule, its error/state, and its **Source** (the `A#/BR#/S#/Q#` it
-came from) — so an unlinked or orphan requirement is visible. Screen mapping optional.
-| BRD-R id | Flow (F0n-Name) | Business rule | Error / state | Source (← A#/BR#/S#/Q#) | Story id | AC | Test id | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| BRD-R01 | F01-<Name> | BR3 | <code/state> | A1 | <…> | <…> | T-14 | Active |
-| BRD-R14 | — | — | — | S2 | — | — | — | Deferred |
+## 15. Test scenarios (by context)
+Read-and-understand scenarios for BA/QA as **one numbered table** (so the total case
+count is visible at a glance), rows grouped by flow (`F0n-Name`). Each row pairs
+*precondition + action* with its expected result and a stable `(T-xx)`. Composed from
+`test-scenarios.md` when it exists; do not invent outcomes.
 
-## 13. Open items
-Grouped for reviewers. Items here are unresolved or proposed — not agreed scope.
+| # | Flow (F0n-Name) | Scenario (precondition + action) | Expected result | Test |
+| --- | --- | --- | --- | --- |
+| **F01-<Name>** | | | | |
+| 1 | F01-<Name> | <given state>, <actor does X> | <observable outcome> | T-01 |
+| 2 | F01-<Name> | <…> | <…> | T-02 |
+| **F02-<Name>** | | | | |
+| 3 | F02-<Name> | <…> | <…> | T-03 |
 
-### 13.1 Assumptions
-- A1 — ASSUMPTION: <stated default in effect>
+### Coverage & traceability
+<One self-standing paragraph stating the case count and coverage, e.g. "12 test
+scenarios across 4 flows; 15/15 requirements have a flow + at least one test; no
+orphan requirement or flow."> Requirement ↔ flow ↔ rule ↔ error links are read from
+§6 (Requirements) ↔ §8.1 (Flow Catalog, which carries the rule / error code /
+requirement columns) ↔ this table; step-level detail is in
+`clarify-output/test-scenarios.md`. (No separate traceability-matrix file.)
 
-### 13.2 Open Questions
-- Q1 — OPEN QUESTION: <unresolved item>
+## 16. Decisions & open items
+What was decided, how each suggestion was dispositioned, and what is still open after
+sign-off prep. Internal codes (`A#`/`S#`) are **not shown** in these tables. The dated
+history of changes lives in **Document control → Change history**.
 
-### 13.3 Suggested additional capabilities (for confirmation)
-- S1 — SUGGESTION: <capability the business need + domain implies but the doc omits> — rationale: <why>.
+### 16.1 Decisions made
+Assumptions that are now in effect and questions that were answered, stated as
+decisions.
 
-## 14. Sign-off blockers (must resolve before approval)
-- OPEN QUESTION: <the blocker subset of §13.2>
+| Topic | Decision | Reflected in (BR / BRD-R) |
+| --- | --- | --- |
+| <topic> | <what was decided> | <BR3 / BRD-R02> |
+
+### 16.2 Suggestions — dispositioned
+Each proposed capability marked Accepted (with the requirement it became), Won't do,
+or Awaiting confirmation.
+
+| Suggestion | Disposition | Reflected in (BRD-R) |
+| --- | --- | --- |
+| <capability> | Accepted → BRD-R.. / Won't do / Awaiting confirmation | <BRD-R.. / —> |
+
+### 16.3 Open items (do not block sign-off)
+- OPEN QUESTION: <unresolved item that is non-blocking, incl. any deferred NFR metric
+  from §14>. Blocking ones go to §17.
+
+## 17. Sign-off blockers (must resolve before approval)
+- OPEN QUESTION: <the blocking subset of the open items in §16.3>
 - Blocker findings (from audit-report.md): <…>
 
-## 15. Approval / sign-off
+## 18. Approval / sign-off
 | Approver | Role | Decision | Date |
 | --- | --- | --- | --- |
 
 ## Appendix: Artifact index (source)
-Companion files produced in `clarify-output/` (list only those that exist; diagrams
-are **source code** rendered via the linked viewers — no image files are produced).
-| Artifact | Description | Path |
-| --- | --- | --- |
-| Draft | Shaped BRD draft | `clarify-output/brd-draft.md` |
-| Audit report | Score, band, findings | `clarify-output/audit-report.md` |
-| Edge-case matrix | Edge / negative / boundary / temporal / batch | `clarify-output/edge-case-matrix.md` |
-| Error handling | Error → state → user-message → action map | `clarify-output/error-handling.md` |
-| Model suggestions | Per-flow activity (PlantUML) + sequence (Mermaid) + state | `clarify-output/model-suggestions.md` |
-| Wireframes | Low-fi HTML screen wireframes | `clarify-output/wireframes.html` |
-| API/data impact | Entities, source of truth, endpoints | `clarify-output/api-data-impact.md` |
-| Stories + AC | User stories and acceptance criteria | `clarify-output/stories.md` |
-| Test scenarios | Test cases | `clarify-output/test-scenarios.md` |
-| Traceability | Requirement ↔ flow ↔ rule ↔ error ↔ source ↔ story ↔ test | `clarify-output/traceability-matrix.md` |
-| HTML BRD | Full BRD rendered from `brd.md` | `clarify-output/brd.html` |
+The lean deliverable set — only files worth opening (list only those that exist).
+Diagrams are **source code** rendered via the in-document viewers — no image files
+are produced. Analysis that used to be separate files is now **inside this document**:
+edge cases → §11, error map → §11.1, flows/diagrams → §8, traceability → §6 ↔ §8.1 ↔
+§15, decisions → §16 + Change history. So there are no `edge-case-matrix.md`,
+`error-handling.md`, `model-suggestions.md`, `traceability-matrix.md`, or
+`decision-log.md` files.
+
+| Artifact | Description | Used when (who / when) | Path |
+| --- | --- | --- | --- |
+| Source (this doc) | Canonical Markdown master for this BRD | BA/PO — single source of truth; all edits happen here | `clarify-output/brd.md` |
+| Audit report | Score, band, findings | BA — checking quality before sign-off | `clarify-output/audit-report.md` |
+| Wireframes | Low-fi HTML screen wireframes | Design/Dev — screen layout reference | `clarify-output/wireframes.html` |
+| API/data impact | Entities, source of truth, endpoints | Dev — build planning | `clarify-output/api-data-impact.md` |
+| Stories + AC | User stories and acceptance criteria | Dev/QA — build & verify | `clarify-output/stories.md` |
+| Test scenarios | Full step-level test cases | QA — test execution | `clarify-output/test-scenarios.md` |
+| Version archive | Prior sign-off versions | BA/PO — comparing against an earlier version | `clarify-output/brd.v<N>.md` |
+| HTML BRD | Full BRD rendered from `brd.md` | Stakeholders — read / share without a Markdown tool | `clarify-output/brd.html` |

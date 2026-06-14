@@ -64,7 +64,17 @@ Defined in `.claude/commands/clarify/`:
     (intro + symbol table + front glossary); (13.5) a "How the system works
     (overview)" before requirements; (13.6) flows named `F0n-Name` (stable number,
     appended name); (13.7) requirements are ONE grouped table (`ID | Requirement |
-    Why | Priority`), with flow/rule/test/source moved to Traceability (+Source).
+    Why | Priority`); (13.8) the error section is the **Error code & message table**
+    (no entity-state column) and the whole edge analysis is in-document (error edges in
+    that table, non-error edges in "Edge cases without errors"); (13.9) the body
+    **Test scenarios (by context)** is ONE numbered table + a Coverage paragraph, and
+    traceability is in-document (Requirements ↔ Flow Catalog ↔ Test scenarios) — **no
+    `traceability-matrix.md` file**; (13.10) **Decisions & open items** (Decisions made
+    is 3 cols; history in Change history) — **no `decision-log.md` file**; (13.11) lean
+    deliverable set (`brd.md`/`brd.html`, stories, test-scenarios, api-data-impact,
+    wireframes, audit-report, version archive) with a "Used when" artifact index —
+    edge/error/model/traceability/decision-log/elicitation are folded into the doc, not
+    emitted; (13.12) a blank line between any label/paragraph and a following table.
     Scored under `clarity`/structure.
 
 ## Where things live
@@ -121,10 +131,12 @@ Recommended flows:
 Governance conventions: the Document Profile carries a **Language** (output
 renders in it; ASSUMPTION/OPEN QUESTION/SUGGESTION labels and all IDs stay
 English as parse anchors); questions carry an elicitation owner (`→ ask:
-<stakeholder>`) and are regrouped per owner in `elicitation-pack.md`; applied
-decisions append to `decision-log.md`; `finalize` never overwrites silently
-(archives `brd.v<N>.md`/`prd.v<N>.md`, bumps Version, adds a Change history row);
-`trace` reports dangling ID references.
+<stakeholder>`) and are regrouped per owner **in the draft's Open items section**;
+applied decisions are recorded in the doc's **Decisions made** table + **Change
+history** (no `decision-log.md`); `finalize` never overwrites silently (archives
+`brd.v<N>.md`/`prd.v<N>.md`, bumps Version, adds a Change history row); `trace`
+verifies in-document traceability and reports dangling ID references (no separate
+matrix file).
 
 ## Build/scope notes
 

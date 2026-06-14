@@ -104,11 +104,12 @@ Sheet** (see `output-conventions.md` → "Labeled items & answer sheet"):
 - `## Answer Sheet` — one fenced ```text block listing every `V/A/Q/S` ID with a
   blank to fill (each line carries its `ask:` owner as a hint), so the user can
   copy, answer in-place, and send back.
-- `clarify-output/elicitation-pack.md` — the same questions REGROUPED **by
-  stakeholder owner** (one section per owner, each question with one line of
-  context: why it matters + the related section), using
-  `templates/elicitation-pack-template.md` — so the BA can take it straight into a
-  workshop/interview.
+- An **Open items** block in the draft REGROUPING the questions **by stakeholder
+  owner** (one sub-list per owner, each question with one line of context: why it
+  matters + the related section), so the BA can take it straight into a
+  workshop/interview. This lives **inside the draft**, not a separate
+  `elicitation-pack.md` file (Principle 13.11); `templates/elicitation-pack-template.md`
+  is the working structure.
 - `## Recommended next step` — "Fill the Answer Sheet, then run
   `/clarify:improve answers` to resolve the draft. Use `/clarify:from-spec` only
   if you need stories, AC, tests, API/data impact, and traceability for Dev/QA."

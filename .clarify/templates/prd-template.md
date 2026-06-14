@@ -20,10 +20,12 @@
 ### 0.1 What this is
 A shaped PRD draft. **Quick read:** skim §1 Summary, §4 "How the system works",
 §6 "Requirements", and the open items (§12–§13). Reply to labeled items via the
-Answer Sheet (§17).
+Answer Sheet (§17). **Diagrams** are kept as source code here; they render visually in
+the eventual `prd.html` export.
 
 ### 0.2 Symbol conventions
 Codes are **stable across versions**; the names beside them are only for reading.
+
 | Symbol | Means | Example |
 | --- | --- | --- |
 | `F0n-Name` | A functional flow (number is the stable anchor; name is for reading) | `F02-Login` |
@@ -34,6 +36,7 @@ Codes are **stable across versions**; the names beside them are only for reading
 ### 0.3 Glossary
 Define each domain term ONCE so the requirements read plainly. Only define terms the
 requirements actually use; do not invent terms.
+
 | Term | Plain meaning |
 | --- | --- |
 | <core term> | <one-line plain meaning> |
@@ -71,11 +74,13 @@ parts. Detailed per-flow diagrams live in the flow blocks (`from-spec` / `improv
 ## 5. Actors / Roles
 
 **User roles**
+
 | Actor | Description | Key permissions |
 | --- | --- | --- |
 | <…> | <…> | <…> |
 
 **System & external actors** (do not leave empty — list or mark OPEN QUESTION)
+
 | Actor | Type (back-office / system / external / scheduled-job) | Responsibility | Trigger / Schedule |
 | --- | --- | --- | --- |
 | <e.g. Rate Administrator> | back-office | configures interest rate | on demand |
@@ -85,7 +90,10 @@ parts. Detailed per-flow diagrams live in the flow blocks (`from-spec` / `improv
 **One grouped table (Principle 13.7).** Requirements grouped by capability in journey
 order; within a group **Must → Should → Could**. Each is a self-standing sentence
 (actor + trigger + observable outcome); **Why** is the business reason, not a
-cross-reference. Flow / rule / test / source links live in §16 Traceability.
+cross-reference. Flow / rule links live in §10.1 (Flow Catalog) and the §16 draft
+trace register — not inline here; there is no separate traceability **file**
+(Principle 13.9). (Leave a blank line before the table — Principle 13.12.)
+
 | ID | Requirement | Why | Priority |
 | --- | --- | --- | --- |
 | **Group A — <capability name>** | | | |
@@ -116,9 +124,12 @@ stable, name appended). Detailed PlantUML/Mermaid diagrams come from `from-spec`
 `improve model`.
 
 ### 10.1 Flow Catalog
+The in-document traceability spine: the **Requirement** column must list **every**
+`R#` from §6 (no requirement left unmapped; an orphan flow is a finding).
+
 | Flow ID | Business name | Actor(s) | Goal | Related rules (BR) | Requirement (Rxx) |
 | --- | --- | --- | --- | --- | --- |
-| F01-<Name> | <…> | <…> | <…> | <…> | <R01> |
+| F01-<Name> | <…> | <…> | <…> | <…> | <R01, R02> |
 
 ### 10.2 Screen Information / Display Matrix
 Reference each screen's flow as `F0n-Name / step`.
@@ -128,22 +139,35 @@ Reference each screen's flow as `F0n-Name / step`.
 | <confirmation summary> | F01-<Name> / 4 | <review before commitment> | <amount, terms, dates, expected result, source, terms checkbox> | <accept / authenticate / cancel> | <terms accepted, auth required> | <auth unavailable / changed terms> | <no technical jargon> |
 | <result> | F01-<Name> / 6 | <show outcome> | <success/failure/pending, reference, next step> | <view detail / retry / contact support> | <n/a> | <unknown / timeout / failed> | <message matches error map> |
 
-## 11. Edge Cases (summary)
-- <empty / boundary / failure / temporal / batch case>  (full matrix: edge-case-matrix.md)
+## 11. Edge cases, exception handling & messages
+The edge analysis lives here in full (no separate matrix file): error-producing edges
+in §11.1, non-error edges in §11.3. Groups: boundary, negative/invalid,
+exception/failure, illegal state, concurrency, permission, empty/null,
+temporal/rule-change, batch/schedule.
 
-### 11.1 Error Handling & Customer Messages (summary)
-Key failures with code, the **user-facing message**, and next action (full table:
-error-handling.md). Reference the `F0n-Name / step` where each occurs. User messages
-avoid technical jargon.
-| Code | Flow / Step | Scenario | HTTP / API status | Entity state | Transaction / operation state | User-facing message | Retryable | Required action | Needs Ops/CS? |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <CODE_001> | F01-<Name> / 3 | <…> | <unchanged / pending / active> | <failed / timeout / unknown / reversed> | <plain message> | yes/no | <…> | yes/no |
+### 11.1 Error code & message table
+Key failures with code, the **user-facing message**, and next action. Reference the
+`F0n-Name / step` where each occurs; the entity-state column is dropped (almost always
+`unchanged`). User messages avoid technical jargon.
+
+| Code | Flow / Step | Scenario | HTTP / API status | Transaction state | User-facing message | Retryable | Required action | Needs Ops/CS? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <CODE_001> | F01-<Name> / 3 | <…> | <e.g. 409> | <failed / timeout / unknown / reversed> | <plain message> | yes/no | <…> | yes/no |
 
 ### 11.2 State Summary
 | Model type | State set | Key transitions / terminal states | Gaps |
 | --- | --- | --- | --- |
 | Entity state | <e.g. pending, active, closed> | <allowed transitions> | <OPEN QUESTION / none> |
 | Transaction / operation state | <initiated, pending-auth, processing, success, failed, timeout, reversed, unknown> | <auth → processing → final state> | <OPEN QUESTION / none> |
+
+### 11.3 Edge cases without errors
+Boundary / temporal / concurrency / batch behaviours handled silently or by design
+(no user-facing error code): idempotency/replay, TTL/expiry boundaries,
+sandbox-vs-production isolation, accepted risks (→ Risks), where relevant.
+
+| Edge | Expected behaviour | Source flow (F0n-Name) |
+| --- | --- | --- |
+| <e.g. idempotency / replay> | <e.g. duplicate request returns first result, no double effect> | <F0n-Name> |
 
 ## 12. Assumptions
 In effect unless you override (reply by ID in the Answer Sheet, §17).
@@ -176,7 +200,10 @@ OPEN QUESTION where the need is unconfirmed.
 ## 16. Traceability (draft)
 The trace layer for the requirements above: every requirement once (including
 deferred — keep the row, mark Status = Deferred), with its **Source** (the
-`A#/BR#/S#/Q#` it came from). `finalize` carries this into the final §12.
+`A#/BR#/S#/Q#` it came from). At `finalize` this is expressed **in-document** via the
+Flow Catalog (rule/error/requirement columns) + the Test scenarios table + a Coverage
+paragraph — there is no separate traceability-matrix file (Principle 13.9).
+
 | R id | Flow (F0n-Name) | Business rule | Source (← A#/BR#/S#/Q#) | Status |
 | --- | --- | --- | --- | --- |
 | R01 | F01-<Name> | BR3 | A1 | Active |

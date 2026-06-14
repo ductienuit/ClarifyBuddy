@@ -11,9 +11,12 @@ invent messages silently; mark unknowns `OPEN QUESTION`.
 > Needs-ops**. Dev/QA also use **Code / HTTP / Entity state / Transaction status /
 > Retryable / Log level / Owner**.
 
+<!-- Working structure for building the in-document "Error code & message table"
+     (Principle 13.8). Not emitted as a separate file. -->
+
 ## Error map
-Each row maps back to the flow/step it occurs in (Flow Fxx / step # from
-`model-suggestions.md`), so the error is anchored in the process.
+Each row maps back to the flow/step it occurs in (Flow `F0n-Name` / step # from the
+flow analysis), so the error is anchored in the process.
 | Code | Flow / Step | Scenario | HTTP / API status | Entity state after error | Transaction / operation status after error | Internal message | User-facing message | Retryable? | Required action | Needs Ops/CS? | Owner |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | <CODE_001> | <F01 / step 3> | <e.g. amount below minimum> | 422 | <unchanged / none created> | Failed | <internal> | <plain user message, no jargon> | yes/no | <next step> | no | <service> |

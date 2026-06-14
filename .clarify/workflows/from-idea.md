@@ -35,20 +35,18 @@ build-ready layer just to raise a score.
    implementation detail.
 
 ## Templates to fill
-- `templates/prd-template.md` (PRD) **or** `templates/brd-draft-template.md` (BRD).
-- `templates/edge-case-matrix-template.md`
-- `templates/error-handling-template.md` when the feature has user-facing errors,
-  exceptions, risky actions, external calls, or transaction/process states.
-- `templates/model-suggestions-template.md` when the feature has a user journey,
-  stateful entity, process, async operation, risky action, or transaction.
+- `templates/prd-template.md` (PRD) **or** `templates/brd-draft-template.md` (BRD) —
+  this single draft holds the edge / error / model / state analysis inline. The
+  `edge-case-matrix-template.md`, `error-handling-template.md`, and
+  `model-suggestions-template.md` are used as **working structures** for those draft
+  sections, not as separate output files.
 
 ## Outputs written
-- `clarify-output/prd-draft.md` **or** `clarify-output/brd-draft.md` (per standard).
-- `clarify-output/elicitation-pack.md` — open questions grouped by stakeholder
-  owner (whom to ask), for workshops/interviews.
-- `clarify-output/edge-case-matrix.md`
-- `clarify-output/error-handling.md` when applicable.
-- `clarify-output/model-suggestions.md` when applicable.
+- `clarify-output/prd-draft.md` **or** `clarify-output/brd-draft.md` (per standard) —
+  the single working draft, with edge cases, the error code & message table, the flow
+  diagrams/state, open questions (grouped by owner in the Open items section), and the
+  Answer Sheet folded in. **No separate** `edge-case-matrix.md`, `error-handling.md`,
+  `model-suggestions.md`, or `elicitation-pack.md` files (Principle 13.11).
 
 ## Done criteria
 - Draft titled per standard (BRD → "BRD Draft", PRD → "PRD Draft") — never a BRD

@@ -8,38 +8,36 @@ Create the directory if it does not exist. Never scatter outputs elsewhere.
 | File | Written by | Contains |
 | --- | --- | --- |
 | `clarify-output/audit-report.md` | `audit`, `from-spec` | Score, band, blockers/major/minor, detected anti-patterns linked to dimensions. |
-| `clarify-output/prd-draft.md` *or* `brd-draft.md` | `from-idea` | Shaped draft at the standard's altitude (PRD product-focus / BRD business-focus): Document Profile, scope, journey, screen matrix, business rules, error/message summary, state summary, assumptions, open questions, suggestions. |
-| `clarify-output/edge-case-matrix.md` | `from-idea`, `from-spec`, `improve edge` | Edge / negative / boundary / exception coverage. |
-| `clarify-output/handoff-pack.md` | `handoff` | Dev pack + QA pack, traced to requirements. |
+| `clarify-output/prd-draft.md` *or* `brd-draft.md` | `from-idea` | Shaped **working draft** at the standard's altitude (PRD product-focus / BRD business-focus): Document Profile, scope, journey, screen matrix, business rules, **edge cases**, error/message summary, state summary, flow diagrams, assumptions, open questions, suggestions, answer sheet. Intermediate — superseded by `brd.md`/`prd.md` at finalize; not a final deliverable. |
+| `clarify-output/stories.md` | `from-spec` | User stories + acceptance criteria. |
+| `clarify-output/test-scenarios.md` | `from-spec` | Step-level test scenarios (the in-doc §Test scenarios summarizes these). |
+| `clarify-output/api-data-impact.md` | `from-spec` | API and data impact analysis. |
+| `clarify-output/handoff-pack.md` | `handoff` | Dev pack + QA pack, traced to requirements (optional). |
 | `clarify-output/prd.md` *or* `brd.md` | `finalize` | Standard sign-off document (PRD or BRD per the Document Profile). **No "final" in the name** — version lives in the Change history + archive name (Principle 13.1). |
 | `clarify-output/prd.html` *or* `brd.html` | `export` | Full HTML BRD/PRD rendered **from `brd.md`/`prd.md`** (one source of truth): rendered diagrams, merged requirement group cells, TOC, artifact index. Not a "review pack" (Principle 13.2). |
+| `clarify-output/brd.v<N>.md` *or* `prd.v<N>.md` | `finalize` | Archived prior versions (`finalize` never overwrites silently; Version bumps + Change history row). The canonical `brd.md`/`prd.md` always holds the latest. |
+| `clarify-output/wireframes.html` | `finalize` / `export` | Low-fidelity HTML wireframe widget when screen/flow requirements exist and inline HTML is unavailable. |
 
-## Supplementary files (created as needed)
+## Lean deliverable set (Principle 13.11) — analysis folds into the document
 
-Additional sections produced by `from-idea` / `from-spec` may be appended to the
-most relevant canonical file, or written as clearly-named companions:
+There is **no separate file** for edge cases, error handling, models/diagrams,
+traceability, decisions, or elicitation. Each analysis is written **inside** the draft
+and then the sign-off document, so the final `clarify-output/` is exactly the set
+above. The following files are **no longer produced**:
 
-- `clarify-output/stories.md` — user stories + acceptance criteria.
-- `clarify-output/test-scenarios.md` — test scenarios.
-- `clarify-output/api-data-impact.md` — API and data impact analysis.
-- `clarify-output/model-suggestions.md` — activity (PlantUML) / sequence
-  (Mermaid) / entity state and transaction/operation state suggestions, each
-  with a viewer link.
-- `clarify-output/error-handling.md` — error → entity state → transaction status
-  → user-message → action map.
-- `clarify-output/traceability-matrix.md` — requirement ↔ story ↔ test links
-  (+ Dangling references section).
-- `clarify-output/elicitation-pack.md` — open questions grouped **by stakeholder
-  owner** (whom to ask), for workshops; refreshed by `improve answers`.
-- `clarify-output/decision-log.md` — **append-only** audit trail of applied
-  Answer-Sheet decisions and CRs (written by `improve answers` / CR apply).
-- `clarify-output/change-impact.md` — CR impact analysis from the traceability
-  chain (written by `improve change-request`; analysis only).
-- `clarify-output/brd.v<N>.md` *or* `prd.v<N>.md` — archived prior versions of the
-  sign-off doc (`finalize` never overwrites silently; Version bumps + Change history
-  row). The canonical `brd.md`/`prd.md` always holds the latest version.
-- `clarify-output/wireframes.html` — low-fidelity HTML wireframe widget written by
-  `finalize` when screen/flow requirements exist and inline HTML is unavailable.
+| Folded analysis | Now lives in | (was) file — not produced |
+| --- | --- | --- |
+| Edge cases (error + no-error) | §Edge cases (error table + "Edge cases without errors") | `edge-case-matrix.md` |
+| Error → message → action map | §Error code & message table | `error-handling.md` |
+| Activity / sequence / state diagrams | §Functional Flows (embedded) | `model-suggestions.md` |
+| Requirement ↔ flow ↔ rule ↔ error traceability | §Requirements ↔ §Flow Catalog ↔ §Test scenarios + coverage paragraph | `traceability-matrix.md` |
+| Applied decisions / CRs | §Decisions & open items + Document control → Change history | `decision-log.md` |
+| Open questions grouped by owner | §Open items | `elicitation-pack.md` |
+
+## Other working files (created as needed)
+
+- `clarify-output/change-impact.md` — CR impact analysis read from the in-document
+  traceability chain (written by `improve change-request`; analysis only, transient).
 
 ## HTML BRD/PRD (written by `export`)
 
@@ -66,15 +64,22 @@ export validates. Rendering is best-effort with fallback to diagram code + viewe
 link; no tool label ("Clarify", "Visual Review Pack") appears in the displayed
 content (Principle 13.2).
 
+**Markdown→HTML hygiene (Principle 13.12):** in `brd.md`/`prd.md`, always keep one
+blank line between a bold label or paragraph and a pipe table directly below it.
+Without it pandoc folds the label into the table and the table breaks in `brd.html`.
+This applies to every label-then-table spot (step-by-step, screen matrix, symbol
+table, glossary, requirements, artifact index, …).
+
 ## Composability rules
 
 - `improve`, `handoff`, and `finalize` **read** prior files from `clarify-output/` rather
   than re-deriving them. If a required input file is missing, say so and suggest
   the command that produces it (e.g. run `/clarify:from-spec` first).
 - When `from-spec` runs on a Clarify **draft** already in `clarify-output/`, it
-  **reuses** the existing `edge-case-matrix.md`, `error-handling.md`, and
-  `model-suggestions.md` and adds only the build-ready layer (scored audit,
-  stories, AC, tests, api-data-impact, traceability) — it does not start over.
+  **reuses** the draft's own edge / error / model / state sections (which now live
+  inside the draft, not in separate files) and adds only the build-ready layer
+  (scored audit, stories, AC, tests, api-data-impact, in-document traceability) — it
+  does not start over and does not re-emit dropped companion files.
 - `from-idea` and `from-spec` are **entry points**, not a forced sequence. After a
   `from-idea` draft, the next step is `improve answers`; `from-spec` is optional
   for Dev/QA build-ready elaboration.

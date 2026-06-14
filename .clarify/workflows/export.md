@@ -8,16 +8,18 @@ Markdown stays the single source of truth; the HTML is its rendering, **not** a
 separate "review pack".
 
 ## Inputs
-- Prior outputs in `clarify-output/`: `brd.md`/`prd.md` (preferred) or the draft,
-  plus companions (`model-suggestions.md`, `error-handling.md`,
-  `traceability-matrix.md`, `edge-case-matrix.md`, `stories.md`, `test-scenarios.md`,
-  `api-data-impact.md`). Read; do not re-derive.
+- Prior outputs in `clarify-output/`: `brd.md`/`prd.md` (preferred — it carries the
+  edge / error / diagram / traceability / decisions content inline) or the draft,
+  plus the kept companions (`stories.md`, `test-scenarios.md`, `api-data-impact.md`).
+  No separate model / error-handling / traceability / edge / decision-log files exist
+  (Principle 13.11). Read; do not re-derive.
 - `$ARGUMENTS`: `html` (default) | `all` (static render + offline + docx round-trip +
   wireframes) | `offline`.
 
 ## Engine sequence (ordered)
-1. `trace` — ensure the traceability matrix is current (build if missing) and that it
-   carries Flow (`F0n-Name`) / Business rule / Error-State / **Source** columns.
+1. `trace` — verify in-document traceability (Requirements ↔ Flow Catalog ↔ Test
+   scenarios) and the coverage paragraph; report orphans/dangling refs. No separate
+   traceability file is built.
 2. `export` — probe the environment, then render `clarify-output/brd.html` **from**
    `brd.md`: pandoc md→html (fallback minimal converter), Mermaid client-side,
    PlantUML via plantuml.com hex `~h` + code fallback, requirement group-bands →
@@ -52,8 +54,9 @@ separate "review pack".
 - The HTML is generated **from** `brd.md`/`prd.md` (one source of truth); the
   Markdown is unchanged; re-running `export` is idempotent.
 - The Business requirements table renders as a **banded table** (group rows are
-  `colspan` merged cells); a TOC and an **Artifact index (source)** link back to
-  `brd.md` + companions.
+  `colspan` merged cells); a TOC and an **Artifact index (source)** (lean set, with a
+  "Used when" column) link back to `brd.md` + the kept companions only — no link to a
+  dropped file (Principle 13.11).
 - Wireframes derive from the Screen/Display Matrix + flow steps + rules + error map +
   state (derive-only; unknowns → ASSUMPTION / OPEN QUESTION; stamped low-fi, not
   final UI); responsive grayscale HTML widget, not ASCII art.

@@ -5,7 +5,8 @@
 Built from prior Clarify outputs. If an input was missing, it is noted below.
 
 ## Inputs used
-- prd-draft.md / audit-report.md / edge-case-matrix.md / stories.md / etc.
+- brd-draft.md / prd-draft.md (carries edge / error / flow / traceability inline) /
+  audit-report.md / stories.md / test-scenarios.md / api-data-impact.md / etc.
 - Missing inputs: <list, with the command that produces each>
 
 ---
@@ -47,10 +48,10 @@ Built from prior Clarify outputs. If an input was missing, it is noted below.
 | <…> | <Story/AC id> | functional/negative/... | <…> |
 
 ### Edge cases to verify
-- <from edge-case-matrix.md>
+- <from the doc's Edge cases section (§Edge cases + "Edge cases without errors")>
 
 ### Error-message tests
-- <from error-handling.md: expected code, user-facing message, state, retryability, action>
+- <from the doc's Error code & message table: expected code, user-facing message, transaction state, retryability, action>
 
 ### Risk-based focus
 - <permissions, idempotency, exception flows that most need testing>

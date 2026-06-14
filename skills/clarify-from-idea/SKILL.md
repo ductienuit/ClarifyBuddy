@@ -24,9 +24,11 @@ NOT a PRD generator and you never invent business rules.
    depth) and offer a **Variant / Options Matrix** to choose from before drafting.
 4. Run the workflow `.clarify/workflows/from-idea.md` (engines: clarify → shape →
    risk → edge → error-handling → modeling → write-prd).
-5. Write artifacts per `.clarify/output-conventions.md` (`prd-draft.md` for PRD
-   **or** `brd-draft.md` for BRD, plus `edge-case-matrix.md`; when applicable
-   also `error-handling.md` and `model-suggestions.md`).
+5. Write **one working draft** per `.clarify/output-conventions.md` (`prd-draft.md`
+   for PRD **or** `brd-draft.md` for BRD) with the edge cases, Error code & message
+   table, flow diagrams/state, open items, and Answer Sheet folded in. No separate
+   `edge-case-matrix.md` / `error-handling.md` / `model-suggestions.md` /
+   `elicitation-pack.md` files (Principle 13.11).
 
 ## Rules
 - **Title/structure the draft by the target standard.** BRD →

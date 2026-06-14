@@ -70,6 +70,15 @@ Without it pandoc folds the label into the table and the table breaks in `brd.ht
 This applies to every label-then-table spot (step-by-step, screen matrix, symbol
 table, glossary, requirements, artifact index, …).
 
+**Read-by-flow & deep-link anchors (Principle 13.13):** each §8.x flow reads
+*overview → diagram(s) → Steps (3-col, below the diagram) → pointer line*; the pointer
+deep-links to that flow's error sub-header in §11.1 (`[…](#err-f0n)`). The §11.1
+register is split by flow, each under `#### F0n-Name {#err-f0n}`. `export` must keep
+pandoc's `header_attributes` enabled so those ids survive into `brd.html` and the
+deep-links resolve. Keep one fact in one place (rule → §7, error → §11.1 anchor, screen
+→ §Screens, step → flow only); APIs are named at the business level, never
+path/method/schema.
+
 ## Composability rules
 
 - `improve`, `handoff`, and `finalize` **read** prior files from `clarify-output/` rather

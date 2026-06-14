@@ -178,13 +178,18 @@ mark Status = Deferred) appears once and stays mapped in Traceability. A flat
 one-liner dump with no grouping / no Why is a clarity finding.
 
 **13.8 Error section = "Error code & message table"; edge analysis lives in the doc.**
-In the sign-off document the error section is titled **Error code & message table**
-(not "Error Handling & Message Mapping"). Drop the low-signal **entity-state** column
-(it is almost always `unchanged`); transaction state carries the meaning. Columns:
-`Error code | Flow / Step (F0n-Name) | Scenario | Transaction state
+In the sign-off document the error section is titled **Error code & message table**.
+It is split **by flow** — each flow under a sub-header carrying a stable anchor
+(`#### F02-Login {#err-f02}`) so a flow's Steps deep-link straight to its errors. Drop
+the low-signal **entity-state** column (almost always `unchanged`); transaction state
+carries the meaning. Columns: `Error code | Step / API | Scenario | Transaction state
 (rejected/throttled/refresh_required) | User-facing message | Retryable? | Required
-action | Needs Ops/CS?` — a PRD may keep `HTTP / API status`. The **whole edge-case
-analysis lives inside the document, not in a separate `edge-case-matrix.md` file**:
+action | Test`. **Step / API** is the business-level step or call (e.g. `step 3` /
+`login()`) — never a path / method / HTTP status. (A very small error set may stay as
+ONE table with the per-flow sub-header anchors inserted, as long as every Step
+deep-link resolves.) This **supersedes** the earlier single-block error table. The
+**whole edge-case analysis lives inside the document, not in a separate
+`edge-case-matrix.md` file**:
 edges that *produce* an error are rows in this table; edges that *do not produce* an
 error (idempotency/replay, TTL/expiry boundaries, sandbox-vs-production isolation,
 cross-app linkability, …) go in a sibling subsection **"Edge cases without errors"**.
@@ -193,8 +198,10 @@ The edge-section intro lists the edge groups; it points to no file.
 **13.9 Body test scenarios = one numbered table; traceability is in-document.**
 The body section is **Test scenarios (by context)** (replacing "Traceability
 summary"): **one numbered table** so the total case count is visible at a glance, rows
-grouped by flow (`F0n-Name`), columns `# | Flow (F0n-Name) | Scenario (precondition +
-action) | Expected result | Test (T-xx)` — **not** a bullet list. Close it with one
+grouped by flow (`F0n-Name`), columns `# | Requirement (R#/BRD-R#) | Flow (F0n-Name) |
+Scenario (precondition + action) | Expected result | Test (T-xx)` — **not** a bullet
+list. **Full preconditions/steps stay in `test-scenarios.md`**, not duplicated in the
+doc. Close it with one
 self-standing **Coverage & traceability** paragraph stating the case count and
 coverage (e.g. "12 scenarios across 4 flows; 15/15 requirements have a flow + test; no
 orphans"). **There is no `traceability-matrix.md` file**: requirement ↔ flow ↔ rule ↔
@@ -235,4 +242,32 @@ Always leave **one blank line** between a bold label (e.g. `**Step-by-step**`) o
 paragraph text and a pipe table directly below it. Without it, pandoc folds the label
 and the table into a single paragraph and the table breaks in the HTML render. Applies
 everywhere a label or sentence precedes a table (step-by-step, screen matrix, symbol
-table, glossary, requirements, artifact index, …).
+table, glossary, requirements, artifact index, …). The `export` render must keep
+pandoc's `header_attributes` on so the `{#err-f0n}` anchors survive (13.13 deep-links).
+
+**13.13 Read-by-flow: one source of truth, diagram-then-steps, anchored links.**
+A reader should understand a flow by reading **top to bottom within its block**, and
+each fact should live in exactly **one** place.
+- **Flow block order (per §8.x):** a one-line **Flow overview** (`Goal — …; Primary
+  actor — …; Trigger — …; Outcome — …`) right after the heading → the **diagram(s)**
+  (activity and/or sequence) → **Steps** → open notes.
+- **Steps read the diagram, and sit BELOW it** (picture first, prose second). They
+  explain the **sequence** diagram if the flow has one, else the **activity** diagram.
+  The table is **three columns** `Step | Actor | Action / processing`; branch points
+  are bullets (`• If … → …`). Steps carry **no** error codes and do **not** restate
+  rules or screen behaviour — only the flow and its branches.
+- **Steps end with one pointer line**, e.g. `Rules: BR.. (§7). Errors / messages /
+  retry & tests: [§11.1 — F0n-Name](#err-f0n).` Links always target a **specific
+  anchor / sub-header** (`#err-f0n`), never a vague "see the error table".
+- **Single source of truth:** a rule lives in §Business rules (the flow only cites its
+  `BR#`); an error / message / retry lives in the §Error code & message table (under
+  its flow anchor); screen behaviour lives in §Screens; a step describes only the flow
+  + branch points. No fact is duplicated across sections.
+- **APIs are business-level** (`login()`, `code2Session()`), never path / method /
+  header / schema. **§Data & systems impact is a table** — `Data concept | Business
+  meaning | Created/Read/Written when | Source of truth | Sensitivity | Owner to
+  confirm` — with the disclaimer that it is BA-altitude and does not replace a
+  Technical Design / API Spec (no invented endpoint / schema / table / storage).
+- **§Open items is a table** `Item | Impact if unresolved | Owner | Status | Deadline`
+  so each unresolved item carries its consequence and a date.
+Every `#err-f0n` link must have a matching header id (no broken deep-links).

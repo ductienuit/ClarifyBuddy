@@ -27,13 +27,21 @@ Always attach the matching viewer link directly beneath each fenced block.
   maturity & renewal, and pending/unknown/reversal handling if money moves through
   core banking). Take the flow list from scope — never add out-of-scope flows.
 
-## Per flow (in the catalog)
-1. **Step-by-step**: numbered steps, each with actor, action, system response, and
-   the related rule / validation / error code (or `—`).
+## Per flow (read-by-flow order — Principle 13.13)
+Lay each flow block out so the reader sees the picture first, then its reading:
+1. **Flow overview** — one line right after the heading: `Goal — …; Primary actor —
+   …; Trigger — …; Outcome — …`.
 2. **Activity (PlantUML)** for the process + its decision/exception branches.
 3. **Sequence (Mermaid)** for the SAME process; if the flow is simple/single-system
    write "Sequence diagram not required — <reason>" instead.
-4. **Gaps revealed / Open questions** for that flow.
+4. **Steps (reading of the diagram above)** — placed **below** the diagram, a plain
+   step-by-step of the **sequence** diagram (or the **activity** when there is no
+   sequence). Table is **three columns** `Step | Actor | Action / processing`; branch
+   points are bullets (`• If … → …`). Put **no** error codes in steps and do **not**
+   restate rules or screen behaviour — only the flow and its branches. End with one
+   pointer line: `Rules: BR.. (§7). Errors / messages / retry & tests: [§11.1 —
+   F0n-Name](#err-f0n).`
+5. **Gaps revealed / Open questions** for that flow.
 
 ## State
 - Model **entity state** and **transaction/operation state** as two distinct
@@ -54,5 +62,6 @@ Always attach the matching viewer link directly beneath each fenced block.
 ## Output
 Write **into the document's Functional Flows section** (no separate file): a **Flow
 Catalog** (with rule / error-code / requirement columns — the in-document traceability
-spine), then one block per flow (step-by-step + activity + sequence + gaps, all for the
-same process), then the entity and transaction/operation state summary.
+spine), then one block per flow in read-by-flow order (overview → activity → sequence
+→ Steps below the diagram → gaps, all for the same process), then the entity and
+transaction/operation state summary.

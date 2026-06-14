@@ -148,9 +148,14 @@ validation, and error states where the user may be blocked or confused.
 | <confirmation summary> | F01-<Name> / 4 | <confirm commitment> | <amount, source, terms, dates, fees/penalty, terms checkbox> | <accept terms / authenticate / cancel> | <terms accepted, auth required> | <rate changed / auth unavailable> | <no technical jargon> |
 | <result> | F01-<Name> / 6 | <show outcome> | <success/failure/pending, reference, next step> | <view detail / retry / contact support> | <n/a> | <unknown / processing / failed> | <message matches error map> |
 
-## 10. Data notes
-<Business-level affected systems / source of truth. Detailed API/data impact is a
-Dev/QA build-ready layer (`from-spec`).>
+## 10. Data & systems impact
+**BA-altitude only — does NOT replace a Technical Design / API Spec.** Do not invent
+endpoints, schemas, tables, or storage; APIs are named at the business level (e.g.
+`login()`) — never path / method / schema.
+
+| Data concept | Business meaning | Created / Read / Written when | Source of truth | Sensitivity | Owner to confirm |
+| --- | --- | --- | --- | --- | --- |
+| <concept> | <…> | <e.g. created at F01 / step 3> | <system> | <low / PII / secret> | <owner> |
 
 ## 11. Edge cases, exception handling & messages
 The edge analysis lives here in full (no separate matrix file): error-producing edges
@@ -159,15 +164,18 @@ exception/failure, illegal state, concurrency, permission, empty/null,
 temporal/rule-change, batch/schedule.
 
 ### 11.1 Error code & message table
-Key failures with the **message the customer sees**, the transaction state left
-behind, and the next action. Reference the `F0n-Name / step` where each error occurs;
-the entity-state column is dropped (almost always `unchanged`). User messages avoid
-technical jargon.
+Grouped **by flow** under per-flow anchors (e.g. `{#err-f01}`) so flow steps can
+deep-link here. **Step / API** is the business-level step or call (e.g. `step 3` /
+`login()`), never a path / method; the entity-state column is dropped (almost always
+`unchanged`); user messages avoid technical jargon. The **Test** column is filled when
+`from-spec` adds tests.
 
-| Error code | Flow / Step | Scenario | Transaction state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
+#### F01-<Name> {#err-f01}
+
+| Error code | Step / API | Scenario | Transaction state | User-facing message | Retryable? | Required action | Test |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| <CODE_001> | F01-<Name> / 3 | <insufficient balance> | <failed / rejected> | <plain message> | yes | <choose another source / amount> | no |
-| <CODE_002> | F01-<Name> / auth | <auth failed / expired / cancelled> | <failed / refresh_required> | <plain message> | yes/no | <retry / resend / restart> | no |
+| <CODE_001> | step 3 | <insufficient balance> | failed / rejected | <plain message> | yes | <choose another source / amount> | <T-..> |
+| <CODE_002> | auth | <auth failed / expired / cancelled> | failed / refresh_required | <plain message> | yes/no | <retry / resend / restart> | <T-..> |
 
 ### 11.2 State Summary
 For process / transaction features, distinguish the state of the business object
@@ -192,9 +200,12 @@ In effect unless you override (reply by ID in the Answer Sheet, §20).
 - **A2** — ASSUMPTION: <…>
 
 ## 13. Open Questions
-Answer by ID in the Answer Sheet (§20).
-- **Q1** — OPEN QUESTION: <unresolved item blocking confidence>
-- **Q2** — OPEN QUESTION: <…>
+Answer by ID in the Answer Sheet (§20). IDs stay stable.
+
+| Item | Impact if unresolved | Owner | Status | Deadline |
+| --- | --- | --- | --- | --- |
+| **Q1** — OPEN QUESTION: <unresolved item blocking confidence> | <what it blocks / risk> | <→ ask: stakeholder> | open | <date> |
+| **Q2** — OPEN QUESTION: <…> | <…> | <…> | open | <date> |
 
 ## 14. Suggested Additional Capabilities (for confirmation)
 Proactive recommendations to complete the product — **not** agreed scope (reply by

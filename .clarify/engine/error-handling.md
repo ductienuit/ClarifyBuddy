@@ -30,9 +30,13 @@ handling.
 
 ## Output
 Write the map **into the document's "Error code & message table"** (Principle 13.8) —
-there is no separate `error-handling.md` file. Columns: `Error code | Flow / Step
-(F0n-Name) | Scenario | Transaction state | User-facing message | Retryable? |
-Required action | Needs Ops/CS?` (a PRD may add `HTTP / API status`); the entity-state
-column is dropped (almost always `unchanged`). Use
+there is no separate `error-handling.md` file. **Split it by flow:** each flow under a
+sub-header with a stable anchor (`#### F0n-Name {#err-f0n}`) so the flow's Steps
+deep-link straight to its errors. Columns: `Error code | Step / API | Scenario |
+Transaction state | User-facing message | Retryable? | Required action | Test`. The
+entity-state column is dropped (almost always `unchanged`); **Step / API** is the
+business-level step or call (e.g. `step 3` / `login()`), never a path / method / HTTP
+status. (A very small error set may stay as ONE table with per-flow sub-header anchors
+inserted, as long as every Step deep-link resolves.) Use
 `templates/error-handling-template.md` as the working checklist while enumerating, and
 keep a coverage / Gaps list (`missing-error-message-mapping`).

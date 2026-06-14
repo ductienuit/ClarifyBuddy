@@ -30,7 +30,7 @@ happy, negative, and boundary paths.
 - AC must be objectively verifiable; no subjective terms
   (`non-testable-requirement`).
 - Happy-path-only AC is a gap (`weak-acceptance-criteria`) — flag and fill it.
-- Pull boundary/negative cases from the edge-case-matrix to stay consistent.
+- Pull boundary/negative cases from the doc's Edge cases section to stay consistent.
 
 ## Output
 Append AC into `clarify-output/stories.md` (or a companion section) using

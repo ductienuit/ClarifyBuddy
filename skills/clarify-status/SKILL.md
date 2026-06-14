@@ -20,9 +20,11 @@ Re-orient the BA: what exists, what's unresolved, what to do next. **Read-only.*
 1. Run the workflow `.clarify/workflows/status.md`.
 2. Reply in chat (no files written) with:
    - Artifact inventory — exists / missing, and the producing command for each
-     missing one (draft, elicitation-pack, edge/error/model, audit, stories/tests/
-     api/traceability, decision-log, change-impact, final doc + archived versions,
-     wireframes, review-pack).
+     missing one — the **lean set** (Principle 13.11): draft, audit-report, stories,
+     test-scenarios, api-data-impact, change-impact, sign-off doc + archived versions,
+     wireframes, HTML. Do not expect edge-case-matrix / error-handling /
+     model-suggestions / traceability-matrix / decision-log / elicitation-pack — that
+     analysis lives inside the draft / sign-off doc.
    - Document Profile (role, target standard, domain mode, language).
    - Unresolved items: counts of open `A#/Q#/S#/V#` + top blockers; audit blocker
      findings; unapplied CRs.

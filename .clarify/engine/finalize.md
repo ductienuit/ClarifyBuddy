@@ -16,9 +16,12 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
    `brd` → use `templates/final-brd-template.md`.
 
 ## Do
-1. Read available outputs: prd-draft **or** brd-draft, plus any companions that
-   exist: audit-report, edge-case-matrix, error-handling, model-suggestions,
-   api-data-impact, stories, test-scenarios, traceability-matrix.
+1. Read available outputs: prd-draft **or** brd-draft (which now carries the edge /
+   error / flow-diagram / state / traceability analysis inline), plus the build-ready
+   companions that exist: audit-report, api-data-impact, stories, test-scenarios.
+   There are no separate `edge-case-matrix.md` / `error-handling.md` /
+   `model-suggestions.md` / `traceability-matrix.md` / `decision-log.md` files to read
+   — pull that content from the draft's corresponding sections (Principle 13.11).
 2. Compose the chosen template, pulling each section from the matching prior
    output. Keep wording testable and build-ready. Follow the **document presentation
    & naming conventions** (Principle 13):
@@ -33,14 +36,14 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
      `ID | Requirement | Why | Priority`, grouped by capability in journey order
      with a bold band row per group, Must → Should → Could within a group. `Why` is
      the business reason, never a `Source: BRx` cross-reference. Do NOT put
-     flow/rule/test/source in this section — they live in §12 Traceability. Carry
-     the draft's requirement sentences verbatim; never collapse them to a bare
-     one-liner with no Why. Every requirement (including deferred) appears once and
-     stays mapped in §12 traceability.
+     flow/rule/test/source in this section — traceability is expressed in-document via
+     the Flow Catalog + Test scenarios (Principle 13.9), not a body grid. Carry the
+     draft's requirement sentences verbatim; never collapse them to a bare one-liner
+     with no Why. Every requirement (including deferred) appears once.
 3. Assemble the **Functional Flows (process-centric)** section: build the Flow
    Catalog, then one block per business process, mapping each flow to its OWN
-   step-by-step + Activity (PlantUML) + Sequence (Mermaid) from
-   `model-suggestions.md`. Name flows **`F0n-Name`** (Principle 13.6): keep the
+   step-by-step + Activity (PlantUML) + Sequence (Mermaid) from the draft's flow
+   section. Name flows **`F0n-Name`** (Principle 13.6): keep the
    number stable, append a short English feature name (Login/Consent/Token/Revoke/…),
    and lead the block heading with the Profile-language name (e.g. "Luồng F02-Login
    — Định danh người dùng"). Use `F0n-Name` consistently in the flow catalog, error
@@ -62,10 +65,15 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
    `clarify-output/wireframes.html` using the same template and link it from the
    final document and Appendix. Do not create ASCII wireframes as the primary
    artifact.
-4. Preserve every `ASSUMPTION` / `OPEN QUESTION` / `SUGGESTION`. Group them into the
-   **Open items** cluster (Assumptions / Open Questions / Suggested capabilities —
-   BRD §13, PRD §13); then list the **blocker subset** of open questions + blocker
-   audit findings in the **Sign-off blockers** section (BRD §14, PRD §14).
+4. Resolve every `ASSUMPTION` / `OPEN QUESTION` / `SUGGESTION` into the **Decisions &
+   open items** section (§16 in both; Principle 13.10): (a) **Decisions made** —
+   accepted assumptions + answered questions as a **three-column** `Topic | Decision |
+   Reflected in (BR/R)` table (no "decision-log ref" column); (b) **Suggestions —
+   dispositioned** (Accepted → `<R..>` / Won't do / Awaiting confirmation); (c) **Open
+   items** that do not block sign-off. **Hide `A#`/`S#` codes** in these displayed
+   tables. There is **no `decision-log.md` file** — the dated history lives in
+   Document control → Change history. Then list the **blocking subset** of open items
+   + blocker audit findings in the **Sign-off blockers** section (§17 in both).
 4b. Compose a short **Executive summary** (BRD) from the business context,
    objectives, scope, and key blockers — 1–2 paragraphs / bullets, composed from
    those sections, introducing no new claims.
@@ -79,22 +87,38 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
    never as agreed scope.
 7. Put the high-level Customer/User Journey into the **"How the system works
    (overview)"** section (overview only + one representative diagram — detailed
-   per-flow blocks live in the Functional Flows section). Carry over Error Handling
-   & Message Mapping and the entity vs transaction/operation state summary. If a
-   source artifact is missing, mark the section `OPEN QUESTION` and name the command
-   that produces it.
-8. Carry over the expanded columns from source files, using `F0n-Name` for every
-   flow reference: the **Flow / Step** column in the error map (from
-   `error-handling.md`), **trigger / owner system / terminal** in the state summary
-   (from `model-suggestions.md`), and **Flow / Business rule / Error-State** plus a
-   **Source** column (`← A#/BR#/S#/Q#` that produced each requirement) in the
-   Traceability summary (from `traceability-matrix.md` + the draft's §18 register).
-   Every requirement, including deferred ones, appears once in Traceability.
-9. Emit the **Appendix: Artifact index (source)** listing only the `clarify-output/`
-   companion files that actually exist — diagrams are referenced as source +
-   viewer link, never as image files Clarify did not produce. List
-   `clarify-output/wireframes.html`, `clarify-output/brd.html`/`prd.html`, and
-   `clarify-output/decision-log.md` only when they were actually written.
+   per-flow blocks live in the Functional Flows section). Carry over the whole edge
+   analysis from the draft into the **Edge cases** section (Principle 13.8) — **no
+   `edge-case-matrix.md` file**: error-producing edges become rows in the **Error code
+   & message table** (titled so; drop the entity-state column, keep transaction state;
+   a PRD may keep `HTTP / API status`), and non-error edges (idempotency/replay,
+   TTL/expiry, sandbox isolation, cross-app linkability, …) go in an **"Edge cases
+   without errors"** subsection. Carry the entity vs transaction/operation state
+   summary too. If a source section is missing, mark it `OPEN QUESTION` and name the
+   command that produces it.
+8. Build the **Test scenarios (by context)** section as **one numbered table**
+   (Principle 13.9), NOT a body traceability grid and NOT bullets. Columns
+   `# | Flow (F0n-Name) | Scenario (precondition + action) | Expected result | Test
+   (T-xx)`, numbered continuously and grouped by flow, from `test-scenarios.md` (do
+   not invent outcomes). Close with one self-standing **Coverage & traceability**
+   paragraph stating the case count + coverage (e.g. "12 scenarios across 4 flows;
+   15/15 requirements have a flow + test; no orphans") that points to the **Flow
+   Catalog** + `test-scenarios.md` — **never** to a traceability-matrix file (none
+   exists). In-document traceability = Requirements ↔ the Flow Catalog (whose
+   rule/error/requirement columns carry the links) ↔ this table. Still carry over the
+   **Flow / Step** column in the error table and **trigger / owner system / terminal**
+   in the state summary, both using `F0n-Name`.
+9. Emit the **Appendix: Artifact index (source)** with a **Used when (who / when)**
+   column (Principle 13.11), listing only the **lean deliverable set** that actually
+   exists: the source `brd.md`/`prd.md`, audit-report, api-data-impact, stories,
+   test-scenarios, the version archive, plus `wireframes.html` and
+   `brd.html`/`prd.html` when written. Diagrams are referenced as in-document source +
+   viewer link, never as image files Clarify did not produce. **Do not** list — and do
+   not write — `edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`,
+   `traceability-matrix.md`, `decision-log.md`, `elicitation-pack.md`, or the draft:
+   their content is folded into the document sections (edge → §Edge, errors →
+   §Error table, diagrams → §Flows, traceability → Flow Catalog + Test scenarios,
+   decisions → §Decisions + Change history). Never link to a file that is not emitted.
 9b. **Versioning — never overwrite silently.** If the target file already exists:
    (1) archive the existing file as `brd.v<N>.md` / `prd.v<N>.md` (N = its current
    Version); (2) bump the Version in Document control (1.0 → 1.1, or as the user
@@ -121,6 +145,10 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
   codes), and file names.
 - Final ≠ invented: if a section has no source in prior outputs, mark it
   `OPEN QUESTION` rather than fabricating it.
+- **Markdown→HTML hygiene (Principle 13.12):** always leave one blank line between a
+  bold label or paragraph and a pipe table directly below it (step-by-step, screen
+  matrix, symbol table, glossary, requirements, artifact index, …). Without it pandoc
+  folds the label into the table and the table breaks in `brd.html`/`prd.html`.
 - A `blocker`-level audit finding means status = `Draft — not approved`; never
   stamp a document `Approved`.
 - Keep in-scope / out-of-scope / open questions clearly separated.

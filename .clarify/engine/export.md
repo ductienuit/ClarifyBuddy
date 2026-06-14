@@ -9,12 +9,13 @@ is the low-fi HTML wireframe, generated under strict derive-only rules. `brd.md`
 `prd.md` stays the master; the HTML is derived and is never the place edits are made.
 
 ## Inputs (read; do not re-derive)
-`clarify-output/brd.md` or `prd.md` (preferred) — else the draft
-(`brd-draft.md`/`prd-draft.md`) — plus whatever companions exist:
-`model-suggestions.md` (per-flow activity/sequence/state), `error-handling.md`,
-`traceability-matrix.md`, `edge-case-matrix.md`, `stories.md`, `test-scenarios.md`,
-`api-data-impact.md`. A missing companion does not block the render — its section
-becomes an `OPEN QUESTION` naming the command that produces it.
+`clarify-output/brd.md` or `prd.md` (preferred — it already carries the edge / error /
+flow-diagram / state / traceability / decisions content inline) — else the draft
+(`brd-draft.md`/`prd-draft.md`) — plus the kept companions that exist: `stories.md`,
+`test-scenarios.md`, `api-data-impact.md`. There are no separate
+`model-suggestions.md` / `error-handling.md` / `traceability-matrix.md` /
+`edge-case-matrix.md` / `decision-log.md` files (Principle 13.11). A missing section
+in the source becomes an `OPEN QUESTION` naming the command that produces it.
 
 ## Output
 `clarify-output/brd.html` (or `prd.html`) — always. Plus, per mode/env:
@@ -61,9 +62,13 @@ files), `wireframes.html`, and a validated `brd.docx`.
 ## Step 4 — TOC + Artifact index
 7. Ensure a **table of contents** at the top (from pandoc `--toc`, or built inline
    from the headings).
-8. Append an **Artifact index (source)** at the end: link back to `brd.md` and every
-   companion file in `clarify-output/` that exists (relative links), so a reader can
-   reach the source of truth from the rendering.
+8. Append an **Artifact index (source)** at the end (if `brd.md` already carries one,
+   render that — do not duplicate): a **Used when (who / when)** column linking back to
+   `brd.md` and the lean deliverable set that exists (audit-report, api-data-impact,
+   stories, test-scenarios, version archive, wireframes, HTML). Do not link the draft,
+   `edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`,
+   `traceability-matrix.md`, or `decision-log.md` — those files are not produced
+   (Principle 13.11). Never emit a link to a file that does not exist.
 
 ## Step 5 — Screens & wireframes (derive-only)
 9. When the doc has a Screen / Display Matrix or flow steps, render low-fi

@@ -10,8 +10,8 @@ Try `python3`, then `python`. Run from the project root (paths default to
 
 | Subcommand | Used by | Does |
 | --- | --- | --- |
-| `status` | `workflows/status.md` | Artifact inventory, Document Profile, outstanding `A/Q/S/V` (draft ids minus decision-log), archived final versions. |
-| `answers <file\|->` | `workflows/improve.md` (mode `answers`) | Parse a filled Answer Sheet → normalized decisions JSON; **append** non-keep/skip decisions to `decision-log.md` (creates it with header if absent; never rewrites old rows). Applying decisions to the draft remains the LLM's job. |
+| `status` | `workflows/status.md` | Artifact inventory (lean set — Principle 13.11), Document Profile, outstanding `A/Q/S/V` ids in the draft, archived versions. |
+| `answers <file\|->` | `workflows/improve.md` (mode `answers`) | Parse a filled Answer Sheet → normalized decisions JSON. Writes **no file** — applying decisions to the draft's Decisions made table + Change history is the LLM's job (no `decision-log.md`; Principle 13.10). |
 | `integrity` | `engine/trace.md` | Mechanical dangling-reference pass: collect defined ids (BR/F/S/error codes) vs referenced ids across clarify-output; print a Dangling references table. Best-effort regex — the LLM still does the semantic review. |
 | `manifest` | `engine/export.md` | Rescan `review-pack/` and rewrite `manifest.json` artifact entries from what actually exists (merging prior descriptive fields). |
 

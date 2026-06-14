@@ -22,10 +22,12 @@
 ### 0.1 What this is
 A shaped BRD draft at business altitude. **Quick read:** skim §4 "How the system
 works", §7 "Business requirements", and the open items (§13). Reply to the labeled
-items via the Answer Sheet (§20).
+items via the Answer Sheet (§20). **Diagrams** are kept as source code here; they
+render visually in the eventual `brd.html` export.
 
 ### 0.2 Symbol conventions
 Codes are **stable across versions**; the names beside them are only for reading.
+
 | Symbol | Means | Example |
 | --- | --- | --- |
 | `F0n-Name` | A functional flow (number is the stable anchor; name is for reading) | `F02-Login` |
@@ -36,6 +38,7 @@ Codes are **stable across versions**; the names beside them are only for reading
 ### 0.3 Glossary
 Define each domain term ONCE so the requirements below read plainly. Only define
 terms the requirements actually use; do not invent terms.
+
 | Term | Plain meaning |
 | --- | --- |
 | <e.g. login code> | <one-time code that ties a sign-in to a (user, app) pair> |
@@ -83,9 +86,13 @@ diagrams belong in §9. At business altitude a textual flow is acceptable:>
 ```
 
 ## 5. Stakeholders
-| Stakeholder | Interest / need | Responsibility |
+Use **RACI**; **at least one row must be (A) Accountable** (the single owner who signs
+off at finalize).
+
+| Stakeholder | Interest / need | Responsibility (R/A/C/I) |
 | --- | --- | --- |
-| Customer / Product owner / Operations / Accounting / Compliance / Risk / Partners / Customer service | <…> | <…> |
+| <business owner> | <…> | A |
+| Customer / Product owner / Operations / Accounting / Compliance / Risk / Partners / Customer service | <…> | R / C / I |
 
 ## 6. Product Variant / Options Matrix (for confirmation)
 Proactively proposed options for the user to choose — **not** an assumed choice.
@@ -124,9 +131,12 @@ At business altitude: a flow catalog and the screen matrix. Flow IDs are `F0n-Na
 `from-spec` / `improve model`; reference them here when they exist.
 
 ### 9.1 Flow Catalog
+The in-document traceability spine: the **Requirement** column must list **every**
+`BRD-R#` from §7 (no requirement left unmapped; an orphan flow is a finding).
+
 | Flow ID | Business name | Actor(s) | Goal | Related rules (BR) | Requirement (BRD-Rxx) |
 | --- | --- | --- | --- | --- | --- |
-| F01-<Name> | <…> | <…> | <…> | <…> | <BRD-R01> |
+| F01-<Name> | <…> | <…> | <…> | <…> | <BRD-R01, BRD-R02> |
 
 ### 9.2 Screen Information / Display Matrix
 What each key screen must show and let the user do (information level, not visual
@@ -143,14 +153,21 @@ validation, and error states where the user may be blocked or confused.
 Dev/QA build-ready layer (`from-spec`).>
 
 ## 11. Edge cases, exception handling & messages
-### 11.1 Error Handling & Customer Messages (summary)
-Key failures with the **message the customer sees**, the state left behind, and the
-next action (full code/status table in `error-handling.md`). Reference the
-`F0n-Name / step` where each error occurs. User messages avoid technical jargon.
-| Error code | Flow / Step | Scenario | Entity state | Transaction / operation state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <CODE_001> | F01-<Name> / 3 | <insufficient balance> | <unchanged / none created> | <failed> | <plain message> | yes | <choose another source / amount> | no |
-| <CODE_002> | F01-<Name> / auth | <auth failed / expired / cancelled> | <unchanged / pending> | <failed / cancelled> | <plain message> | yes/no | <retry / resend / restart> | no |
+The edge analysis lives here in full (no separate matrix file): error-producing edges
+in §11.1, non-error edges in §11.3. Groups: boundary, negative/invalid,
+exception/failure, illegal state, concurrency, permission, empty/null,
+temporal/rule-change, batch/schedule.
+
+### 11.1 Error code & message table
+Key failures with the **message the customer sees**, the transaction state left
+behind, and the next action. Reference the `F0n-Name / step` where each error occurs;
+the entity-state column is dropped (almost always `unchanged`). User messages avoid
+technical jargon.
+
+| Error code | Flow / Step | Scenario | Transaction state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <CODE_001> | F01-<Name> / 3 | <insufficient balance> | <failed / rejected> | <plain message> | yes | <choose another source / amount> | no |
+| <CODE_002> | F01-<Name> / auth | <auth failed / expired / cancelled> | <failed / refresh_required> | <plain message> | yes/no | <retry / resend / restart> | no |
 
 ### 11.2 State Summary
 For process / transaction features, distinguish the state of the business object
@@ -159,6 +176,15 @@ from the state of the action currently being processed. Mark unknowns `OPEN QUES
 | --- | --- | --- | --- |
 | Entity state | <e.g. pending, active, closed> | <allowed transitions> | <OPEN QUESTION / none> |
 | Transaction / operation state | <initiated, pending-auth, processing, success, failed, timeout, reversed, unknown> | <auth → processing → final state> | <OPEN QUESTION / none> |
+
+### 11.3 Edge cases without errors
+Boundary / temporal / concurrency / batch behaviours handled silently or by design
+(no user-facing error code). Cover idempotency/replay, TTL/expiry boundaries,
+sandbox-vs-production isolation, and accepted risks (→ §16) where relevant.
+
+| Edge | Expected behaviour | Source flow (F0n-Name) |
+| --- | --- | --- |
+| <e.g. idempotency / replay> | <e.g. duplicate request returns first result, no double effect> | <F0n-Name> |
 
 ## 12. Assumptions
 In effect unless you override (reply by ID in the Answer Sheet, §20).
@@ -192,7 +218,9 @@ Beyond user ↔ system. One row per relevant stakeholder.
 ## 18. Traceability (draft)
 The trace layer for the requirements above: every requirement once (including
 deferred — keep the row, mark Status = Deferred), with its **Source** (the
-`A#/BR#/S#/Q#` it came from). `finalize` carries this into the final §12.
+`A#/BR#/S#/Q#` it came from). At `finalize` this is expressed **in-document** via the
+Flow Catalog (rule/error/requirement columns) + the Test scenarios table + a Coverage
+paragraph — there is no separate traceability-matrix file (Principle 13.9).
 | BRD-R id | Flow (F0n-Name) | Business rule | Source (← A#/BR#/S#/Q#) | Status |
 | --- | --- | --- | --- | --- |
 | BRD-R01 | F01-<Name> | BR3 | A1 | Active |

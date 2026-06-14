@@ -45,10 +45,11 @@ NFRs). Produces `prd-draft.md` or `brd-draft.md`.
 5. Fill the **Customer Journey** (end-to-end steps incl. authentication) and the
    **Screen Information / Display Matrix** sections from `shape`. For BRD, keep
    them at business altitude. A UI feature with no screen matrix is a handoff gap.
-6. Summarize edge cases (from `edge`) into the Edge Cases section and add an
-   **Error Handling & Customer Messages** summary (key failures → entity state →
-   transaction/operation state → user message → action; full table in
-   error-handling.md). Add Dependencies & Risks and NFRs.
+6. Write the edge cases (from `edge`) into the **Edge cases** section — error-producing
+   edges in the **Error code & message table** (failure → transaction state → user
+   message → action; entity-state column dropped) and non-error edges in **"Edge cases
+   without errors"** (no separate file; Principle 13.8). Add Dependencies & Risks and
+   NFRs.
 7. Fill **Stakeholder Perspectives** (Principle 10): one row per stakeholder class
    (operations, accounting, reconciliation, partners/external, risk/compliance,
    maintenance, data/analytics, security) with its need/concern, or OPEN QUESTION.

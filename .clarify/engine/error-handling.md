@@ -29,6 +29,10 @@ handling.
 - Keep codes stable and namespaced (e.g. `<FEATURE>_<NNN>`).
 
 ## Output
-Write `clarify-output/error-handling.md` using
-`templates/error-handling-template.md`, including the coverage checklist and a
-Gaps section.
+Write the map **into the document's "Error code & message table"** (Principle 13.8) —
+there is no separate `error-handling.md` file. Columns: `Error code | Flow / Step
+(F0n-Name) | Scenario | Transaction state | User-facing message | Retryable? |
+Required action | Needs Ops/CS?` (a PRD may add `HTTP / API status`); the entity-state
+column is dropped (almost always `unchanged`). Use
+`templates/error-handling-template.md` as the working checklist while enumerating, and
+keep a coverage / Gaps list (`missing-error-message-mapping`).

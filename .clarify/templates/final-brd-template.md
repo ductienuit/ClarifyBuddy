@@ -144,31 +144,41 @@ an orphan flow is a finding).
 | F01-<Name> | <…> | <…> | <…> | activity + sequence | <…> | <…> | <BRD-R01, BRD-R02> |
 
 ### 8.2 Flow F01-<Name> — <Business name>
-**8.2.1 Step-by-step**
+**Flow overview:** Goal — <…>; Primary actor — <…>; Trigger — <…>; Outcome — <…>.
 
-| # | Actor | Action | System response | Rule / validation / error code |
-| --- | --- | --- | --- | --- |
-| 1 | <…> | <…> | <…> | <…> |
-
-**8.2.2 Activity diagram (PlantUML)** — process flow + decisions
+**8.2.1 Activity diagram (PlantUML)** — process flow + decisions
 ```plantuml
 <from the draft's flow analysis — THIS flow; label nodes with the F0n-Name where relevant>
 ```
 **View / edit:** https://www.plantuml.com/plantuml — ref: https://plantuml.com/
 
-**8.2.3 Sequence diagram (Mermaid)** — system interaction for the **same** flow
+**8.2.2 Sequence diagram (Mermaid)** — system interaction for the **same** flow
 ```mermaid
 <from the draft's flow analysis — THIS flow>
 ```
 **View / edit:** https://mermaid.live/
 <!-- Simple/single-system flow: replace with "Sequence diagram not required — <reason>". -->
 
+**8.2.3 Steps (reading of the diagram above)** — plain step-by-step of the **sequence**
+diagram (or the **activity** diagram when there is no sequence), placed below it so a
+reader sees the picture first. Branch points as bullets (`• If … → …`). Do **not** list
+error codes or restate rules / screen behaviour here — only the flow and its branches.
+
+| Step | Actor | Action / processing |
+| --- | --- | --- |
+| 1 | <…> | <…> |
+| 2 | <…> | <…> • If <condition> → <…> |
+
+Rules: BR.. (§7). Errors / messages / retry & tests: [§11.1 — F01-<Name>](#err-f01).
+
 **8.2.4 Gaps revealed / Open questions**
 - <gap or `OPEN QUESTION` from this flow>
 
 ### 8.3 Flow F02-<Name> — <Business name>
-<repeat 8.x.1–8.x.4; activity and sequence in one block must be the SAME process —
-never mix process A's activity with process B's sequence>
+<repeat 8.x: overview → diagram(s) → Steps (below the diagram) → pointer line → gaps;
+activity and sequence in one block must be the SAME process — never mix process A's
+activity with process B's sequence. The Steps pointer deep-links to that flow's error
+anchor, e.g. [§11.1 — F02-<Name>](#err-f02).>
 
 ## 9. Screens & wireframe
 ### 9.1 Screen / Display Matrix
@@ -185,9 +195,14 @@ maps every screen back to its source flow/step and requirement. Do not use ASCII
 wireframes as the primary screen artifact.
 
 ## 10. Data & systems impact
-<From api-data-impact.md when build-ready layer exists; otherwise summarize
-business-level affected systems from the draft and mark detailed API/data impact
-as optional for Dev/QA handoff.>
+**BA-altitude description only — does NOT replace a Technical Design / API Spec.** Do
+not invent endpoints, schemas, tables, or storage; Engineering / Architect finalize
+those downstream. APIs are named at the **business level** (e.g. `login()`,
+`code2Session()`) — never path / method / header / schema.
+
+| Data concept | Business meaning | Created / Read / Written when | Source of truth | Sensitivity | Owner to confirm |
+| --- | --- | --- | --- | --- | --- |
+| <concept> | <…> | <e.g. created at F01 / step 3; read at F02> | <system> | <low / PII / secret> | <owner> |
 
 ## 11. Edge cases, exception handling & messages
 The edge analysis lives here in full (no separate matrix file). Edges that **produce
@@ -196,13 +211,25 @@ covered: boundary, negative/invalid, exception/failure, illegal state, concurren
 permission, empty/null, temporal/rule-change, batch/schedule.
 
 ### 11.1 Error code & message table
-Each error maps back to the `F0n-Name / step` it occurs in (from §8), so design/QA/CS
-do not have to guess where it happens. The entity-state column is intentionally
-dropped (it is almost always `unchanged`); transaction state carries the meaning.
+Errors are grouped **by flow**, each under a sub-header carrying a **stable anchor**
+so a flow's Steps (§8) deep-link straight to its errors (e.g. `(#err-f01)`). The
+entity-state column is dropped (almost always `unchanged`); transaction state carries
+the meaning. **Step / API** is the business-level step or call (e.g. `step 3` /
+`login()`) — never a path / method. (A very small error set may stay as ONE table with
+the per-flow sub-headers inserted as anchors, as long as every Step deep-link
+resolves.)
 
-| Error code | Flow / Step | Scenario | Transaction state | User-facing message | Retryable? | Required action | Needs Ops/CS? |
+#### F01-<Name> {#err-f01}
+
+| Error code | Step / API | Scenario | Transaction state | User-facing message | Retryable? | Required action | Test |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| <CODE> | F0n-Name / step | <…> | rejected / throttled / refresh_required | <message the user sees> | <yes/no> | <…> | <yes/no> |
+| <CODE> | <step 3 / login()> | <…> | rejected / throttled / refresh_required | <message the user sees> | <yes/no> | <…> | T-xx |
+
+#### F02-<Name> {#err-f02}
+
+| Error code | Step / API | Scenario | Transaction state | User-facing message | Retryable? | Required action | Test |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <CODE> | <…> | <…> | <…> | <…> | <yes/no> | <…> | T-xx |
 
 ### 11.2 State summary
 | Model type | State set | Trigger / event | Owner system | Terminal states | Gaps |
@@ -237,17 +264,18 @@ no row in §11.1. Examples to cover when relevant:
 
 ## 15. Test scenarios (by context)
 Read-and-understand scenarios for BA/QA as **one numbered table** (so the total case
-count is visible at a glance), rows grouped by flow (`F0n-Name`). Each row pairs
-*precondition + action* with its expected result and a stable `(T-xx)`. Composed from
-`test-scenarios.md` when it exists; do not invent outcomes.
+count is visible at a glance), rows grouped by flow (`F0n-Name`). Each row ties a
+`BRD-R#` (**Requirement**) to a *precondition + action*, its expected result, and a
+stable `(T-xx)`. Composed from `test-scenarios.md` when it exists; do not invent
+outcomes. **Full preconditions/steps stay in `test-scenarios.md`** — not duplicated here.
 
-| # | Flow (F0n-Name) | Scenario (precondition + action) | Expected result | Test |
-| --- | --- | --- | --- | --- |
-| **F01-<Name>** | | | | |
-| 1 | F01-<Name> | <given state>, <actor does X> | <observable outcome> | T-01 |
-| 2 | F01-<Name> | <…> | <…> | T-02 |
-| **F02-<Name>** | | | | |
-| 3 | F02-<Name> | <…> | <…> | T-03 |
+| # | Requirement | Flow (F0n-Name) | Scenario (precondition + action) | Expected result | Test |
+| --- | --- | --- | --- | --- | --- |
+| **F01-<Name>** | | | | | |
+| 1 | BRD-R01 | F01-<Name> | <given state>, <actor does X> | <observable outcome> | T-01 |
+| 2 | BRD-R01 | F01-<Name> | <…> | <…> | T-02 |
+| **F02-<Name>** | | | | | |
+| 3 | BRD-R03 | F02-<Name> | <…> | <…> | T-03 |
 
 ### Coverage & traceability
 <One self-standing paragraph stating the case count and coverage, e.g. "12 test
@@ -279,8 +307,12 @@ or Awaiting confirmation.
 | <capability> | Accepted → BRD-R.. / Won't do / Awaiting confirmation | <BRD-R.. / —> |
 
 ### 16.3 Open items (do not block sign-off)
-- OPEN QUESTION: <unresolved item that is non-blocking, incl. any deferred NFR metric
-  from §14>. Blocking ones go to §17.
+Non-blocking unresolved items (incl. any deferred NFR metric from §14). Blocking ones
+go to §17.
+
+| Item | Impact if unresolved | Owner | Status | Deadline |
+| --- | --- | --- | --- | --- |
+| OPEN QUESTION: <…> | <what slips / what risk if not decided> | <owner> | open | <date> |
 
 ## 17. Sign-off blockers (must resolve before approval)
 - OPEN QUESTION: <the blocking subset of the open items in §16.3>

@@ -146,13 +146,17 @@ exception/failure, illegal state, concurrency, permission, empty/null,
 temporal/rule-change, batch/schedule.
 
 ### 11.1 Error code & message table
-Key failures with code, the **user-facing message**, and next action. Reference the
-`F0n-Name / step` where each occurs; the entity-state column is dropped (almost always
-`unchanged`). User messages avoid technical jargon.
+Grouped **by flow** under per-flow anchors (e.g. `{#err-f01}`) so flow steps can
+deep-link here. **Step / API** is the business-level step or call (e.g. `step 3` /
+`login()`), never a path / method / HTTP status; the entity-state column is dropped
+(almost always `unchanged`); user messages avoid technical jargon. The **Test** column
+is filled when `from-spec` adds tests.
 
-| Code | Flow / Step | Scenario | HTTP / API status | Transaction state | User-facing message | Retryable | Required action | Needs Ops/CS? |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <CODE_001> | F01-<Name> / 3 | <…> | <e.g. 409> | <failed / timeout / unknown / reversed> | <plain message> | yes/no | <…> | yes/no |
+#### F01-<Name> {#err-f01}
+
+| Code | Step / API | Scenario | Transaction state | User-facing message | Retryable | Required action | Test |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <CODE_001> | step 3 | <…> | <failed / timeout / unknown / reversed> | <plain message> | yes/no | <…> | <T-..> |
 
 ### 11.2 State Summary
 | Model type | State set | Key transitions / terminal states | Gaps |
@@ -175,9 +179,12 @@ In effect unless you override (reply by ID in the Answer Sheet, §17).
 - **A2** — ASSUMPTION: <…>
 
 ## 13. Open Questions
-Answer by ID in the Answer Sheet (§17).
-- **Q1** — OPEN QUESTION: <unresolved item blocking confidence>
-- **Q2** — OPEN QUESTION: <…>
+Answer by ID in the Answer Sheet (§17). IDs stay stable.
+
+| Item | Impact if unresolved | Owner | Status | Deadline |
+| --- | --- | --- | --- | --- |
+| **Q1** — OPEN QUESTION: <unresolved item blocking confidence> | <what it blocks / risk> | <→ ask: stakeholder> | open | <date> |
+| **Q2** — OPEN QUESTION: <…> | <…> | <…> | open | <date> |
 
 ## 14. Dependencies, Risks & Non-Functional Requirements
 - Dependency / risk: <…>

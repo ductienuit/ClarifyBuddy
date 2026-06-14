@@ -41,9 +41,13 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
      draft's requirement sentences verbatim; never collapse them to a bare one-liner
      with no Why. Every requirement (including deferred) appears once.
 3. Assemble the **Functional Flows (process-centric)** section: build the Flow
-   Catalog, then one block per business process, mapping each flow to its OWN
-   step-by-step + Activity (PlantUML) + Sequence (Mermaid) from the draft's flow
-   section. Name flows **`F0n-Name`** (Principle 13.6): keep the
+   Catalog, then one block per business process in **read-by-flow order** (Principle
+   13.13): a one-line **Flow overview** → Activity (PlantUML) → Sequence (Mermaid) →
+   **Steps** (3-col `Step | Actor | Action / processing`, placed **below** the diagram,
+   reading the sequence if present else the activity; branches as bullets; no error
+   codes/rules/screens in steps) → a pointer line (`Rules: BR.. (§7). Errors / messages
+   / retry & tests: [§11.1 — F0n-Name](#err-f0n).`) → gaps. All diagrams come from the
+   draft's flow section. Name flows **`F0n-Name`** (Principle 13.6): keep the
    number stable, append a short English feature name (Login/Consent/Token/Revoke/…),
    and lead the block heading with the Profile-language name (e.g. "Luồng F02-Login
    — Định danh người dùng"). Use `F0n-Name` consistently in the flow catalog, error
@@ -70,10 +74,11 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
    accepted assumptions + answered questions as a **three-column** `Topic | Decision |
    Reflected in (BR/R)` table (no "decision-log ref" column); (b) **Suggestions —
    dispositioned** (Accepted → `<R..>` / Won't do / Awaiting confirmation); (c) **Open
-   items** that do not block sign-off. **Hide `A#`/`S#` codes** in these displayed
-   tables. There is **no `decision-log.md` file** — the dated history lives in
-   Document control → Change history. Then list the **blocking subset** of open items
-   + blocker audit findings in the **Sign-off blockers** section (§17 in both).
+   items** that do not block sign-off, as a **table** `Item | Impact if unresolved |
+   Owner | Status | Deadline` (Principle 13.13). **Hide `A#`/`S#` codes** in these
+   displayed tables. There is **no `decision-log.md` file** — the dated history lives
+   in Document control → Change history. Then list the **blocking subset** of open
+   items + blocker audit findings in the **Sign-off blockers** section (§17 in both).
 4b. Compose a short **Executive summary** (BRD) from the business context,
    objectives, scope, and key blockers — 1–2 paragraphs / bullets, composed from
    those sections, introducing no new claims.
@@ -90,24 +95,31 @@ content: compose from prior `clarify-output/` files. Do NOT invent business rule
    per-flow blocks live in the Functional Flows section). Carry over the whole edge
    analysis from the draft into the **Edge cases** section (Principle 13.8) — **no
    `edge-case-matrix.md` file**: error-producing edges become rows in the **Error code
-   & message table** (titled so; drop the entity-state column, keep transaction state;
-   a PRD may keep `HTTP / API status`), and non-error edges (idempotency/replay,
-   TTL/expiry, sandbox isolation, cross-app linkability, …) go in an **"Edge cases
-   without errors"** subsection. Carry the entity vs transaction/operation state
-   summary too. If a source section is missing, mark it `OPEN QUESTION` and name the
-   command that produces it.
+   & message table**, which is **split by flow** under per-flow anchors (`#### F0n-Name
+   {#err-f0n}`) so each flow's Steps deep-link to it; columns `Error code | Step / API |
+   Scenario | Transaction state | User-facing message | Retryable? | Required action |
+   Test` (drop entity-state; Step/API is business-level — `step 3` / `login()`, never a
+   path/method/HTTP status). Non-error edges (idempotency/replay, TTL/expiry, sandbox
+   isolation, cross-app linkability, …) go in an **"Edge cases without errors"**
+   subsection. Also build **§Data & systems impact as a table** (`Data concept |
+   Business meaning | Created/Read/Written when | Source of truth | Sensitivity | Owner
+   to confirm`) with the BA-altitude disclaimer (no invented endpoint/schema; APIs at
+   business level). Carry the entity vs transaction/operation state summary too. If a
+   source section is missing, mark it `OPEN QUESTION` and name the command that
+   produces it.
 8. Build the **Test scenarios (by context)** section as **one numbered table**
    (Principle 13.9), NOT a body traceability grid and NOT bullets. Columns
-   `# | Flow (F0n-Name) | Scenario (precondition + action) | Expected result | Test
-   (T-xx)`, numbered continuously and grouped by flow, from `test-scenarios.md` (do
-   not invent outcomes). Close with one self-standing **Coverage & traceability**
+   `# | Requirement (BRD-R#/R#) | Flow (F0n-Name) | Scenario (precondition + action) |
+   Expected result | Test (T-xx)`, numbered continuously and grouped by flow, from
+   `test-scenarios.md` (do not invent outcomes; full preconditions/steps stay in
+   `test-scenarios.md`). Close with one self-standing **Coverage & traceability**
    paragraph stating the case count + coverage (e.g. "12 scenarios across 4 flows;
    15/15 requirements have a flow + test; no orphans") that points to the **Flow
    Catalog** + `test-scenarios.md` — **never** to a traceability-matrix file (none
    exists). In-document traceability = Requirements ↔ the Flow Catalog (whose
    rule/error/requirement columns carry the links) ↔ this table. Still carry over the
-   **Flow / Step** column in the error table and **trigger / owner system / terminal**
-   in the state summary, both using `F0n-Name`.
+   **Step / API** column in the error table and **trigger / owner system / terminal**
+   in the state summary, using `F0n-Name`.
 9. Emit the **Appendix: Artifact index (source)** with a **Used when (who / when)**
    column (Principle 13.11), listing only the **lean deliverable set** that actually
    exists: the source `brd.md`/`prd.md`, audit-report, api-data-impact, stories,

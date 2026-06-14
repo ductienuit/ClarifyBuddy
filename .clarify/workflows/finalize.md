@@ -65,8 +65,14 @@ after `from-idea` / `improve answers` / `from-spec` (and optionally `handoff`).
   - Decision-rich processes have an Activity diagram (PlantUML); multi-system
     processes have a Sequence diagram (Mermaid) — or state "Sequence diagram not
     required" + a short reason.
-  - **No 7.x block mixes process A's activity with process B's sequence.**
-  - Flow steps map to business rule / validation / error code where relevant.
+  - **Read-by-flow order** in each block (Principle 13.13): Flow overview (one line)
+    → diagram(s) → **Steps below the diagram** (3-col `Step | Actor | Action`, reading
+    the sequence if present else the activity, branches as bullets, no error
+    codes/rules/screens) → pointer line `Rules: BR.. (§7). Errors … [§11.1 —
+    F0n-Name](#err-f0n).` → gaps.
+  - **No 8.x block mixes process A's activity with process B's sequence.**
+  - Flow steps name only the flow + branches; rules/errors/screens are referenced by
+    ID/anchor, not restated.
   - The Flow Catalog carries the rule / error-code / requirement columns (it is the
     in-document traceability spine); each Flow maps to ≥1 requirement.
   - The Screen / Display Matrix is **after** the detailed flows (or a clear reason).
@@ -97,13 +103,19 @@ after `from-idea` / `improve answers` / `from-spec` (and optionally `handoff`).
   codes hidden, no decision-log reference — history is in Change history), with
   blockers called out in **Sign-off blockers** (§17).
 - Edge analysis is in the document: error-producing edges in the **Error code &
-  message table** (a **Flow / Step** column using `F0n-Name`, no entity-state column);
-  non-error edges in an **"Edge cases without errors"** subsection; the **State
-  summary** has trigger / owner / terminal. The body has **Test scenarios (by
-  context)** as **one numbered table** (`# | Flow | Scenario | Expected | T-xx`,
-  grouped by flow, countable) + a self-standing **Coverage & traceability** paragraph
-  pointing to the Flow Catalog + `test-scenarios.md` — NOT to a traceability-matrix
-  file and NOT a body grid (Principle 13.9).
+  message table**, **split by flow** under per-flow anchors (`#### F0n-Name {#err-f0n}`)
+  with columns `Error code | Step / API | Scenario | Transaction state | User-facing
+  message | Retryable? | Required action | Test` (Step/API at business level, no
+  entity-state column); non-error edges in an **"Edge cases without errors"**
+  subsection; the **State summary** has trigger / owner / terminal. **§Data & systems
+  impact is a table** (Data concept | Business meaning | Created/Read/Written when |
+  Source of truth | Sensitivity | Owner) with the BA-altitude disclaimer. The body has
+  **Test scenarios (by context)** as **one numbered table** (`# | Requirement | Flow |
+  Scenario | Expected | T-xx`, grouped by flow, countable) + a self-standing **Coverage
+  & traceability** paragraph pointing to the Flow Catalog + `test-scenarios.md` — NOT
+  to a traceability-matrix file and NOT a body grid (Principle 13.9). **§Open items is
+  a table** (`Item | Impact if unresolved | Owner | Status | Deadline`). Every
+  `#err-f0n` deep-link has a matching header id (no broken links).
 - An **Appendix: Artifact index (source)** with a **Used when (who / when)** column
   lists only the lean deliverable set that exists (source `brd.md`/`prd.md`,
   audit-report, api-data-impact, stories, test-scenarios, version archive,

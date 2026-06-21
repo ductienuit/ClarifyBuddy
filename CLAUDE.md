@@ -5,33 +5,31 @@ Project context for Claude Code working in this repository.
 ## What this repo is
 
 Clarify is an **agent-native requirement-quality skill pack**, NOT a PRD
-generator. It turns rough ideas and weak PRDs into clear, testable, traceable,
-handoff-ready specs and **scores** their quality against a reproducible rubric.
+generator. It turns rough ideas into a clear, testable, traceable **URD (User
+Requirements Document)** in the **URD template** shape, and **scores** its quality
+against a reproducible rubric. URD is the single document standard — there is no
+BRD/PRD path.
 
-## The 8 commands (namespaced `clarify:`)
+## The 6 commands (namespaced `clarify:`)
 
 Defined in `.claude/commands/clarify/`:
 
-- `/clarify:from-idea [idea|path]` — shape an idea into a business/product-ready
-  PRD/BRD draft; captures the Document Profile plus journey, screen matrix,
-  business rules, exceptions, error messages, and state summary.
-- `/clarify:from-spec [path]` — optional Dev/QA build-ready elaboration for an
-  existing PRD/BRD or resolved Clarify draft: audit score, stories, AC, tests,
-  API/data impact, traceability. (Renamed from `from-prd`.)
+- `/clarify:from-idea [idea|path]` — shape an idea into a **URD draft**; captures the
+  Document Profile plus journey, user stories, screen matrix & field specs, business
+  rules, exceptions, error messages, and state model.
+- `/clarify:improve [mode]` — resolve the Answer Sheet (`answers`) or upgrade one
+  section (`model` regenerates the Mermaid diagrams; `change-request` analyzes CR
+  impact). Modes: answers, change-request, clarity, scope, business-rules, edge,
+  stories, acceptance-criteria, risk, traceability, nfr, model.
 - `/clarify:audit [path]` — score + findings only.
-- `/clarify:improve [mode]` — upgrade one section from prior output
-  (`answers` resolves the Answer Sheet after `from-idea`; `model` regenerates the
-  diagrams).
-- `/clarify:handoff` — emit Dev + QA packs from prior output.
-- `/clarify:finalize [prd|brd]` — closing step: compile confirmed outputs into the
-  standard sign-off document `brd.md`/`prd.md` (PRD or BRD per the Document Profile;
-  **never named "final-…"**, Principle 13.1).
-- `/clarify:export [html|all|offline]` — render the sign-off doc as **one full HTML
-  BRD/PRD** `clarify-output/brd.html` **from `brd.md`** (one source of truth):
-  client-side Mermaid + PlantUML (plantuml.com hex `~h` + code fallback), requirement
-  group-bands as `colspan` banded tables, a TOC, low-fi HTML wireframes, an artifact
-  index, and a LibreOffice docx round-trip. Best-effort with fallback; never invents;
-  no tool labels in displayed content.
+- `/clarify:finalize [md|html|word|all]` — closing step: compile confirmed outputs into
+  the sign-off URD `urd.md` (**never named "final-…"**, Principle 13.1) and render
+  `urd.html` (default); `word`/`all` also produce `urd.docx`.
+- `/clarify:export [html|word|offline|all]` — render the sign-off doc as **one full HTML
+  URD** `clarify-output/urd.html` **from `urd.md`** (one source of truth): client-side
+  Mermaid (no PlantUML), banded tables via `colspan`, a TOC, low-fi HTML wireframes, an
+  artifact index, and an optional LibreOffice `urd.docx`. Best-effort with fallback;
+  never invents; no tool labels in displayed content.
 - `/clarify:status` — read-only: artifact inventory, Document Profile, unresolved
   A/Q/S/V counts + blockers, and the recommended next step. Writes no files.
 
@@ -40,7 +38,7 @@ Defined in `.claude/commands/clarify/`:
 1. Quality over generation — improve and score, don't fabricate.
 2. **Never invent business rules** — label `ASSUMPTION` / `OPEN QUESTION`.
 3. Separate in-scope / out-of-scope / open questions.
-4. Testable, build-ready wording (actor + trigger + outcome; Given/When/Then).
+4. Testable, build-ready wording (actor + trigger + outcome; acceptance criteria).
 5. Always surface edge cases and handoff risk.
 6. Traceability both directions.
 7. Reproducible scoring — show the math.
@@ -54,45 +52,41 @@ Defined in `.claude/commands/clarify/`:
 12. Domain pack is an optional accelerator, not a gate — auto-detect the domain,
     load a matching pack if any, else proceed with **labeled inference** (never
     force-fit a wrong pack or block on a missing one).
-13. Document presentation & naming conventions — the default for from-idea,
-    finalize, and export: (13.1) output is `brd.md`/`prd.md`, **never "final-…"**,
-    archive `brd.v<semver>.md`; (13.2) the HTML is a full BRD/PRD rendered from
-    `brd.md` (pandoc + client-side Mermaid + PlantUML hex `~h`, requirement
-    group-bands → `colspan`, TOC + artifact index, LibreOffice docx round-trip; no
-    tool labels) — not a "review pack"; (13.3) headings render `Vietnamese (English)`
-    when Language=vi, machine anchors always English; (13.4) a §0 "How to read"
-    (intro + symbol table + front glossary); (13.5) a "How the system works
-    (overview)" before requirements; (13.6) flows named `F0n-Name` (stable number,
-    appended name); (13.7) requirements are ONE grouped table (`ID | Requirement |
-    Why | Priority`); (13.8) the error section is the **Error code & message table**
-    (no entity-state column) and the whole edge analysis is in-document (error edges in
-    that table, non-error edges in "Edge cases without errors"); (13.9) the body
-    **Test scenarios (by context)** is ONE numbered table + a Coverage paragraph, and
-    traceability is in-document (Requirements ↔ Flow Catalog ↔ Test scenarios) — **no
-    `traceability-matrix.md` file**; (13.10) **Decisions & open items** (Decisions made
-    is 3 cols; history in Change history) — **no `decision-log.md` file**; (13.11) lean
-    deliverable set (`brd.md`/`brd.html`, stories, test-scenarios, api-data-impact,
-    wireframes, audit-report, version archive) with a "Used when" artifact index —
+13. Document presentation & naming conventions (URD template) — the default for
+    from-idea, finalize, and export: (13.1) output is `urd.md`, **never "final-…"**,
+    archive `urd.v<semver>.md`, renderings `urd.html`/`urd.docx`; (13.2) the HTML/Word
+    are a full URD rendered from `urd.md` (pandoc + navy skin + client-side Mermaid,
+    **no PlantUML**, banded tables → `colspan`, TOC + artifact index, LibreOffice docx;
+    no tool labels) — not a "review pack"; (13.3) headings render `Tiếng Việt (English)`
+    when Language=vi (default), machine anchors always English; (13.4) the URD skeleton
+    (cover → §1–§5, diagram conventions, §3 repeating per process); (13.5) §3 is a
+    capability-repeating block (3.1 desc · 3.2 user stories · 3.3 sequence · 3.4 state ·
+    3.5 rules · 3.6 screens · 3.7 errors · 3.8 NFR); (13.6) flows named `F0n-Name`
+    (stable number, appended name); (13.7) user stories table (`ID | Là | Tôi muốn | Để |
+    Tiêu chí chấp nhận`); (13.8) errors in §3.7 (`Trường hợp/Mã | Điều kiện | Thông báo
+    VN | EN | Xử lý`) and the whole edge analysis in-document; (13.9) diagrams are
+    Mermaid-only (sequence autonumber/no-color + colored state) and traceability is
+    in-document — **no `traceability-matrix.md` file**; (13.10) open questions
+    consolidated in §5, decisions in Lịch sử thay đổi — **no `decision-log.md` file**;
+    (13.11) lean deliverable set (`urd.md`/`urd.html`/`urd.docx`, wireframes,
+    audit-report, version archive) with a "Dùng khi" artifact index — user-stories/
     edge/error/model/traceability/decision-log/elicitation are folded into the doc, not
-    emitted; (13.12) a blank line between any label/paragraph and a following table.
-    Scored under `clarity`/structure.
+    emitted; (13.12) a blank line between any label/paragraph and a following table;
+    (13.13) screen field specs + one-source-of-truth + BA altitude. Scored under
+    `clarity`/structure.
 
 ## Where things live
 
 - `.clarify/workflows/` — ordered engine sequences per command.
-- `.clarify/engine/` — 16 imperative engines (clarify, shape, write-prd, edge,
-  error-handling, risk, modeling, data, api, story, acceptance-criteria, test,
-  trace, handoff, finalize, export). `modeling` emits a PlantUML activity diagram +
-  a Mermaid sequence diagram, each with a viewer link; `export` packages the Visual
-  Review Pack.
-- `.clarify/templates/` — 22 output shapes (incl. brd-draft, error-handling,
-  model-suggestions, final-prd, final-brd, elicitation-pack, decision-log,
-  change-impact, and the review-pack set: `review-pack-template.html`,
-  `review-manifest-template.json`, `screen-inventory-template`,
-  `wireframe-template.html`, `traceability-map-template`,
-  `review-checklist-template`). The draft stage picks `prd-template` (PRD) or
-  `brd-draft-template` (BRD) by the Document Profile; BRD keeps deep technical
-  mechanics under a "Downstream Technical Notes" section (altitude by standard).
+- `.clarify/engine/` — 12 imperative engines (clarify, shape, write-urd, edge,
+  error-handling, risk, modeling, story, acceptance-criteria, trace, finalize, export).
+  `modeling` emits a Mermaid sequence diagram (§3.3) + a colored Mermaid state diagram
+  (§3.4), each with a viewer link; `finalize`/`export` render the URD HTML/Word.
+- `.clarify/templates/` — 13 output shapes (incl. `urd-draft-template`,
+  `final-urd-template`, `urd-pack-template.html`, error-handling, model-suggestions,
+  user-story, acceptance-criteria, edge-case-matrix, elicitation-pack, decision-log,
+  change-impact, audit-report, `wireframe-template.html`). `from-idea` writes the
+  `urd-draft`; `finalize` composes the `final-urd`.
 - `.clarify/anti-patterns/anti-patterns.yaml` — **source of truth** for the 36
   anti-patterns (`.md` is the human rendering).
 - `.clarify/evaluators/scoring-rubric.yaml` — **source of truth** for scoring;
@@ -104,8 +98,8 @@ Defined in `.claude/commands/clarify/`:
   `fintech-mini` + template.
 - `.clarify/eval/` — golden tests for the skill itself.
 - `.clarify/scripts/clarify_tools.py` — deterministic helpers (stdlib Python:
-  `status`, `answers`, `integrity`, `manifest`), bundled in every zip. Engines
-  prefer them but ALWAYS fall back to the manual checklist when Python is absent.
+  `status`, `answers`, `integrity`), bundled in every zip. Engines prefer them but
+  ALWAYS fall back to the manual checklist when Python is absent.
 - `lint-skill.ps1` (repo root, dev-time) — checks every count/sync invariant;
   `build-skill.ps1` runs it first and refuses to package on violations
   (`-SkipLint` to bypass).
@@ -113,53 +107,44 @@ Defined in `.claude/commands/clarify/`:
 ## Output convention
 
 All artifacts go to `clarify-output/` at repo root (see
-`.clarify/output-conventions.md`). `improve`, `handoff`, `finalize`, and `export`
-READ prior outputs rather than re-deriving. `finalize` writes `brd.md`/`prd.md`;
-`export` renders `brd.html` **from** that Markdown and never edits the master.
+`.clarify/output-conventions.md`). `improve`, `finalize`, and `export` READ prior
+outputs rather than re-deriving. `finalize` writes `urd.md`; `export` renders
+`urd.html` (and `urd.docx` on request) **from** that Markdown and never edits the
+master.
 
 Recommended flows:
-- Business sign-off from idea: `from-idea` → `improve answers` → `finalize brd`
-  → optional `export` (HTML BRD for stakeholders/design).
-- Dev/QA handoff: `from-idea` → `improve answers` → optional `from-spec` →
-  `handoff` → optional `export`.
-- Existing document: `from-spec` when build-ready elaboration is needed, or
-  `audit` when score/findings only are needed.
+- Sign-off from idea: `from-idea` → `improve answers` → `finalize` (`urd.md` +
+  `urd.html`) → optional `finalize word` / `export word` for `urd.docx`.
+- Score only: `audit`.
 - Returning to a project / "what's left?": `status` (read-only).
 - After sign-off, a change arrives: `improve change-request` (impact analysis) →
-  apply via the relevant improve mode → `finalize` (version bump + Change history).
+  apply via the relevant improve mode → `finalize` (version bump + Lịch sử thay đổi).
 
-Governance conventions: the Document Profile carries a **Language** (output
-renders in it; ASSUMPTION/OPEN QUESTION/SUGGESTION labels and all IDs stay
+Governance conventions: the Document Profile carries a **Language** (default `vi`;
+output renders in it; ASSUMPTION/OPEN QUESTION/SUGGESTION labels and all IDs stay
 English as parse anchors); questions carry an elicitation owner (`→ ask:
-<stakeholder>`) and are regrouped per owner **in the draft's Open items section**;
-applied decisions are recorded in the doc's **Decisions made** table + **Change
-history** (no `decision-log.md`); `finalize` never overwrites silently (archives
-`brd.v<N>.md`/`prd.v<N>.md`, bumps Version, adds a Change history row); `trace`
-verifies in-document traceability and reports dangling ID references (no separate
-matrix file).
+<stakeholder>`) and are consolidated in §5; applied decisions are recorded in the
+doc's **Decisions made** table + **Lịch sử thay đổi** (no `decision-log.md`);
+`finalize` never overwrites silently (archives `urd.v<N>.md`, bumps Version, adds a
+Change history row); `trace` verifies in-document traceability and reports dangling ID
+references (no separate matrix file).
 
 ## Build/scope notes
 
 - MVP 1: no web app, no CLI binary, no Jira/Confluence integration.
-- `finalize` can emit a final **BRD or PRD** document by compiling confirmed
-  outputs. It does not require `from-spec` artifacts for business sign-off; missing
-  stories/AC/tests/API/traceability are optional build-ready layer inputs unless
-  handoff readiness is requested. Standalone `write-brd` / `write-srs` engines
-  (generate-from-scratch) remain deferred to v1.1.
+- `finalize` compiles the sign-off URD from confirmed outputs; it does not require
+  any separate build-ready layer. Higher-fidelity native Word export is deferred to
+  v1.1 (current Word is a LibreOffice round-trip).
 - Anti-pattern count is exactly **36**. Keep the yaml and the catalog in sync.
-- The PRD template carries product/operational lenses: System & External Actors,
-  Configuration & Settings, Scheduled Jobs / Batch, and effective-date/cohort
-  columns on Business Rules. Keep engine prompts and these sections aligned.
-- **Functional Flows are process-centric** (one section title everywhere:
-  "Functional Flows (process-centric)"): a Flow Catalog, then one block per
-  business process with step-by-step + PlantUML activity + Mermaid sequence for the
-  SAME process, then the Screen Matrix. Never mix two processes' diagrams in one
-  block (`mixed-process-diagram-block`). Tools are fixed: activity=PlantUML,
-  sequence=Mermaid, state=Mermaid. Traceability has a `Flow` column; orphan flows
-  are flagged.
+- **§3 is capability-repeating and process-centric** (one block per business process):
+  3.1 description, 3.2 user stories, 3.3 Mermaid sequence + steps, 3.4 colored Mermaid
+  state + table, 3.5 rules, 3.6 screens & field specs, 3.7 errors, 3.8 NFR. Never mix
+  two processes' diagrams in one block (`mixed-process-diagram-block`). Diagrams are
+  **Mermaid-only** (sequence + state); **no PlantUML**. Traceability is in-document
+  (User stories ↔ Flow Catalog ↔ rules ↔ errors); orphan flows are flagged.
 - **Wireframes are HTML-first:** after screen/flow requirements exist, `finalize`
   or `export` renders low-fi grayscale wireframes as an inline HTML widget, or as
   one self-contained `wireframes.html` file if inline HTML is unavailable. Use real
-  labels from the BRD/PRD, mark placeholders `ASSUMPTION`, never invent fields or
+  labels from the URD, mark placeholders `ASSUMPTION`, never invent fields or
   business rules, avoid ASCII wireframes as the primary artifact, and trace every
-  screen to its source flow/step and requirement.
+  screen to its source flow/step and user story.

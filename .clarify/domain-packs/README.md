@@ -29,8 +29,7 @@ pack only for domains used repeatedly or with org-specific rules/compliance.
 | `edge` | `common-edge-cases.md` |
 | `risk` | `common-business-rules.md`, `risk-compliance.md`, `configurations.md`, `scheduled-operations.md` |
 | `modeling` | `common-flows.md`, `state-models.md`, `scheduled-operations.md`, `back-office-flows.md` |
-| `data` / `api` | `api-data-patterns.md`, `configurations.md` |
-| `clarify` / `shape` | `back-office-flows.md` (non-user actors), `configurations.md` |
+| `clarify` / `shape` | `back-office-flows.md` (non-user actors), `configurations.md`, `api-data-patterns.md` |
 | all | `GLOSSARY.md`, `DOMAIN.md` for terminology and context |
 
 A complete pack also includes `configurations.md` (tunable parameters with owners

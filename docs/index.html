@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clarify · Trợ lý chất lượng yêu cầu cho BA/PO</title>
-<meta name="description" content="Hướng dẫn sử dụng Clarify: skill cho Claude giúp BA/PO biến ý tưởng thành BRD/PRD ký duyệt được, có điểm số, có truy vết, không bịa nghiệp vụ.">
+<meta name="description" content="Hướng dẫn sử dụng Clarify: skill cho Claude giúp BA/PO biến ý tưởng thành URD (User Requirements Document) ký duyệt được, có điểm số, có truy vết, không bịa nghiệp vụ.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
@@ -277,7 +277,7 @@ html.js .hero .rv{transition-duration:.8s}
     <a href="#journey">Hành trình</a>
     <a href="#concepts">Khái niệm</a>
     <a href="#outputs">Đầu ra</a>
-    <a href="#commands">8 lệnh</a>
+    <a href="#commands">6 lệnh</a>
     <a href="#faq">FAQ</a>
   </div>
 </div></nav>
@@ -285,18 +285,20 @@ html.js .hero .rv{transition-duration:.8s}
 <header class="hero" id="top"><div class="wrap hero-in">
   <div>
     <span class="who rv">Agent skill cho Claude · dành cho Business Analyst &amp; Product Owner</span>
-    <h1 class="rv">Từ ý tưởng mơ hồ đến <span class="acc">BRD ký duyệt được</span>, không bịa một dòng nghiệp vụ nào.</h1>
+    <h1 class="rv">Từ ý tưởng mơ hồ đến <span class="acc">URD ký duyệt được</span>, không bịa một dòng nghiệp vụ nào.</h1>
     <p class="sub rv">Clarify đóng vai một senior BA đồng hành trong Claude: đặt đúng câu hỏi
-    cho đúng người, soạn tài liệu đúng chuẩn, vẽ sơ đồ, dựng wireframe và chấm điểm chất lượng
-    theo 36 anti-pattern. Điều nó chưa chắc, nó hỏi; điều bạn chưa quyết, nó chờ.</p>
+    cho đúng người, soạn URD (User Requirements Document) đúng chuẩn template, vẽ sơ đồ Mermaid,
+    dựng wireframe và chấm điểm chất lượng theo 36 anti-pattern. Điều nó chưa chắc, nó hỏi;
+    điều bạn chưa quyết, nó chờ.</p>
     <p class="rv">
       <a class="cta solid" href="#install">Cài đặt trong 5 phút</a>
-      <a class="cta line" href="#journey">Xem hành trình 6 bước</a>
+      <a class="cta line" href="#journey">Xem hành trình</a>
+      <a class="cta line" href="URD-TEMPLATE.md">Xem mẫu URD</a>
     </p>
   </div>
   <div class="doc rv" role="img" aria-label="Minh hoạ Answer Sheet: bảng câu hỏi có mã số để BA trả lời">
     <div class="doc-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      <span class="ttl">brd-draft.md · Answer Sheet</span></div>
+      <span class="ttl">urd-draft.md · Answer Sheet</span></div>
     <div class="doc-body">
       <div class="row"><span class="tag t-v">V2</span> Tiết kiệm có kỳ hạn <span class="ans">← bạn chọn</span></div>
       <div class="row"><span class="tag t-a">A1</span> Chỉ KH cá nhân đã KYC <span class="ans">: keep</span></div>
@@ -328,10 +330,10 @@ html.js .hero .rv{transition-duration:.8s}
       gắn nhãn <em>hỏi ai</em> (PO, kế toán, vận hành, pháp chế...) và được gom sẵn thành
       bộ câu hỏi mang đi workshop.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">📐</span><div>
-      <b>Đúng chuẩn tài liệu</b>
-      <p>BRD viết bằng ngôn ngữ nghiệp vụ, PRD đi sâu chi tiết sản phẩm. Flow tổ chức theo
-      nghiệp vụ: mỗi quy trình giữ trọn bộ step-by-step, activity diagram và sequence diagram
-      của cùng một quy trình.</p></div></li>
+      <b>Đúng chuẩn URD (template chuẩn)</b>
+      <p>Một khung duy nhất: Tổng quan → Tổng quan hệ thống → từng nghiệp vụ (§3 lặp lại). Mỗi
+      nghiệp vụ giữ trọn bộ mô tả, user stories, sơ đồ tuần tự (Mermaid sequence), sơ đồ trạng
+      thái (Mermaid state tô màu), quy định, đặc tả màn hình và bảng lỗi.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">🧭</span><div>
       <b>Nhìn đủ mọi góc</b>
       <p>Không dừng ở "user bấm, hệ thống trả lời": tự soi góc vận hành, kế toán, đối soát,
@@ -343,12 +345,13 @@ html.js .hero .rv{transition-duration:.8s}
       chặn ở "Not ready for handoff": tài liệu không thể tự nhận là xong.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">🖼️</span><div>
       <b>Sơ đồ và wireframe xem ngay</b>
-      <p>Bản HTML BRD mở ra là thấy: diagram render sẵn trong trình duyệt, wireframe
-      low-fi dạng khung điện thoại với nhãn thật lấy từ tài liệu.</p></div></li>
+      <p>Bản HTML URD mở ra là thấy: sơ đồ Mermaid render sẵn trong trình duyệt, wireframe
+      low-fi dạng khung điện thoại với nhãn thật lấy từ tài liệu. Xuất thêm Word khi cần.</p></div></li>
     <li class="rv"><span class="gly" aria-hidden="true">📜</span><div>
       <b>Có vết, có version</b>
-      <p>Mỗi quyết định ghi vào Decision Log. Finalize không đè file: tự lưu bản cũ, tăng
-      version, ghi Change history. Change request được phân tích tác động qua chuỗi truy vết.</p></div></li>
+      <p>Mỗi quyết định ghi vào bảng Decisions made + Lịch sử thay đổi. Finalize không đè file:
+      tự lưu bản cũ (<code>urd.v1.md</code>), tăng version. Change request được phân tích tác động
+      qua chuỗi truy vết.</p></div></li>
   </ul>
 </div></section>
 
@@ -363,11 +366,11 @@ html.js .hero .rv{transition-duration:.8s}
       <h3><span class="k">CÁCH 1</span> Claude Desktop / Claude.ai</h3>
       <p class="aside" style="margin-top:0">Khuyên dùng cho BA/PO không làm việc trong repo.</p>
       <ol>
-        <li>Lấy 9 file <code>.zip</code> trong thư mục <code>build/</code> của repo
-          (gói router <code>clarify.zip</code> và 8 gói lệnh chuyên biệt).</li>
+        <li>Lấy 7 file <code>.zip</code> trong thư mục <code>build/</code> của repo
+          (gói router <code>clarify.zip</code> và 6 gói lệnh chuyên biệt).</li>
         <li>Mở <strong>Settings → Capabilities → Skills → Upload skill</strong>, tải từng
           zip (bật Code execution nếu được hỏi).</li>
-        <li>Trong chat, gõ tự nhiên: <em>"clarify: tôi muốn làm BRD cho tính năng gửi tiết
+        <li>Trong chat, gõ tự nhiên: <em>"clarify: tôi muốn làm URD cho tính năng gửi tiết
           kiệm"</em>, hoặc chọn skill từ menu <code>/</code>.</li>
       </ol>
       <p class="aside">Không nhớ nên dùng skill nào? Chọn <code>clarify</code> (router):
@@ -379,11 +382,10 @@ html.js .hero .rv{transition-duration:.8s}
       <ol>
         <li>Clone hoặc copy repo sao cho <code>.claude/</code> và <code>.clarify/</code>
           nằm ở gốc dự án.</li>
-        <li>Claude Code tự nhận 8 slash command:</li>
+        <li>Claude Code tự nhận 6 slash command:</li>
       </ol>
 <pre><code>/clarify:from-idea   /clarify:improve
-/clarify:from-spec   /clarify:audit
-/clarify:handoff     /clarify:finalize
+/clarify:audit       /clarify:finalize
 /clarify:export      /clarify:status</code></pre>
       <p class="aside">Mọi sản phẩm được ghi vào thư mục <code>clarify-output/</code>
       ở gốc repo.</p>
@@ -395,32 +397,31 @@ html.js .hero .rv{transition-duration:.8s}
 <section id="journey"><div class="wrap">
   <div class="sect-head rv">
     <h2>Hành trình của một BA, từ đầu đến cuối</h2>
-    <p class="standfirst">Bốn bước bắt buộc, hai bước tuỳ chọn. Ví dụ xuyên suốt bên dưới:
+    <p class="standfirst">Bốn bước chính, các bước phụ khi cần. Ví dụ xuyên suốt bên dưới:
     <strong>"tính năng mở sổ tiết kiệm online"</strong> cho ngân hàng.</p>
   </div>
 
-  <div class="pipe rv" role="list" aria-label="Pipeline 6 bước">
-    <div class="pstep" role="listitem"><b>from-idea</b><small>Ý tưởng thành bản nháp BRD/PRD kèm bộ câu hỏi</small></div>
+  <div class="pipe rv" role="list" aria-label="Pipeline" style="grid-template-columns:repeat(5,1fr)">
+    <div class="pstep" role="listitem"><b>from-idea</b><small>Ý tưởng thành URD draft kèm bộ câu hỏi</small></div>
     <div class="pstep" role="listitem"><b>improve answers</b><small>Bạn trả lời Answer Sheet, bản nháp được chốt dần</small></div>
-    <div class="pstep opt" role="listitem"><span class="lbl">TUỲ CHỌN</span><b>from-spec</b><small>Thêm lớp build-ready: stories, AC, test, API</small></div>
-    <div class="pstep" role="listitem"><b>finalize</b><small>Tài liệu BRD/PRD cuối, chuẩn ký duyệt</small></div>
-    <div class="pstep" role="listitem"><b>export</b><small>Bản HTML BRD từ brd.md: diagram, wireframe xem ngay</small></div>
-    <div class="pstep opt" role="listitem"><span class="lbl">KHI CẦN</span><b>handoff · status</b><small>Gói Dev-QA · xem mình đang ở đâu</small></div>
+    <div class="pstep opt" role="listitem"><span class="lbl">TUỲ CHỌN</span><b>audit</b><small>Chấm điểm /100 + danh sách lỗi</small></div>
+    <div class="pstep" role="listitem"><b>finalize</b><small>URD cuối (urd.md + urd.html), chuẩn ký duyệt</small></div>
+    <div class="pstep" role="listitem"><b>export</b><small>HTML/Word từ urd.md: sơ đồ, wireframe xem ngay</small></div>
   </div>
 
   <div class="journey">
 
     <article class="jstep rv"><div>
       <h3>Định hình ý tưởng · <code>/clarify:from-idea</code></h3>
-      <p class="who"><b>Bạn có:</b> một câu mô tả &nbsp;·&nbsp; <b>Nhận về:</b> bản nháp BRD/PRD, Answer Sheet, Elicitation Pack</p>
-      <p class="maxw">Bạn gõ: <em>"Tôi là BA, làm BRD cho tính năng gửi tiết kiệm online trên
+      <p class="who"><b>Bạn có:</b> một câu mô tả &nbsp;·&nbsp; <b>Nhận về:</b> URD draft + Answer Sheet</p>
+      <p class="maxw">Bạn gõ: <em>"Tôi là BA, làm URD cho tính năng gửi tiết kiệm online trên
       mobile banking."</em> Clarify lập <strong>Document Profile</strong> (vai trò BA/PO,
-      chuẩn BRD/PRD, domain, ngôn ngữ output) rồi hỏi tối đa 5 câu chặn phạm vi:</p>
+      chuẩn luôn là URD, domain, ngôn ngữ — mặc định tiếng Việt) rồi hỏi tối đa 5 câu chặn phạm vi:</p>
 <pre><code><span class="hl">Q1</span> Kênh áp dụng: mobile app, web, quầy hay cả ba?        <span class="c">→ ask: PO</span>
 <span class="hl">Q2</span> Loại sản phẩm: có kỳ hạn / không kỳ hạn / gửi góp?     <span class="c">→ ask: PO</span>
 <span class="hl">Q3</span> Khách hàng mục tiêu: cá nhân, doanh nghiệp?            <span class="c">→ ask: PO</span>
 <span class="hl">Q4</span> Có gồm tất toán trước hạn, tái tục khi đáo hạn?        <span class="c">→ ask: Vận hành</span>
-<span class="hl">Q5</span> Cần BRD high-level hay PRD chi tiết màn hình?          <span class="c">→ ask: BA</span></code></pre>
+<span class="hl">Q5</span> Mức chi tiết màn hình mong muốn đến đâu?               <span class="c">→ ask: BA</span></code></pre>
       <p class="maxw">Kèm theo là <strong>Variant Matrix</strong>, bảng phương án để bạn tick
       chọn thay vì mô tả dài dòng:</p>
       <div class="tscroll" style="--tmin:560px"><table style="min-width:560px">
@@ -428,20 +429,21 @@ html.js .hero .rv{transition-duration:.8s}
         <tr><td><b>V1</b></td><td>Không kỳ hạn</td><td>Bất kỳ lúc nào</td><td>Thả nổi</td><td>Không áp dụng</td></tr>
         <tr><td><b>V2</b></td><td>Có kỳ hạn</td><td>Đáo hạn / tất toán sớm</td><td>Cố định ngày mở</td><td>Tái tục / trả về TKTT</td></tr>
       </table></div>
-      <details><summary>Bản nháp sinh ra có gì?</summary><div>
-        <p>Một BRD draft đúng độ cao nghiệp vụ: bối cảnh và mục tiêu, phạm vi, stakeholder
-        (cả hậu trường: kế toán, vận hành, đối soát), <strong>Customer Journey</strong> đầy đủ
+      <details><summary>URD draft sinh ra có gì?</summary><div>
+        <p>Một URD draft đúng độ cao nghiệp vụ: bối cảnh và mục tiêu, phạm vi, nhóm người dùng &amp;
+        stakeholder (cả hậu trường: kế toán, vận hành, đối soát), <strong>hành trình</strong> đầy đủ
         (menu → chọn sản phẩm → xem lãi suất → nhập tiền → xác nhận → <b>OTP</b> → kết quả),
-        bảng màn hình, business rules có cột hiệu lực và phạm vi áp dụng cho user cũ/mới,
+        <strong>user stories</strong> kèm tiêu chí chấp nhận, bảng màn hình &amp; đặc tả trường,
+        business rules có cột hiệu lực và phạm vi áp dụng cho user cũ/mới, sơ đồ trạng thái,
         bảng lỗi với thông điệp khách hàng, edge cases, cùng các đề xuất
         <span class="tag t-s">SUGGESTION</span> như màn cấu hình lãi suất, job tính lãi,
-        báo cáo cho kế toán. Chi tiết kỹ thuật sâu (ledger, idempotency...) được dồn vào mục
-        "Downstream Technical Notes" để không làm rối người đọc nghiệp vụ.</p></div></details>
+        báo cáo cho kế toán. Chi tiết kỹ thuật sâu (ledger, idempotency...) được tóm tắt ở mục
+        phi chức năng hoặc gắn <span class="tag t-q">OPEN QUESTION</span> cho team kỹ thuật.</p></div></details>
     </div></article>
 
     <article class="jstep rv"><div>
       <h3>Trả lời và chốt · <code>/clarify:improve answers</code></h3>
-      <p class="who"><b>Bạn làm:</b> copy Answer Sheet, điền, dán lại &nbsp;·&nbsp; <b>Nhận về:</b> bản nháp đã chốt, Decision Log</p>
+      <p class="who"><b>Bạn làm:</b> copy Answer Sheet, điền, dán lại &nbsp;·&nbsp; <b>Nhận về:</b> URD draft đã chốt dần</p>
       <p class="maxw">Cuối bản nháp luôn có khối <strong>Answer Sheet</strong> copy được.
       Mỗi mục cần bạn quyết có ID riêng:</p>
 <pre><code><span class="c"># Copy khối này, điền sau mỗi ID, gửi lại.</span>
@@ -454,44 +456,43 @@ S1: yes                               <span class="c"># duyệt: màn cấu hìn
 S2: later                             <span class="c"># để sau: dashboard huy động</span></code></pre>
       <p class="maxw">Gửi kèm lệnh <code>/clarify:improve answers</code>. Clarify áp từng quyết
       định theo ID: câu trả lời thành rule đã chốt, suggestion được duyệt vào phạm vi, phương án
-      V2 được cố định. Mọi quyết định tự ghi vào <strong>Decision Log</strong> (ai quyết, khi
-      nào, ảnh hưởng mục nào); ba tuần sau sếp hỏi "sao chọn V2?" là có vết. Các câu hỏi còn lại
-      được gom theo <em>người cần hỏi</em> trong <code>elicitation-pack.md</code> để bạn mang
-      đi họp. Lặp bước này đến khi hết câu hỏi lớn.</p>
+      V2 được cố định. Mọi quyết định tự ghi vào bảng <strong>Decisions made</strong> + dòng
+      <strong>Lịch sử thay đổi</strong> ngay trong tài liệu (không file rời); ba tuần sau sếp hỏi
+      "sao chọn V2?" là có vết. Các câu hỏi còn lại được gom theo <em>người cần hỏi</em> trong mục
+      Câu hỏi mở (§5) để bạn mang đi họp. Lặp bước này đến khi hết câu hỏi lớn.</p>
     </div></article>
 
     <article class="jstep rv"><div>
-      <h3>Lớp build-ready (tuỳ chọn) · <code>/clarify:from-spec</code></h3>
-      <p class="who"><b>Khi nào:</b> cần bàn giao Dev/QA. Bỏ qua nếu chỉ cần ký duyệt nghiệp vụ.</p>
-      <p class="maxw">Bổ sung những thứ bản nháp không có: <strong>điểm audit</strong>, user
-      stories, acceptance criteria dạng Given/When/Then (gồm cả case biên hiệu lực lãi suất và
-      case "trừ tiền rồi nhưng tạo sổ lỗi"), kịch bản test, phân tích API/dữ liệu, ma trận truy
-      vết Requirement → Flow → Rule → Error → Story → Test. Nó tái dùng edge case, bảng lỗi,
-      sơ đồ đã có chứ không làm lại từ đầu.</p>
+      <h3>Chấm điểm chất lượng (tuỳ chọn) · <code>/clarify:audit</code></h3>
+      <p class="who"><b>Khi nào:</b> muốn biết tài liệu "đủ tốt" chưa, bất cứ lúc nào.</p>
+      <p class="maxw">Chấm <strong>100 điểm trên 10 tiêu chí</strong>, đối chiếu 36 anti-pattern,
+      kèm bảng điểm từng tiêu chí và danh sách lỗi (blocker / major / minor) — mỗi lỗi nối tới một
+      tiêu chí và một cách sửa cụ thể. Có lỗi mức blocker thì band bị chặn ở "Not ready for
+      handoff": tài liệu không thể tự nhận là xong. Audit chỉ chấm, không sửa.</p>
     </div></article>
 
     <article class="jstep rv"><div>
-      <h3>Chốt tài liệu · <code>/clarify:finalize brd</code></h3>
-      <p class="who"><b>Nhận về:</b> <code>brd.md</code> chuẩn ký duyệt (không đặt tên "final")</p>
-      <p class="maxw">Biên soạn tài liệu: Document control với Change history, Executive
-      summary, <strong>§0 "Cách đọc tài liệu"</strong> (bảng ký hiệu + glossary), <strong>"Cách
-      hệ thống hoạt động (tổng quan)"</strong>, <strong>bảng yêu cầu nhóm theo chức năng</strong>
-      (ID · Yêu cầu · Vì sao · Ưu tiên), <strong>Functional Flows tổ chức theo nghiệp
-      vụ</strong> đặt tên <code>F0n-Tên</code> (Flow Catalog rồi từng quy trình; mỗi flow đủ bộ
-      step-by-step, activity, sequence), bảng lỗi và thông điệp khách hàng, state model,
-      truy vết (có cột Nguồn), cùng mục <strong>Sign-off blockers</strong> gom mọi điểm chưa chốt.</p>
+      <h3>Chốt tài liệu · <code>/clarify:finalize</code></h3>
+      <p class="who"><b>Nhận về:</b> <code>urd.md</code> + <code>urd.html</code> chuẩn ký duyệt (không đặt tên "final"; thêm <code>word</code> để có <code>urd.docx</code>)</p>
+      <p class="maxw">Biên soạn URD theo <a href="URD-TEMPLATE.md">template chuẩn</a>: Cover (thông
+      tin tài liệu) + Lịch sử thay đổi, <strong>§1 Tổng quan</strong>, <strong>§2 Tổng quan hệ
+      thống</strong> (mục tiêu, nhóm người dùng, tổng quan vận hành), <strong>Quy ước trình bày
+      sơ đồ</strong>, rồi <strong>§3 lặp lại cho từng nghiệp vụ</strong> đặt tên <code>F0n-Tên</code>
+      (mô tả · user stories · sơ đồ tuần tự Mermaid · sơ đồ trạng thái Mermaid tô màu · quy định ·
+      đặc tả màn hình · bảng lỗi VN/EN · phi chức năng), <strong>§4 Phụ lục</strong> và
+      <strong>§5 Câu hỏi mở</strong> gom mọi điểm chưa chốt. Heading song ngữ, ID giữ tiếng Anh.</p>
       <p class="maxw">Chạy lại finalize sau khi sửa? Bản cũ tự lưu thành
-      <code>brd.v1.md</code>, version tăng, Change history thêm dòng. Không bao giờ
-      đè mất.</p>
+      <code>urd.v1.md</code>, version tăng, Lịch sử thay đổi thêm dòng. Không bao giờ đè mất.</p>
     </div></article>
 
     <article class="jstep rv"><div>
-      <h3>Xuất bản HTML · <code>/clarify:export</code></h3>
-      <p class="who"><b>Nhận về:</b> <code>brd.html</code> — toàn bộ BRD render từ <code>brd.md</code>, mở bằng trình duyệt là xem được</p>
-      <p class="maxw">Hết cảnh copy code PlantUML/Mermaid sang web để xem sơ đồ. Bản HTML
-      là chính tài liệu BRD/PRD render từ <code>brd.md</code> (một nguồn sự thật): mục lục,
-      sơ đồ render sẵn (Mermaid client-side, PlantUML qua plantuml.com), bảng yêu cầu gộp ô
-      theo nhóm, wireframe low-fi, chỉ mục artifact, round-trip qua LibreOffice để xuất Word chuẩn.
+      <h3>Xuất bản HTML / Word · <code>/clarify:export</code></h3>
+      <p class="who"><b>Nhận về:</b> <code>urd.html</code> (và <code>urd.docx</code> khi cần) — toàn bộ URD render từ <code>urd.md</code>, mở bằng trình duyệt/Word là xem được</p>
+      <p class="maxw">Hết cảnh copy code sơ đồ sang web để xem. Bản HTML là chính tài liệu URD
+      render từ <code>urd.md</code> (một nguồn sự thật), skin navy theo mẫu chuẩn: mục lục,
+      sơ đồ <strong>Mermaid render sẵn client-side</strong> (không cần copy đi đâu), bảng gộp ô
+      theo nhóm, wireframe low-fi, chỉ mục artifact. Thêm <code>word</code> để xuất
+      <code>urd.docx</code> (qua LibreOffice), <code>offline</code> để xem không cần mạng.
       Gửi một file cho cả PO, Design, Dev, QA.</p>
       <div class="wf-demo">
         <div class="wf" role="img" aria-label="Wireframe low-fi màn xác nhận mở sổ">
@@ -512,21 +513,19 @@ S2: later                             <span class="c"># để sau: dashboard huy
           <div class="btn">Xem chi tiết sổ</div>
           <div class="src">S04 · Flow F01 bước 7 · trace về R1</div>
         </div>
-        <p class="cap">Wireframe trong bản HTML BRD: khung điện thoại grayscale, đánh số theo
-        flow, nhãn thật từ BRD, mỗi màn ghi rõ nguồn truy vết. Được đóng dấu "low-fi, not
+        <p class="cap">Wireframe trong bản HTML URD: khung điện thoại grayscale, đánh số theo
+        flow, nhãn thật từ URD, mỗi màn ghi rõ nguồn truy vết. Được đóng dấu "low-fi, not
         final UI" vì nó phục vụ chốt nội dung, không thay designer.</p>
       </div>
     </div></article>
 
     <article class="jstep rv"><div>
-      <h3>Vòng đời tiếp theo · <code>status</code>, <code>handoff</code>, <code>change-request</code></h3>
-      <p class="who"><b>Khi nào:</b> quay lại sau vài ngày · bàn giao · có thay đổi sau ký duyệt</p>
+      <h3>Vòng đời tiếp theo · <code>status</code>, <code>change-request</code></h3>
+      <p class="who"><b>Khi nào:</b> quay lại sau vài ngày · có thay đổi sau ký duyệt</p>
       <p class="maxw"><code>/clarify:status</code>: quên mất đang làm tới đâu? Một lệnh cho biết
       artifact nào có hay thiếu, còn bao nhiêu câu chưa trả lời, nên chạy gì tiếp.<br>
-      <code>/clarify:handoff</code>: gói Dev (yêu cầu build-ready, thứ tự làm) và gói QA
-      (AC, test, bảng lỗi với thông điệp kỳ vọng).<br>
       <code>/clarify:improve change-request</code>: mô tả thay đổi, Clarify dò chuỗi truy vết
-      và liệt kê mọi flow, màn hình, rule, lỗi, test bị ảnh hưởng trước khi bạn quyết sửa.</p>
+      và liệt kê mọi nghiệp vụ, màn hình, rule, lỗi bị ảnh hưởng trước khi bạn quyết sửa.</p>
     </div></article>
 
   </div>
@@ -541,10 +540,10 @@ S2: later                             <span class="c"># để sau: dashboard huy
   <div class="cgrid">
     <div class="cg rv"><h3>1 · Document Profile</h3>
       <p>Hồ sơ định hình toàn bộ output, lập ngay đầu <code>from-idea</code>:
-      <b>Role</b> (BA mặc định ra BRD, PO ra PRD), <b>chuẩn tài liệu</b>, <b>domain</b>
+      <b>Role</b> (BA/PO, định giọng văn), <b>chuẩn luôn là URD</b>, <b>domain</b>
       (có gói kiến thức fintech, ecommerce, SaaS; không có pack thì suy luận có gắn nhãn),
-      và <b>Language</b>: bạn viết tiếng Việt thì tài liệu ra tiếng Việt, riêng nhãn
-      ASSUMPTION cùng các ID giữ tiếng Anh để máy đọc.</p></div>
+      và <b>Language</b> (mặc định tiếng Việt): tài liệu ra tiếng Việt với heading song ngữ,
+      riêng nhãn ASSUMPTION cùng các ID giữ tiếng Anh để máy đọc.</p></div>
     <div class="cg rv"><h3>2 · Bốn loại nhãn có ID</h3>
       <p><span class="tag t-a">A#</span> giả định đang dùng, giữ hoặc sửa.<br>
       <span class="tag t-q">Q#</span> câu hỏi chỉ con người quyết được, kèm <em>hỏi ai</em>.<br>
@@ -564,7 +563,7 @@ S2: later                             <span class="c"># để sau: dashboard huy
       <p>Danh mục lỗi spec mà audit soi: từ kinh điển (thiếu actor, AC chỉ có happy path)
       đến các lỗi tài liệu "user-flow" hay quên: tham số không ai sở hữu, rule đổi không có
       ngày hiệu lực, không nói user cũ xử lý sao, job chạy nền mơ hồ, thiếu bước OTP,
-      lỗi không có thông điệp khách hàng, jargon kỹ thuật trong BRD.</p></div>
+      lỗi không có thông điệp khách hàng, jargon kỹ thuật lẫn vào yêu cầu nghiệp vụ.</p></div>
     <div class="cg w4 rv"><h3>5 · Truy vết hai chiều</h3>
       <p>Mỗi yêu cầu nối tới Flow → Màn hình → Rule → Lỗi/State → Story → Test. Yêu cầu
       không có flow, flow không có yêu cầu, ID được nhắc mà không tồn tại: đều bị gắn cờ.
@@ -582,38 +581,34 @@ S2: later                             <span class="c"># để sau: dashboard huy
     <h2>Sản phẩm đầu ra</h2>
     <p class="standfirst">Mọi thứ nằm trong thư mục <code>clarify-output/</code>.</p>
   </div>
+  <p class="standfirst" style="margin-bottom:14px">Bộ deliverable <strong>tinh gọn</strong> — phân tích (user stories, edge, lỗi, sơ đồ, truy vết, quyết định) nằm <strong>bên trong</strong> tài liệu, không thành file rời.</p>
   <div class="tscroll rv"><table>
     <tr><th>File</th><th>Là gì</th><th>Sinh bởi</th></tr>
-    <tr><td><code>brd-draft.md</code> / <code>prd-draft.md</code></td><td>Bản nháp kèm Answer Sheet</td><td>from-idea</td></tr>
-    <tr><td><code>elicitation-pack.md</code></td><td>Câu hỏi gom theo người cần hỏi, mang đi workshop</td><td>from-idea</td></tr>
-    <tr><td><code>edge-case-matrix.md</code> · <code>error-handling.md</code> · <code>model-suggestions.md</code></td><td>Edge case · bảng mã lỗi với thông điệp khách và hành động · flow, sơ đồ, state theo từng nghiệp vụ</td><td>from-idea / from-spec</td></tr>
-    <tr><td><code>audit-report.md</code></td><td>Điểm /100, band, findings kèm cách sửa</td><td>audit / from-spec</td></tr>
-    <tr><td><code>stories.md</code> · <code>test-scenarios.md</code> · <code>api-data-impact.md</code> · <code>traceability-matrix.md</code></td><td>Lớp build-ready cho Dev/QA</td><td>from-spec</td></tr>
-    <tr><td><code>decision-log.md</code></td><td>Nhật ký quyết định (chỉ ghi thêm, không sửa cũ)</td><td>improve answers</td></tr>
+    <tr><td><code>urd-draft.md</code></td><td>Bản nháp URD kèm Answer Sheet (user stories/edge/lỗi/sơ đồ gói trong đó)</td><td>from-idea</td></tr>
+    <tr><td><code>audit-report.md</code></td><td>Điểm /100, band, findings kèm cách sửa</td><td>audit</td></tr>
     <tr><td><code>change-impact.md</code></td><td>Phân tích tác động change request</td><td>improve change-request</td></tr>
-    <tr><td><code>brd.md</code> / <code>prd.md</code> (+ <code>brd.v1.md, .v2…</code>)</td><td>Tài liệu ký duyệt, có version (không đặt tên "final")</td><td>finalize</td></tr>
+    <tr><td><code>urd.md</code> (+ <code>urd.v1.md, .v2…</code>)</td><td>Tài liệu URD ký duyệt, có version (không đặt tên "final")</td><td>finalize</td></tr>
+    <tr><td><code>urd.html</code></td><td>Toàn bộ URD render từ urd.md: sơ đồ Mermaid, bảng gộp ô, mục lục, wireframe, chỉ mục artifact</td><td>finalize / export</td></tr>
+    <tr><td><code>urd.docx</code></td><td>Bản Word render từ urd.md (qua LibreOffice)</td><td>finalize word / export word</td></tr>
     <tr><td><code>wireframes.html</code></td><td>Wireframe low-fi HTML</td><td>finalize / export</td></tr>
-    <tr><td><code>brd.html</code> / <code>prd.html</code></td><td>Toàn bộ BRD/PRD render từ brd.md: diagram, bảng yêu cầu gộp ô, mục lục, wireframe, chỉ mục artifact</td><td>export</td></tr>
-    <tr><td><code>handoff-pack.md</code></td><td>Gói Dev và gói QA</td><td>handoff</td></tr>
   </table></div>
 </div></section>
 
 <!-- ============================ COMMANDS ============================ -->
 <section id="commands" style="background:var(--surface)"><div class="wrap">
   <div class="sect-head rv">
-    <h2>8 lệnh, chọn theo tình huống</h2>
+    <h2>6 lệnh, chọn theo tình huống</h2>
     <p class="standfirst">Bảng tra cứu nhanh khi bạn biết mình đang cần gì.</p>
   </div>
   <div class="tscroll rv"><table>
     <tr><th>Bạn đang…</th><th>Dùng lệnh</th></tr>
     <tr><td>Chỉ có một ý tưởng / mô tả ngắn</td><td><code>/clarify:from-idea</code></td></tr>
     <tr><td>Vừa điền xong Answer Sheet</td><td><code>/clarify:improve answers</code></td></tr>
-    <tr><td>Có sẵn PRD/BRD muốn chấm điểm nhanh</td><td><code>/clarify:audit</code></td></tr>
-    <tr><td>Cần stories, AC, test, API cho Dev/QA</td><td><code>/clarify:from-spec</code></td></tr>
-    <tr><td>Muốn sửa một mục yếu (edge case, sơ đồ, NFR…)</td><td><code>/clarify:improve &lt;mode&gt;</code></td></tr>
-    <tr><td>Spec ổn rồi, bàn giao Dev/QA</td><td><code>/clarify:handoff</code></td></tr>
-    <tr><td>Mọi thứ đã chốt, cần bản ký duyệt</td><td><code>/clarify:finalize brd|prd</code></td></tr>
-    <tr><td>Cần gói review trực quan gửi stakeholder / Design</td><td><code>/clarify:export</code></td></tr>
+    <tr><td>Muốn sửa một mục (user story, edge case, sơ đồ, NFR…)</td><td><code>/clarify:improve &lt;mode&gt;</code></td></tr>
+    <tr><td>Muốn chấm điểm + danh sách lỗi</td><td><code>/clarify:audit</code></td></tr>
+    <tr><td>Mọi thứ đã chốt, cần bản ký duyệt (md + html)</td><td><code>/clarify:finalize</code></td></tr>
+    <tr><td>Cần bản Word</td><td><code>/clarify:finalize word</code> hoặc <code>/clarify:export word</code></td></tr>
+    <tr><td>Render lại HTML / offline để gửi stakeholder</td><td><code>/clarify:export</code></td></tr>
     <tr><td>Quay lại sau vài ngày, quên đang ở đâu</td><td><code>/clarify:status</code></td></tr>
     <tr><td>Có change request sau ký duyệt</td><td><code>/clarify:improve change-request</code></td></tr>
     <tr><td>Không biết dùng cái gì 🤷</td><td>skill <code>clarify</code> (router): mô tả nhu cầu bằng lời</td></tr>
@@ -636,26 +631,27 @@ S2: later                             <span class="c"># để sau: dashboard huy
     nghiệp vụ là quyết định của tổ chức bạn. Clarify đề xuất khung, gắn nhãn ASSUMPTION /
     OPEN QUESTION và chỉ ra cần hỏi ai. Chất lượng tài liệu cuối phụ thuộc nhiều nhất vào
     việc bạn trả lời Answer Sheet đầy đủ.</p></div></details>
-  <details class="rv"><summary>Tôi đã có PRD do team khác viết, bắt đầu từ đâu?</summary><div>
-    <p>Đưa file cho <code>/clarify:audit</code> để có điểm và danh sách lỗi trước (5 phút).
-    Nếu muốn nâng cấp hẳn, dùng <code>/clarify:from-spec</code>: nó nhận cả PRD lẫn BRD,
-    tự phát hiện chuẩn tài liệu.</p></div></details>
-  <details class="rv"><summary>BRD và PRD khác nhau thế nào trong Clarify?</summary><div>
-    <p>BRD trả lời "doanh nghiệp cần gì, vì sao, ai liên quan, quy tắc là gì", viết bằng ngôn
-    ngữ nghiệp vụ, chi tiết kỹ thuật bị đẩy xuống mục Downstream Technical Notes. PRD trả lời
-    "sản phẩm hoạt động ra sao": flow, màn hình, state, AC chi tiết. Chọn một lần ở Document
-    Profile, mọi template tự theo.</p></div></details>
+  <details class="rv"><summary>Tôi đã có tài liệu do team khác viết, bắt đầu từ đâu?</summary><div>
+    <p>Đưa file cho <code>/clarify:audit</code> để có điểm và danh sách lỗi trước (5 phút). Nếu
+    muốn dựng lại thành URD chuẩn, dùng <code>/clarify:from-idea</code> với nội dung đó làm input
+    rồi <code>improve answers</code> → <code>finalize</code>.</p></div></details>
+  <details class="rv"><summary>Vì sao chỉ còn URD, không còn BRD/PRD?</summary><div>
+    <p>Clarify giờ tập trung vào một chuẩn duy nhất — URD theo template chuẩn — để mọi tài liệu
+    đồng nhất, dễ duyệt và dễ tái dùng. URD gói đủ cả góc nghiệp vụ (mục tiêu, nhóm người dùng,
+    quy định) và góc sản phẩm (user stories, màn hình &amp; đặc tả trường, flow, trạng thái, lỗi),
+    nên không cần tách hai loại. Xem <a href="URD-TEMPLATE.md">mẫu URD đầy đủ</a>.</p></div></details>
   <details class="rv"><summary>Sơ đồ vẽ bằng gì? Tôi có phải cài thêm gì không?</summary><div>
-    <p>Activity dùng PlantUML; Sequence và State dùng Mermaid (quy ước cố định). Trong bản
-    HTML BRD, Mermaid render ngay trong trình duyệt (không cần mạng, không gửi dữ liệu đi đâu);
-    PlantUML có ảnh kèm hoặc fallback code với link viewer. Không phải cài gì.</p></div></details>
+    <p>Tất cả sơ đồ dùng <strong>Mermaid</strong> (quy ước cố định): §3.3 sequence (autonumber,
+    không tô màu), §3.4 state (tô màu). Trong bản HTML URD, Mermaid render ngay trong trình duyệt;
+    chỉ tải thư viện mermaid.js từ CDN, không gửi nội dung tài liệu đi đâu. Không phải cài gì.</p></div></details>
   <details class="rv"><summary>Wireframe có thay được designer không?</summary><div>
     <p>Không, và nó được đóng dấu rõ "BA low-fi wireframe, not final UI". Mục đích là chốt
     màn hình nào có thông tin gì, nút gì, lỗi hiện ra sao trước khi Design vào việc; mỗi
     phần tử đều truy vết về flow, step, rule, mã lỗi nguồn.</p></div></details>
   <details class="rv"><summary>Lỡ chạy finalize nhiều lần có mất bản cũ không?</summary><div>
-    <p>Không. Bản cũ tự lưu thành <code>brd.v1.md</code>, version tăng, Change history
-    ghi lý do. Quyết định nào dẫn đến thay đổi đều nằm trong <code>decision-log.md</code>.</p></div></details>
+    <p>Không. Bản cũ tự lưu thành <code>urd.v1.md</code>, version tăng, Lịch sử thay đổi ghi lý do.
+    Quyết định nào dẫn đến thay đổi đều nằm trong bảng Decisions made + Lịch sử thay đổi ngay
+    trong tài liệu (không file rời).</p></div></details>
   <details class="rv"><summary>Một phiên from-idea mất bao lâu? Có mẹo gì không?</summary><div>
     <p>Vài phút sinh nháp; phần tốn thời gian (xứng đáng) là bạn trả lời câu hỏi. Mẹo:
     (1) trả lời 5 câu chặn phạm vi càng cụ thể thì nháp đầu càng sát; (2) chưa chắc thì ghi
@@ -663,15 +659,15 @@ S2: later                             <span class="c"># để sau: dashboard huy
     (3) <code>S#: later</code> giúp giữ ý tưởng hay mà không phình phạm vi; (4) quay lại sau
     kỳ nghỉ thì chạy <code>status</code> trước tiên.</p></div></details>
   <details class="rv"><summary>Skill có gửi tài liệu của tôi lên server bên ngoài không?</summary><div>
-    <p>Sơ đồ Mermaid render client-side trong trình duyệt của bạn. Việc dùng server render
-    bên thứ ba (PlantUML server) chỉ xảy ra ở chế độ online và được ghi rõ trong manifest.
-    Với tài liệu nhạy cảm, cứ dùng chế độ mặc định.</p></div></details>
+    <p>Không. Sơ đồ Mermaid render client-side trong trình duyệt của bạn; chỉ thư viện mermaid.js
+    được tải từ CDN, còn nội dung tài liệu không rời máy. Cần xem hoàn toàn không mạng thì dùng
+    <code>/clarify:export offline</code> (nhúng sẵn mermaid.js).</p></div></details>
   </div>
 </div></section>
 
 <footer><div class="wrap">
-  <p><b>Clarify</b> · requirement-quality skill pack · 8 lệnh · 16 engine · 36 anti-pattern ·
-  rubric 100 điểm / 10 tiêu chí · MIT License.</p>
+  <p><b>Clarify</b> · requirement-quality skill pack · 6 lệnh · 12 engine · 36 anti-pattern ·
+  rubric 100 điểm / 10 tiêu chí · URD theo template chuẩn · MIT License.</p>
   <p class="pr">Nguyên tắc bất biến: không bịa nghiệp vụ. Chưa rõ thì gắn nhãn và hỏi đúng người.</p>
 </div></footer>
 

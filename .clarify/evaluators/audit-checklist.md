@@ -1,13 +1,13 @@
 # Clarify Audit Checklist
 
-A fast, ordered pass an agent runs during `audit` / `from-spec`. For each item,
-note pass / partial / fail and the anti-pattern id(s) it maps to.
+A fast, ordered pass an agent runs during `audit`. For each item, note pass /
+partial / fail and the anti-pattern id(s) it maps to.
 
-Apply the checklist through the Document Profile. For a BRD/business-facing draft
-from `from-idea`, journey, screens, rules, exceptions, messages, state summary,
-business NFRs, and stakeholder coverage are core readiness checks. Full stories,
-AC, tests, API/data impact, and traceability are Dev/QA build-ready layer checks;
-report their absence separately unless the user requested handoff readiness.
+Apply the checklist to the URD. Journey, user stories + acceptance criteria,
+screens & field specs, rules, exceptions, messages, state model, business NFRs, and
+stakeholder coverage are **core** URD checks. Only deep step-level test scenarios
+and a full API/data impact analysis are out of URD scope (BA altitude); report
+their absence as out-of-scope, not as defects.
 
 ## Clarity
 - [ ] Every requirement names an **actor** (`ambiguous-actor`).
@@ -28,16 +28,15 @@ report their absence separately unless the user requested handoff readiness.
       front (not buried inside requirements).
 - [ ] A **"How the system works (overview)"** section precedes the requirements
       (end-to-end narrative + one representative diagram).
-- [ ] Section order matches Principle 13 (Summary → §0 → context → objectives →
-      scope → how-it-works → stakeholders → requirements → rules → flows → screens →
-      data → errors → constraints/risks/NFR → traceability → open items → blockers →
-      approval → artifact index).
-- [ ] Flows are named `F0n-Name` consistently (catalog, error map, screen matrix,
-      traceability, diagrams); the number is stable, the name only appended.
-- [ ] Flow/rule/test/**source** links live in Traceability (which has a **Source**
-      column ← A#/BR#/S#/Q#), not crammed into the requirements section.
-- [ ] Output file is `brd.md`/`prd.md` (never "final-…"); HTML is `brd.html` rendered
-      from it; no tool label ("Visual Review Pack") in displayed content.
+- [ ] Section order matches the URD skeleton (Principle 13.4): cover → Lịch sử
+      thay đổi → Mục lục → §1 Tổng quan → §2 Tổng quan hệ thống → Quy ước sơ đồ → §3
+      [Tên nghiệp vụ] repeating (3.1–3.8) → §4 Phụ lục → §5 Câu hỏi mở → Sign-off.
+- [ ] Flows are named `F0n-Name` consistently (catalog, steps, screen specs,
+      diagrams); the number is stable, the name only appended.
+- [ ] In-document traceability resolves (User stories ↔ Flow Catalog ↔ rules ↔
+      errors); no separate matrix file.
+- [ ] Output file is `urd.md` (never "final-…"); HTML is `urd.html` rendered from it;
+      no tool label ("Review Pack") in displayed content.
 
 ## Completeness
 - [ ] In-scope stated (`missing-scope`).
@@ -99,21 +98,19 @@ report their absence separately unless the user requested handoff readiness.
       required action, and Ops/CS ownership where applicable.
 - [ ] A Dev and QA engineer could act with no further clarification.
 
-## Functional Flows (process-centric)
-- [ ] §7 has a **Flow Catalog** before the detailed flows.
-- [ ] Each flow block keeps step-by-step + activity + sequence for the **same**
-      process; no block mixes process A's activity with process B's sequence
-      (`mixed-process-diagram-block`).
-- [ ] Decision-rich flows have a PlantUML activity; multi-system flows have a
-      Mermaid sequence (or "Sequence diagram not required" + reason).
-- [ ] Flow steps map to business rule / validation / error code where relevant.
-- [ ] Each Flow (Fxx) maps to ≥1 requirement and appears in the traceability
-      matrix; orphan flows are flagged.
-- [ ] Each requirement maps to ≥1 flow and, where relevant, to a business rule and
-      an error/state (traceability has Flow / Business rule / Error-State columns).
-- [ ] No dangling ID references: every BR / Fxx / Sxx / error code cited anywhere
+## Functional Flows (§3, process-centric, Mermaid-only)
+- [ ] A **Flow Catalog** lists the in-scope processes.
+- [ ] Each §3 block keeps user stories + Mermaid sequence (§3.3) + colored state
+      (§3.4) for the **same** process; no block mixes two processes' diagrams
+      (`mixed-process-diagram-block`). **No PlantUML.**
+- [ ] §3.3 sequence uses `autonumber` + no color; §3.4 state uses colored `classDef`.
+- [ ] Flow steps (§3.3) map to business rule (§3.5) / error code (§3.7) where relevant.
+- [ ] Each Flow (`F0n-Name`) maps to ≥1 user story; orphan flows are flagged.
+- [ ] Each user story maps to ≥1 flow and, where relevant, to a business rule and an
+      error/state (in-document traceability via the Flow Catalog).
+- [ ] No dangling ID references: every BR / `F0n` / `US-#` / `ERR-*` cited anywhere
       exists in its source list (counts against `traceability`).
-- [ ] Screen / Display Matrix is placed **after** the flows (or a clear reason).
+- [ ] Screen field specs (§3.6) present for UI processes (EN/VN/Kiểu/M-O).
 
 ## Stakeholder coverage & completeness (Principles 10–11)
 - [ ] Each stakeholder class walked (operations, accounting, reconciliation,

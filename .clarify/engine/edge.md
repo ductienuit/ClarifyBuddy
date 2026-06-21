@@ -34,11 +34,9 @@ For each row, mark covered (yes/no) and the anti-pattern id if uncovered
   expected behavior as OPEN QUESTION.
 
 ## Output
-Write the edge analysis **into the draft's / document's Edge cases section** (no
-separate file): edges that **produce an error** become rows in the **Error code &
-message table**, under the anchor of the flow they occur in (`{#err-f0n}`); edges that
-**do not produce an error** (idempotency/replay, TTL/expiry, sandbox isolation,
-cross-app linkability, …) go in the **"Edge cases without errors"** subsection. Use
-`templates/edge-case-matrix-template.md` as the
-working checklist while enumerating, and keep a Gaps / `OPEN QUESTION` list for
-uncovered cases.
+Write the edge analysis **into the URD** (no separate file): edges that **produce an
+error** become rows in the process's **§3.7 error & message table** (draft §11.1); edges
+that **do not produce an error** (idempotency/replay, TTL/expiry, sandbox isolation,
+cross-app linkability, …) go in the **"Edge cases without errors"** subsection (draft
+§11.2). Use `templates/edge-case-matrix-template.md` as the working checklist while
+enumerating, and keep a Gaps / `OPEN QUESTION` list for uncovered cases.

@@ -5,16 +5,14 @@ labeled assumptions. Do NOT hard-block.
 
 ## Do
 0. **Establish the Document Profile first** (drives every later engine and the
-   final `finalize` export). Determine, by asking live or reading the input:
+   final `finalize` export). The **target document standard is always URD** (User
+   Requirements Document) — there is no PRD/BRD choice. Determine, by asking live or
+   reading the input:
    - **Audience role:** is the requester a **BA** (Business Analyst) or **PO**
      (Product Owner)? This shapes tone and depth — BA → business/process and
      compliance emphasis; PO → product/value and delivery emphasis.
-   - **Target document standard:** **PRD** (product-focused) or **BRD**
-     (business-focused). Default by role if unstated (BA → BRD, PO → PRD) and
-     record it as an `ASSUMPTION` the user can flip.
-   Record both as a **Document Profile** block at the top of the output so
-   `finalize` knows which standard to emit. If unknown and not live, mark
-   `OPEN QUESTION: target standard (PRD vs BRD)?`.
+   Record the Role plus `Standard: URD` as a **Document Profile** block at the top of
+   the output so every later engine and `finalize` know the target.
 0b. **Detect the domain** (Principle 12) and pick the mode: if a pack under
    `domain-packs/` matches, load it (`domain pack: <name>`); otherwise proceed
    with labeled inference (`domain: <inferred> (no pack — inferences labeled)`).
@@ -62,8 +60,8 @@ labeled assumptions. Do NOT hard-block.
    non-term vs goal-savings; channel; segment; lifecycle ops included.)
 2. Group gaps into **clarifying questions** (cap ~7). **For thin input, lead with
    the 5 highest-impact, scope-blocking questions** before any detail question —
-   the unknowns that most change the whole document. Typically: (1) role + target
-   standard (Document Profile), (2) which channel(s)/platform, (3) which product
+   the unknowns that most change the whole document. Typically: (1) role + scope
+   (Document Profile), (2) which channel(s)/platform, (3) which product
    variant/type(s), (4) which customer segment, (5) which lifecycle operations are
    in scope (and the depth/altitude wanted: BRD high-level vs PRD detailed).
    Adapt these axes to the feature/domain. Tag each question with its dimension
@@ -78,9 +76,8 @@ labeled assumptions. Do NOT hard-block.
    decide). Never invent a business rule silently.
 5. Output two lists: **Clarifying Questions** and **Assumptions in effect**.
 6. When the output contains an Answer Sheet, tell the user the immediate next
-   step is to fill it and run `/clarify:improve answers`. Do not steer them to
-   `/clarify:from-spec` as the default continuation; `from-spec` is optional for
-   Dev/QA build-ready artifacts after the business/product draft is resolved.
+   step is to fill it and run `/clarify:improve answers`, then `/clarify:finalize`
+   to produce the URD.
 
 ## Rules
 - Prefer a small number of decision-changing questions over many trivial ones.
@@ -90,9 +87,9 @@ labeled assumptions. Do NOT hard-block.
 ## Output
 Number every decidable item with a stable ID and end with a copyable **Answer
 Sheet** (see `output-conventions.md` → "Labeled items & answer sheet"):
-- `## Document Profile` — `Role: BA | PO`, `Target standard: PRD | BRD`
-  (ASSUMPTION if defaulted), `Domain: <pack name | inferred (no pack)>`, and
-  `Language: <vi | en | …>`.
+- `## Document Profile` — `Role: BA | PO`, `Standard: URD`,
+  `Domain: <pack name | inferred (no pack)>`, and `Language: <vi | en | …>`
+  (default `vi`).
 - `## Clarifying / Open Questions` — `Q1, Q2, …`, each tagged with dimension AND
   `→ ask: <stakeholder>`; thin input → the 5 highest-impact, scope-blocking
   questions first.
@@ -111,5 +108,5 @@ Sheet** (see `output-conventions.md` → "Labeled items & answer sheet"):
   `elicitation-pack.md` file (Principle 13.11); `templates/elicitation-pack-template.md`
   is the working structure.
 - `## Recommended next step` — "Fill the Answer Sheet, then run
-  `/clarify:improve answers` to resolve the draft. Use `/clarify:from-spec` only
-  if you need stories, AC, tests, API/data impact, and traceability for Dev/QA."
+  `/clarify:improve answers` to resolve the draft, then `/clarify:finalize` to
+  produce the URD (`urd.md` + `urd.html`; add `word` for `urd.docx`)."

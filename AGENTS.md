@@ -1,22 +1,21 @@
 # AGENTS.md — Clarify for Codex and other agents
 
 Clarify is a **requirement-quality skill pack**, NOT a PRD generator. Use it to
-audit, improve, score, and hand off software requirements. Never invent business
-rules — label uncertain items `ASSUMPTION` or `OPEN QUESTION`.
+shape, audit, improve, score, and finalize software requirements into a **URD (User
+Requirements Document)** in the URD template shape. Never invent business rules —
+label uncertain items `ASSUMPTION` or `OPEN QUESTION`.
 
 ## Trigger → workflow map
 
 | If the user says… | Run workflow | Reads | Writes |
 | --- | --- | --- | --- |
-| "shape this idea", "draft a PRD/BRD from this idea" | `.clarify/workflows/from-idea.md` | the idea | `prd-draft.md` or `brd-draft.md` (with Document Profile), edge, error-handling, models when applicable |
-| "analyze / break down this PRD or BRD", "make this build-ready" | `.clarify/workflows/from-spec.md` | existing PRD/BRD or resolved Clarify draft | audit, build-ready layer: api-data, stories, AC, tests, traceability; reuse edge/error/models when present |
+| "shape this idea", "draft a URD from this idea" | `.clarify/workflows/from-idea.md` | the idea | `urd-draft.md` (with Document Profile; user stories / edge / error / model folded in) |
 | "audit this spec", "score these requirements", "how good is this spec" | `.clarify/workflows/audit.md` | the doc | `audit-report.md` |
-| "improve the acceptance criteria / edge cases / clarity / diagrams …" | `.clarify/workflows/improve.md` | prior `clarify-output/` | overwrites the relevant file |
-| "create the dev/QA handoff", "hand this off" | `.clarify/workflows/handoff.md` | prior `clarify-output/` | `handoff-pack.md` |
-| "finalize the doc", "produce the PRD/BRD", "we've confirmed, export it" | `.clarify/workflows/finalize.md` | prior `clarify-output/` | `brd.md` or `prd.md` (never "final-…") |
-| "make the HTML version", "render the diagrams", "something I can open / Word-export", "hand off to design" | `.clarify/workflows/export.md` | `brd.md`/`prd.md` + companions | `clarify-output/brd.html` (full HTML BRD/PRD rendered from the Markdown) |
-| "where were we?", "what's left?", "status of the BRD" | `.clarify/workflows/status.md` | everything in `clarify-output/` | chat reply only (read-only) |
-| "we have a change request", "what does this change affect?" | `.clarify/workflows/improve.md` (mode `change-request`) | traceability + catalogs | `change-impact.md` (analysis only) |
+| "improve the acceptance criteria / edge cases / clarity / diagrams …", "apply my answers" | `.clarify/workflows/improve.md` | prior `clarify-output/` | overwrites the relevant file |
+| "finalize the doc", "produce the URD", "we've confirmed, export it" | `.clarify/workflows/finalize.md` | prior `clarify-output/` | `urd.md` (never "final-…") + `urd.html`; `urd.docx` on word/all |
+| "make the HTML version", "render the diagrams", "Word-export", "hand off to design" | `.clarify/workflows/export.md` | `urd.md` | `clarify-output/urd.html` (full HTML URD from the Markdown), `urd.docx` on word |
+| "where were we?", "what's left?", "status of the URD" | `.clarify/workflows/status.md` | everything in `clarify-output/` | chat reply only (read-only) |
+| "we have a change request", "what does this change affect?" | `.clarify/workflows/improve.md` (mode `change-request`) | in-document trace spine | `change-impact.md` (analysis only) |
 
 ## Core files to read first
 
@@ -35,30 +34,27 @@ rules — label uncertain items `ASSUMPTION` or `OPEN QUESTION`.
 - For audits: show total /100, band (cap at "Not ready for handoff" if any
   blocker), per-dimension table, findings grouped blocker/major/minor with each
   anti-pattern linked to a dimension and a concrete fix.
-- When auditing a BRD/business draft from `from-idea`, score business draft
-  readiness first. Missing stories, AC, tests, API/data impact, or traceability
-  are optional build-ready layer gaps unless the user asked for Dev/QA handoff.
 - Keep in-scope / out-of-scope / open questions separate.
 - Analyze from every stakeholder perspective (operations, accounting,
   reconciliation, partners, risk, maintenance, data, security), not just user +
   system. Proactively add `SUGGESTION:` items for capabilities the feature +
   domain imply but the input omits — kept separate from confirmed scope.
-- For models: emit a PlantUML activity diagram and a Mermaid sequence diagram as
-  fenced code blocks, each followed by its viewer link (https://mermaid.live/ and
-  the PlantUML server https://www.plantuml.com/plantuml, ref https://plantuml.com/).
+- For models: emit **Mermaid only** — a `sequenceDiagram` (autonumber, no color)
+  for §3.3 and a colored `stateDiagram-v2` for §3.4, each followed by its viewer
+  link (https://mermaid.live/). No PlantUML.
 - For wireframes: after screen/flow requirements are defined, `finalize` or
   `export` must render low-fidelity screen wireframes as an HTML visualization
   widget. If inline visualization is unavailable, write one self-contained
-  `wireframes.html` file in the output directory. Use grayscale only, real BRD/PRD
+  `wireframes.html` file in the output directory. Use grayscale only, real URD
   labels, placeholders marked `ASSUMPTION` where the doc is silent, one screen per
   key flow step, alternate/error screens only when specified, and trace every
-  screen back to its source requirement / BRD or PRD section.
+  screen back to its source flow/step and user story.
 - After `from-idea`, tell the user to fill the Answer Sheet and run
-  `improve answers` first. Do not position `from-spec` as required to make the
-  BRD/PRD business-complete; it is optional for Dev/QA build-ready artifacts.
-- `improve`, `handoff`, and `finalize` read prior outputs instead of re-deriving.
-- `finalize` picks PRD vs BRD from the Document Profile (or `$ARGUMENTS`) and
-  never stamps `Approved` while a blocker-level finding exists.
+  `improve answers`, then `finalize` to produce the URD.
+- `improve` and `finalize` read prior outputs instead of re-deriving.
+- `finalize` composes the URD from confirmed outputs and never stamps `Đã duyệt`
+  (Approved) while a blocker-level finding exists. Headings render bilingual
+  `Tiếng Việt (English)` when Language=vi (default); IDs/codes stay English.
 
 ## Domain packs
 

@@ -1,199 +1,102 @@
 # Engine: finalize
 
-Purpose: after the spec is confirmed, assemble the **final sign-off document** —
-a PRD or a BRD — in a standard, professional shape for a BA or PO. This can be a
-business/product sign-off document from a resolved `from-idea` draft, or a
-handoff-ready document when `from-spec` artifacts also exist. Do NOT re-derive
-content: compose from prior `clarify-output/` files. Do NOT invent business rules.
+Purpose: after the spec is confirmed, assemble the **final sign-off URD** (User
+Requirements Document) in the standard shape, from a resolved `from-idea` draft.
+Do NOT re-derive content: compose from prior `clarify-output/` files. Do NOT invent
+business rules.
 
-## Decide the standard
-1. Read the **Document Profile** (role + target standard + Language) from the draft —
-   the `## Document Profile` heading in `prd-draft.md` or `brd-draft.md` — or from
-   `$ARGUMENTS` (`prd` / `brd`).
-2. If still unknown: ask. If not live, default by role (BA→BRD, PO→PRD) and label
-   the choice `ASSUMPTION:` in the document.
-3. `prd` → use `templates/final-prd-template.md`.
-   `brd` → use `templates/final-brd-template.md`.
+## Template & output
+- Always use `templates/final-urd-template.md`.
+- Write `clarify-output/urd.md` (Markdown master). Then render the requested formats
+  (see step 9c): `urd.html` (HTML) and, on request, `urd.docx` (Word).
+- **Format argument** (`$ARGUMENTS`): `md | html | word | all` — **default `md + html`**
+  (always write `urd.md`; render `urd.html` by default; `word`/`all` also produce
+  `urd.docx`).
 
 ## Do
-1. Read available outputs: prd-draft **or** brd-draft (which now carries the edge /
-   error / flow-diagram / state / traceability analysis inline), plus the build-ready
-   companions that exist: audit-report, api-data-impact, stories, test-scenarios.
-   There are no separate `edge-case-matrix.md` / `error-handling.md` /
-   `model-suggestions.md` / `traceability-matrix.md` / `decision-log.md` files to read
-   — pull that content from the draft's corresponding sections (Principle 13.11).
-2. Compose the chosen template, pulling each section from the matching prior
-   output. Keep wording testable and build-ready. Follow the **document presentation
-   & naming conventions** (Principle 13):
-   - **§0 "How to read this document"** up front (after the Executive summary):
-     0.1 what-this-is + quick-read hint, 0.2 the **symbol-conventions** table
-     (`F0n-Name`/`BRD-R#`/`BR#`/`T-#`/`A#/Q#/S#`, "codes stable across versions"),
-     0.3 the **Glossary** moved to the front (carry the draft's §0.3 glossary).
-   - **"How the system works (overview)"** before the requirements: an end-to-end
-     narrative + ONE representative diagram (per-flow detail stays in the Functional
-     Flows section).
-   - **Business requirements = ONE grouped table** (Principle 13.7), columns
-     `ID | Requirement | Why | Priority`, grouped by capability in journey order
-     with a bold band row per group, Must → Should → Could within a group. `Why` is
-     the business reason, never a `Source: BRx` cross-reference. Do NOT put
-     flow/rule/test/source in this section — traceability is expressed in-document via
-     the Flow Catalog + Test scenarios (Principle 13.9), not a body grid. Carry the
-     draft's requirement sentences verbatim; never collapse them to a bare one-liner
-     with no Why. Every requirement (including deferred) appears once.
-3. Assemble the **Functional Flows (process-centric)** section: build the Flow
-   Catalog, then one block per business process in **read-by-flow order** (Principle
-   13.13): a one-line **Flow overview** → Activity (PlantUML) → Sequence (Mermaid) →
-   **Steps** (3-col `Step | Actor | Action / processing`, placed **below** the diagram,
-   reading the sequence if present else the activity; branches as bullets; no error
-   codes/rules/screens in steps) → a pointer line (`Rules: BR.. (§7). Errors / messages
-   / retry & tests: [§11.1 — F0n-Name](#err-f0n).`) → gaps. All diagrams come from the
-   draft's flow section. Name flows **`F0n-Name`** (Principle 13.6): keep the
-   number stable, append a short English feature name (Login/Consent/Token/Revoke/…),
-   and lead the block heading with the Profile-language name (e.g. "Luồng F02-Login
-   — Định danh người dùng"). Use `F0n-Name` consistently in the flow catalog, error
-   map, screen matrix, traceability, and inside the diagrams. The activity and
-   sequence in a block must be the **same** process — never pair process A's
-   activity with process B's sequence (`mixed-process-diagram-block`). **Re-render
-   only from the confirmed step-by-step**; do not invent new flow/logic/rules. If a
-   key in-scope process has no diagram/flow, write an `OPEN QUESTION` naming the
-   missing flow and the command that produces it (`from-spec` / `improve model`) —
-   do not fabricate a diagram and do not drop in two unrelated diagrams. Place the
-   Screen / Display Matrix **after** the flows. Viewer links: Mermaid
-   `https://mermaid.live/`, PlantUML `https://www.plantuml.com/plantuml`
-   (ref `https://plantuml.com/`).
-3b. When the Screen / Display Matrix or flow steps define screens, add
-   **Screen Wireframes (low-fidelity HTML)** right after the matrix. Render an
-   inline HTML visualization widget from `templates/wireframe-template.html`
-   whenever the final Markdown target supports inline HTML. If inline
-   visualization is unavailable, write a single self-contained
-   `clarify-output/wireframes.html` using the same template and link it from the
-   final document and Appendix. Do not create ASCII wireframes as the primary
-   artifact.
-4. Resolve every `ASSUMPTION` / `OPEN QUESTION` / `SUGGESTION` into the **Decisions &
-   open items** section (§16 in both; Principle 13.10): (a) **Decisions made** —
-   accepted assumptions + answered questions as a **three-column** `Topic | Decision |
-   Reflected in (BR/R)` table (no "decision-log ref" column); (b) **Suggestions —
-   dispositioned** (Accepted → `<R..>` / Won't do / Awaiting confirmation); (c) **Open
-   items** that do not block sign-off, as a **table** `Item | Impact if unresolved |
-   Owner | Status | Deadline` (Principle 13.13). **Hide `A#`/`S#` codes** in these
-   displayed tables. There is **no `decision-log.md` file** — the dated history lives
-   in Document control → Change history. Then list the **blocking subset** of open
-   items + blocker audit findings in the **Sign-off blockers** section (§17 in both).
-4b. Compose a short **Executive summary** (BRD) from the business context,
-   objectives, scope, and key blockers — 1–2 paragraphs / bullets, composed from
-   those sections, introducing no new claims.
-5. Include the audit score + band near the top as a quality stamp when an
-   audit-report exists. If no audit-report exists, state `Quality stamp: not run`
-   and do not block finalization solely because the optional build-ready layer was
-   not generated.
-6. Carry over the **Stakeholder Perspectives** and the **Suggested Additional
-   Capabilities** (`SUGGESTION:` items) from prd-draft / audit-report into their
-   sections. Keep suggestions clearly marked as recommendations for confirmation,
-   never as agreed scope.
-7. Put the high-level Customer/User Journey into the **"How the system works
-   (overview)"** section (overview only + one representative diagram — detailed
-   per-flow blocks live in the Functional Flows section). Carry over the whole edge
-   analysis from the draft into the **Edge cases** section (Principle 13.8) — **no
-   `edge-case-matrix.md` file**: error-producing edges become rows in the **Error code
-   & message table**, which is **split by flow** under per-flow anchors (`#### F0n-Name
-   {#err-f0n}`) so each flow's Steps deep-link to it; columns `Error code | Step / API |
-   Scenario | Transaction state | User-facing message | Retryable? | Required action |
-   Test` (drop entity-state; Step/API is business-level — `step 3` / `login()`, never a
-   path/method/HTTP status). Non-error edges (idempotency/replay, TTL/expiry, sandbox
-   isolation, cross-app linkability, …) go in an **"Edge cases without errors"**
-   subsection. Also build **§Data & systems impact as a table** (`Data concept |
-   Business meaning | Created/Read/Written when | Source of truth | Sensitivity | Owner
-   to confirm`) with the BA-altitude disclaimer (no invented endpoint/schema; APIs at
-   business level). Carry the entity vs transaction/operation state summary too. If a
-   source section is missing, mark it `OPEN QUESTION` and name the command that
-   produces it.
-8. Build the **Test scenarios (by context)** section as **one numbered table**
-   (Principle 13.9), NOT a body traceability grid and NOT bullets. Columns
-   `# | Requirement (BRD-R#/R#) | Flow (F0n-Name) | Scenario (precondition + action) |
-   Expected result | Test (T-xx)`, numbered continuously and grouped by flow, from
-   `test-scenarios.md` (do not invent outcomes; full preconditions/steps stay in
-   `test-scenarios.md`). Close with one self-standing **Coverage & traceability**
-   paragraph stating the case count + coverage (e.g. "12 scenarios across 4 flows;
-   15/15 requirements have a flow + test; no orphans") that points to the **Flow
-   Catalog** + `test-scenarios.md` — **never** to a traceability-matrix file (none
-   exists). In-document traceability = Requirements ↔ the Flow Catalog (whose
-   rule/error/requirement columns carry the links) ↔ this table. Still carry over the
-   **Step / API** column in the error table and **trigger / owner system / terminal**
-   in the state summary, using `F0n-Name`.
-9. Emit the **Appendix: Artifact index (source)** with a **Used when (who / when)**
-   column (Principle 13.11), listing only the **lean deliverable set** that actually
-   exists: the source `brd.md`/`prd.md`, audit-report, api-data-impact, stories,
-   test-scenarios, the version archive, plus `wireframes.html` and
-   `brd.html`/`prd.html` when written. Diagrams are referenced as in-document source +
-   viewer link, never as image files Clarify did not produce. **Do not** list — and do
-   not write — `edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`,
-   `traceability-matrix.md`, `decision-log.md`, `elicitation-pack.md`, or the draft:
-   their content is folded into the document sections (edge → §Edge, errors →
-   §Error table, diagrams → §Flows, traceability → Flow Catalog + Test scenarios,
-   decisions → §Decisions + Change history). Never link to a file that is not emitted.
-9b. **Versioning — never overwrite silently.** If the target file already exists:
-   (1) archive the existing file as `brd.v<N>.md` / `prd.v<N>.md` (N = its current
-   Version); (2) bump the Version in Document control (1.0 → 1.1, or as the user
-   directs); (3) add a **Change history** row (version, date, summary of what
-   changed, driver — `answer sheet vN` / `CR-nn`). The canonical `brd.md` / `prd.md`
-   always holds the latest version. **Never** use the word "final" in the file name
-   (Principle 13.1). If a file appears hand-edited since Clarify wrote it, warn
-   before overwriting.
-9c. **Render the HTML document.** After writing `brd.md` / `prd.md`, render the
-   companion `clarify-output/brd.html` / `prd.html` **from that Markdown** (one
-   source of truth) following the `export` engine and Principle 13.2: pandoc
-   md→html, Mermaid client-side + PlantUML plantuml.com hex `~h` with code fallback,
-   requirement group-band rows → `colspan` merged cells, a TOC + an Artifact index,
-   and no tool labels in the displayed content. This is best-effort: if the render
-   toolchain is unavailable, say so and leave `brd.md` as the deliverable — never
-   fail finalize because the HTML render could not run.
+1. Read available outputs: `urd-draft.md` (which carries the user-story / rule / flow /
+   state / edge / error analysis inline), plus `audit-report.md` if it exists. There are
+   no separate edge / error / model / traceability / decision-log files (Principle 13.11) —
+   pull that content from the draft's sections.
+2. Compose `final-urd-template.md`, pulling each section from the matching draft content.
+   Follow the document presentation conventions (Principle 13):
+   - **Document control (cover info table)** + **Lịch sử thay đổi (Change history)** at the
+     top; include the audit score as the **Quality stamp** when an audit-report exists, else
+     `not run`.
+   - **§1 Tổng quan** — 1.1 Giới thiệu (from the draft background/problem + audience), 1.2
+     Đối tượng/Phạm vi (from scope), 1.3 Glossary (carry the draft's glossary) + the
+     symbol-conventions table.
+   - **§2 Tổng quan hệ thống** — 2.1 Mục tiêu (from objectives), 2.2 Nhóm người dùng (from the
+     user-group/stakeholder table), 2.3 overview narrative + ONE representative Mermaid
+     sequence diagram (from the draft journey).
+   - **Quy ước trình bày sơ đồ** — carry the Diagram conventions block (Mermaid sequence
+     no-color + autonumber; colored state).
+3. Assemble the **§3 capability blocks — one per business process** (from the draft Flow
+   Catalog). For each process, in this order:
+   - **3.1 Mô tả nghiệp vụ** — criteria table (Mục tiêu / Phạm vi / Đối tượng / Nền tảng).
+   - **3.2 User stories** — carry the draft's `US-#` for this process (`ID | Là | Tôi muốn |
+     Để | Tiêu chí chấp nhận`). If a confirmed requirement has no story, synthesize one from
+     it (no invention); a gap → `ASSUMPTION` / `OPEN QUESTION`.
+   - **3.3 Luồng xử lý** — the Mermaid `sequenceDiagram` (autonumber, no color) for THIS
+     process, then the steps table below it; end with the pointer line `Quy định: BR.. (§3.5).
+     Lỗi / thông báo / xử lý: §3.7.` Re-render only from the confirmed step-by-step; never
+     invent. If a key in-scope process has no flow, write an `OPEN QUESTION` naming the missing
+     flow and the command that produces it (`improve model`) — do not fabricate a diagram.
+   - **3.4 Trạng thái** — the colored Mermaid `stateDiagram-v2` for THIS process, then the
+     VN/EN state table below it.
+   - **3.5 Quy định & ràng buộc** — the business rules (`BR#`) applying to this process.
+   - **3.6 Danh sách & đặc tả màn hình** — one sub-block per screen (blockquote Nền tảng·
+     Actor·Mục đích + field table `Tên trường (EN) | VN | Kiểu | M/O | Mô tả / Ràng buộc`),
+     enriched from the draft Screen matrix. Where the doc is silent, label `ASSUMPTION`.
+   - **3.7 Thông báo / lỗi** — the error table (`ERR-*` code → điều kiện → thông báo VN/EN →
+     xử lý) for this process, plus any non-error edges.
+   - **3.8 Yêu cầu phi chức năng** — security, performance/sync, i18n, audit log.
+   The sequence (3.3) and state (3.4) in one block must be the **same** process
+   (`mixed-process-diagram-block` otherwise).
+3b. When screens are defined, add low-fidelity **wireframes** — an inline HTML widget from
+   `templates/wireframe-template.html` when the Markdown target supports inline HTML, else a
+   self-contained `clarify-output/wireframes.html` linked from §4.2. Grayscale, derive-only;
+   real labels from the URD; trace each screen to its flow/step + user story. No ASCII
+   wireframes as the primary artifact.
+4. **§4 Phụ lục** — 4.1 ref-code rules (`ERR-<MODULE>-xxx`); 4.2 Artifact index (the lean
+   deliverable set that actually exists, with a "Dùng khi" column) + in-document traceability
+   note (US ↔ Flow ↔ BR ↔ ERR). Do not list files that are not emitted.
+5. **§5 Câu hỏi mở** — consolidate every remaining `OPEN QUESTION` into the table
+   (`# | Câu hỏi | Người phụ trách | Trạng thái`); mark the blocking subset `BLOCKER`. Resolved
+   assumptions/answers become decisions reflected in the body (rules/stories); the dated history
+   lives in **Lịch sử thay đổi**. Hide internal `A#`/`S#` codes from displayed tables.
+6. Carry over **Stakeholder perspectives** into §2.2 / §3, and **Suggested additional
+   capabilities** (`SUGGESTION:`) as clearly-marked recommendations (never agreed scope).
+9b. **Versioning — never overwrite silently.** If `urd.md` already exists: (1) archive it as
+   `urd.v<N>.md` (N = its current Version); (2) bump the Version in Document control; (3) add a
+   **Lịch sử thay đổi** row (version, date, summary, driver — `answer sheet vN` / `CR-nn`). The
+   canonical `urd.md` always holds the latest. **Never** use the word "final" in the file name
+   (Principle 13.1). If the file appears hand-edited since Clarify wrote it, warn before
+   overwriting.
+9c. **Render the requested formats.** After writing `urd.md`, follow the `export` engine and
+   Principle 13.2: pandoc md→html wrapped in `templates/urd-pack-template.html` (Mermaid
+   client-side, navy skin, TOC), no tool labels. By default also render `urd.html`. For `word`
+   / `all`, additionally produce `urd.docx` via LibreOffice round-trip (`soffice --headless
+   --convert-to docx`). Best-effort: if a renderer is unavailable, say so and leave `urd.md` as
+   the deliverable — never fail finalize because a render tool is missing.
 10. List any missing inputs and the command that produces each.
 
 ## Rules
-- **Render headings in the Document Profile's Language** (Principle 13.3): when
-  Language=vi, each heading is `Vietnamese (English term)`; when en, English only.
-  Keep the machine-readable anchors in English ALWAYS: ASSUMPTION/OPEN QUESTION/
-  SUGGESTION labels, all IDs (`A#/Q#/S#/V#/F0n-Name/BRD-R#/BR#/T-#/CR#`, error
-  codes), and file names.
-- Final ≠ invented: if a section has no source in prior outputs, mark it
-  `OPEN QUESTION` rather than fabricating it.
-- **Markdown→HTML hygiene (Principle 13.12):** always leave one blank line between a
-  bold label or paragraph and a pipe table directly below it (step-by-step, screen
-  matrix, symbol table, glossary, requirements, artifact index, …). Without it pandoc
-  folds the label into the table and the table breaks in `brd.html`/`prd.html`.
-- A `blocker`-level audit finding means status = `Draft — not approved`; never
-  stamp a document `Approved`.
+- **Render headings in the Document Profile's Language** (Principle 13.3): default `vi` →
+  each heading `Tiếng Việt (English term)`. Keep machine-readable anchors in English ALWAYS:
+  ASSUMPTION/OPEN QUESTION/SUGGESTION labels, all IDs (`US-#/F0n-Name/BR#/ERR-*/A#/Q#/S#`),
+  field EN names, and file names.
+- Final ≠ invented: if a section has no source in prior outputs, mark it `OPEN QUESTION`.
+- **Markdown→HTML hygiene (Principle 13.12):** always leave one blank line between a bold label
+  or paragraph and a pipe table directly below it. Without it pandoc folds the label into the
+  table and the table breaks in `urd.html`.
+- A `blocker`-level audit finding means Trạng thái = `Draft — chưa duyệt`; never stamp `Đã duyệt`.
 - Keep in-scope / out-of-scope / open questions clearly separated.
-- The Functional Flows section is process-centric: Flow Catalog first (flows named
-  `F0n-Name`), then per-process blocks (each with its own activity+sequence for the
-  same process), then the Screen Matrix. Never mix two processes' diagrams in one
-  block; re-render diagrams only from confirmed step-by-step, never invent.
-- Wireframe rendering is derive-only and HTML-first:
-  - Trigger after screen/flow requirements are defined, or when the user asks to
-    draw, sketch, or visualize wireframes for a flow.
-  - Render low-fidelity wireframes as an inline HTML widget; if inline
-    visualization is unavailable, write one self-contained HTML file in
-    `clarify-output/`.
-  - Use the platform from the BRD/PRD (mobile by default; web only when specified).
-    Lay screens side by side in a responsive grid on a neutral background. Each
-    screen is a phone/card frame with header (back + title), content area, and
-    primary action button. Number screens ① ② ③ in flow order.
-  - Use grayscale only: neutral placeholder fills, no brand colors, no images.
-    Use real labels from the BRD/PRD for field names and buttons; use gray
-    bars/dots for body copy and sensitive/masked values.
-  - Only render fields, actions, and states the BRD/PRD specifies. Where the doc is
-    silent, render a placeholder labeled `ASSUMPTION`; never invent a business
-    rule, field, validation, or state.
-  - Default to happy path. If the BRD/PRD lists alternate or error flows, add one
-    screen per case and label it.
-  - Map every wireframe screen back to its source requirement / BRD or PRD section
-    in the screen footer and traceability summary.
-- Do not require `from-spec` artifacts for a business BRD/PRD sign-off. Missing
-  stories, AC, tests, API/data impact, or traceability are noted as optional
-  build-ready layer inputs, not as blockers to a business-facing final document
-  unless the user requested Dev/QA handoff readiness.
+- §3 is process-centric and **Mermaid-only**: sequence (3.3) + colored state (3.4) for the SAME
+  process; re-render diagrams only from confirmed step-by-step, never invent. No PlantUML.
+- Wireframe rendering is derive-only and HTML-first (grayscale; real labels; trace each screen
+  to its flow/step + user story; placeholders labeled `ASSUMPTION`; never invent fields/rules).
 
 ## Output
-Write `clarify-output/brd.md` or `clarify-output/prd.md` (matching the chosen
-standard, **no "final" in the name**) using the corresponding template, then render
-the companion `clarify-output/brd.html` / `prd.html` from it (best-effort, step 9c).
+Write `clarify-output/urd.md` (**no "final" in the name**) using `final-urd-template.md`, then
+render `urd.html` (default) and `urd.docx` (on `word`/`all`) from it (best-effort, step 9c).

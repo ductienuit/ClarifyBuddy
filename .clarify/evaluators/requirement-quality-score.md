@@ -25,13 +25,12 @@ Always show the math so the same input yields the same score.
    `anti-patterns.yaml`) — apply them at the **document** level, not only per
    requirement, since they often surface as whole missing perspectives.
 
-   **Document-profile calibration:** If the target is a BRD or business-facing
-   draft produced by `from-idea`, distinguish core business-readiness gaps from
-   optional Dev/QA build-ready artifacts. Missing user stories, acceptance
-   criteria, test scenarios, API/data impact, or traceability should be reported
-   as "build-ready layer not generated" unless the user asked for handoff
-   readiness. They may affect the handoff-readiness note, but they should not be
-   framed as proof that the BRD is business-incomplete.
+   **URD calibration:** The URD carries user stories, acceptance criteria, screens,
+   flows, states, and the error/message map as **core content** (§3) — score them as
+   business-readiness, not as an optional layer. Only deep step-level test scenarios
+   and a full API/data impact analysis are **out of URD scope** (the URD stays at
+   BA altitude); their absence may affect the `handoff-readiness` / `api-data-impact`
+   notes but is not proof the URD is incomplete.
 
 3. **Deduct per occurrence** from the anti-pattern's `dimension`:
    - `blocker` → −6
@@ -41,11 +40,10 @@ Always show the math so the same input yields the same score.
 4. **Cap per dimension.** A dimension cannot drop below 0. (Its weight is the
    maximum it can lose.)
 
-4b. **Separate score notes from next-step artifact gaps.** When the score is
-    lower because optional build-ready artifacts are absent, label that as
-    "optional build-ready layer" and recommend `/clarify:from-spec` only if the
-    user needs Dev/QA handoff. Do not present `/clarify:from-spec` as required to
-    make a resolved business draft valid.
+4b. **Separate score notes from out-of-scope artifact gaps.** When the score is
+    lower because out-of-URD-scope analysis (deep test scenarios, full API/data
+    impact) is absent, label that plainly as out of URD scope — do not treat it as a
+    defect that makes a resolved URD invalid.
 
 5. **Sanity-check against anchors.** After deductions, confirm each dimension's
    remaining points are consistent with its `full` / `half` / `zero` anchor in
@@ -73,9 +71,9 @@ Report, in this order:
 3. **Findings**, grouped by severity (blocker → major → minor). Each finding:
    anti-pattern `id`, the offending text, the mapped dimension, and the `fix`.
 4. **Top 3 actions** to raise the score the most.
-5. **Optional build-ready layer gaps** when applicable: stories / AC / tests /
-   API-data / traceability not generated yet, with wording that these are
-   optional for Dev/QA handoff rather than mandatory for business sign-off.
+5. **Out-of-scope notes** when applicable: deep step-level test scenarios and a
+   full API/data impact analysis are out of URD scope (BA altitude) — note them as
+   such, not as business-content defects.
 
 ## Worked mini-example
 

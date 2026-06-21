@@ -22,13 +22,12 @@ before they reach Dev and QA.
 
 ## The core loop
 
-1. **Intake** — a raw idea (`from-idea`) or an existing spec, PRD or BRD
-   (`from-spec` / `audit`).
+1. **Intake** — a raw idea (`from-idea`); or score an existing doc (`audit`).
 2. **Quality analysis** — detect anti-patterns, score against the rubric.
-3. **Improvement** — shape, clarify, add edge cases, write testable AC.
-4. **Handoff** — emit Dev and QA packs traced back to requirements.
-5. **Finalize** — compile the confirmed spec into a final standard document
-   (PRD or BRD) for BA/PO sign-off (`finalize`).
+3. **Improvement** — resolve the Answer Sheet and shape, clarify, add user stories,
+   edge cases, and testable acceptance criteria (`improve`).
+4. **Finalize** — compile the confirmed spec into the sign-off **URD** for BA/PO
+   sign-off (`finalize`), then render HTML/Word (`export`).
 
 ## Value proposition
 

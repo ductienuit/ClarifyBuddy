@@ -2,21 +2,21 @@
 
 ## MVP 1 (current)
 
-- 8 commands: `from-idea`, `from-spec`, `audit`, `improve`, `handoff`,
-  `finalize`, `export`, `status`.
-- 16 engines, 22 templates, 8 workflows.
-- BA-workflow layer: output language follows the Document Profile; questions carry
-  elicitation owners (+ `elicitation-pack.md`); decisions append to
-  `decision-log.md`; final docs are versioned with Change history;
-  `improve change-request` analyzes CR impact via traceability.
-- Document Profile (BA/PO + PRD/BRD) drives a final sign-off document via
-  `finalize`.
-- `modeling` emits PlantUML activity + Mermaid sequence diagrams with viewer
-  links.
-- `export` renders the full HTML BRD/PRD (`brd.html` from `brd.md`; Mermaid rendered
-  client-side; PlantUML via plantuml.com hex `~h` with fallback; requirement
-  group-bands → `colspan`; TOC + low-fi wireframes + artifact index; LibreOffice
-  docx round-trip).
+- 6 commands: `from-idea`, `audit`, `improve`, `finalize`, `export`, `status`.
+- 12 engines, 13 templates, 6 workflows.
+- Single output standard: **URD (User Requirements Document)** in the URD template
+  shape (cover → §1–§5, diagram conventions, §3 repeating per process).
+- BA-workflow layer: output language follows the Document Profile (default `vi`,
+  bilingual headings); questions carry elicitation owners (folded into §5); applied
+  decisions recorded in Decisions made + Lịch sử thay đổi; final docs are versioned
+  with Change history; `improve change-request` analyzes CR impact via traceability.
+- Document Profile (BA/PO role + `Standard: URD` + domain + language) drives the
+  sign-off URD via `finalize`.
+- `modeling` emits **Mermaid-only** diagrams: sequence (autonumber, no color) +
+  colored state — no PlantUML.
+- `finalize`/`export` render the full URD from `urd.md`: `urd.html` (navy skin,
+  Mermaid client-side, banded tables, TOC, low-fi wireframes, artifact index) and
+  `urd.docx` (LibreOffice round-trip, on request).
 - 36-entry anti-pattern catalog (yaml source of truth + human catalog).
 - Reproducible 100-point / 10-dimension scoring rubric with bands.
 - 3 mini domain packs (ecommerce, saas-b2b, fintech) + domain-pack template.
@@ -25,11 +25,11 @@
 
 ## v1.1 (planned)
 
-- Standalone `write-brd` / `write-srs` (generate-from-scratch) engines —
-  `finalize` already compiles a BRD/PRD from confirmed outputs.
+- Higher-fidelity Word export (native `docx` generation) beyond the current
+  LibreOffice round-trip.
 - Expand domain packs (healthcare, gov, marketplace).
-- Harden diagram rendering in `export` (bundled offline Mermaid, local PlantUML/
-  Kroki) beyond the current best-effort client-side + fallback.
+- Harden diagram rendering in `export` (bundled offline Mermaid) beyond the current
+  best-effort client-side + fallback.
 - More golden eval cases + automated diffing harness.
 
 ## v2 (exploratory, OUT of MVP 1)

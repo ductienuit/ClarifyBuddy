@@ -5,6 +5,9 @@ clarify-output/
 # The installable .zip files beside them ARE committed (see build/*.zip).
 build/*/
 
+# Local reference material (not part of the skill; contains node_modules)
+Template/
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

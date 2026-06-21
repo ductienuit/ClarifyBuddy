@@ -16,16 +16,15 @@ project after a break. Read-only: **writes no files, changes nothing**.
    as written. Never fail this command because the script can't run.
 1. **Inventory artifacts.** For each known artifact, report exists / missing, and
    for missing ones the command that produces it — only the **lean set** (Principle
-   13.11): the working draft (`prd-draft.md`/`brd-draft.md`), `audit-report.md`,
-   `stories.md`, `test-scenarios.md`, `api-data-impact.md`, `change-impact.md` (if a
-   CR is in flight), `brd.md`/`prd.md` (the sign-off doc — no "final" in the name; +
-   archived `brd.v<N>.md`/`prd.v<N>.md` versions), `wireframes.html`, and
-   `brd.html`/`prd.html` (HTML rendering from export). Do **not** expect
-   `edge-case-matrix.md`, `error-handling.md`, `model-suggestions.md`,
-   `traceability-matrix.md`, `decision-log.md`, or `elicitation-pack.md` — that
-   analysis now lives inside the draft / sign-off doc, not in separate files.
+   13.11): the working draft (`urd-draft.md`), `audit-report.md`, `change-impact.md`
+   (if a CR is in flight), `urd.md` (the sign-off doc — no "final" in the name; +
+   archived `urd.v<N>.md` versions), `wireframes.html`, `urd.html`, and `urd.docx`
+   (renderings from finalize/export). Do **not** expect `edge-case-matrix.md`,
+   `error-handling.md`, `model-suggestions.md`, `traceability-matrix.md`,
+   `decision-log.md`, `stories.md`, `test-scenarios.md`, or `elicitation-pack.md` —
+   that analysis now lives inside the draft / sign-off URD, not in separate files.
 2. **Document Profile.** Read the `## Document Profile` heading of the draft (or
-   sign-off doc): role, target standard, domain mode, language. If no draft exists,
+   sign-off doc): role, `Standard: URD`, domain mode, language. If no draft exists,
    say so.
 3. **Outstanding items.** Parse the draft's Assumptions / Open Questions /
    Suggestions / Variant sections and the Answer Sheet: count unresolved
@@ -33,8 +32,8 @@ project after a break. Read-only: **writes no files, changes nothing**.
    audit-report exists, and unapplied CRs if `change-impact.md` exists without a
    matching row in the sign-off doc's Change history / Decisions section.
 4. **Pipeline position + next step.** Place the project on
-   `from-idea → improve answers → (from-spec) → finalize → export` and recommend
-   the single most useful next command, with a one-line reason.
+   `from-idea → improve answers → finalize → export` and recommend the single most
+   useful next command, with a one-line reason.
 
 ## Output
 **Reply in chat only** (concise tables/bullets in the Document Profile's

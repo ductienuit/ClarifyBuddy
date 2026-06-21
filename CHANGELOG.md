@@ -5,6 +5,24 @@ All notable changes to Clarify are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Changed — URD-only redesign
+
+- **Single document standard: URD (User Requirements Document)** in a fixed template
+  shape. BRD/PRD are removed (templates, the `write-prd` engine → `write-urd`, the
+  `Target standard` choice). Output is `urd.md` (never "final-…"), archived as
+  `urd.v<N>.md`, rendered to `urd.html` (default) and `urd.docx` (on `word`/`all`).
+- **Command set trimmed to 6:** `from-idea`, `improve`, `audit`, `finalize`, `export`,
+  `status`. Removed `from-spec` and `handoff` (commands, workflows, skill packages).
+- **Diagrams are Mermaid-only** — `sequenceDiagram` (autonumber, no color) for the
+  process flow + colored `stateDiagram-v2` for state. PlantUML removed.
+- **Document shape** = cover → §1 Tổng quan → §2 Tổng quan hệ thống → diagram
+  conventions → §3 capability block repeating per process (description · user stories ·
+  sequence · state · rules · screen field specs · errors · NFR) → §4 Phụ lục → §5 Câu
+  hỏi mở. Headings render bilingual `Tiếng Việt (English)` (default Language=vi); IDs/
+  codes/anchors stay English. `export` uses a navy HTML skin.
+- Engines reduced 16 → 12; templates 22 → 13. Docs, GitHub Pages site, and a new
+  `docs/URD-TEMPLATE.md` showcase updated accordingly.
+
 ### Changed
 
 - **Document presentation & naming conventions (Principle 13) are now the default**

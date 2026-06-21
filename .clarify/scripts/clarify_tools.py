@@ -5,7 +5,6 @@ Usage:
   python clarify_tools.py status    [--dir clarify-output] [--json]
   python clarify_tools.py answers   <answer-sheet-file|-> [--dir clarify-output] [--json] [--by WHO] [--source LABEL]
   python clarify_tools.py integrity [--dir clarify-output] [--json]
-  python clarify_tools.py manifest  [--dir clarify-output] [--json]
 
 These are AIDS for the Clarify engines, not replacements: the engine prompts stay
 the source of rules. If Python is unavailable in the environment, the engines
@@ -16,17 +15,15 @@ import argparse, json, os, re, sys
 
 # ---------------------------------------------------------------- shared
 ARTIFACTS = [  # (filename-or-glob, produced-by, description) — lean set (Principle 13.11):
-    # edge/error/model/traceability/decision-log/elicitation are folded into the
-    # draft / sign-off doc, NOT separate files.
-    ("prd-draft.md|brd-draft.md", "/clarify:from-idea", "working draft (edge/error/model/flows folded in)"),
-    ("audit-report.md", "/clarify:audit or from-spec", "score + findings"),
-    ("stories.md", "/clarify:from-spec", "stories + AC"),
-    ("test-scenarios.md", "/clarify:from-spec", "step-level test scenarios"),
-    ("api-data-impact.md", "/clarify:from-spec", "API/data impact"),
+    # user-stories/edge/error/model/traceability/decision-log/elicitation are folded
+    # into the draft / sign-off URD, NOT separate files.
+    ("urd-draft.md", "/clarify:from-idea", "working URD draft (stories/edge/error/model/flows folded in)"),
+    ("audit-report.md", "/clarify:audit", "score + findings"),
     ("change-impact.md", "/clarify:improve change-request", "CR impact analysis"),
-    ("brd.md|prd.md", "/clarify:finalize", "sign-off doc (no 'final' in name)"),
+    ("urd.md", "/clarify:finalize", "sign-off URD (no 'final' in name)"),
     ("wireframes.html", "/clarify:finalize", "low-fi HTML wireframes"),
-    ("brd.html|prd.html", "/clarify:export", "full HTML BRD/PRD (from brd.md)"),
+    ("urd.html", "/clarify:finalize or export", "full HTML URD (from urd.md)"),
+    ("urd.docx", "/clarify:finalize word or export word", "Word URD (from urd.md)"),
 ]
 ID_RE = re.compile(r"\*\*([AQSV]\d+)\*\*")
 
@@ -36,7 +33,7 @@ def read(p):
     except OSError: return ""
 
 def find_draft(d):
-    for n in ("brd-draft.md", "prd-draft.md"):
+    for n in ("urd-draft.md", "urd.md"):
         p = os.path.join(d, n)
         if os.path.isfile(p): return p
     return None
@@ -61,7 +58,7 @@ def cmd_status(d, as_json):
     profile = {}
     if draft:
         body = section(read(draft), r"^#+ .*Document Profile.*$")
-        for key in ("Role", "Target standard", "Domain", "Language"):
+        for key in ("Role", "Standard", "Domain", "Language"):
             m = re.search(r"-\s*%s:\s*(.+)" % re.escape(key), body)
             if m: profile[key] = m.group(1).strip()
     # outstanding A/Q/S/V = labeled ids still present in the draft (applied decisions
@@ -71,13 +68,12 @@ def cmd_status(d, as_json):
     ids = sorted(set(ID_RE.findall(draft_text)), key=lambda s: (s[0], int(s[1:])))
     outstanding = ids
     archived = sorted(n for n in (os.listdir(d) if os.path.isdir(d) else [])
-                      if re.match(r"(brd|prd)\.v\d+.*\.md$", n))
+                      if re.match(r"urd\.v\d+.*\.md$", n))
     out = {"dir": d, "artifacts": rows, "profile": profile,
            "outstanding_ids": outstanding, "archived_versions": archived}
     if as_json: print(json.dumps(out, ensure_ascii=False, indent=2)); return 0
     if not os.path.isdir(d) or not any(r["exists"] for r in rows):
-        print(f"No Clarify artifacts found in `{d}`. Start with `/clarify:from-idea` "
-              "(new idea) or `/clarify:from-spec` (existing document).")
+        print(f"No Clarify artifacts found in `{d}`. Start with `/clarify:from-idea`.")
         return 0
     print("| Artifact | Exists | Produced by |\n| --- | --- | --- |")
     for r in rows:
@@ -124,17 +120,20 @@ def cmd_answers(d, src, as_json, by, source_label):
 
 # ---------------------------------------------------------------- integrity
 DEF_PATTERNS = {  # id-kind -> (defining file globs, definition regex)
-    "BR": (["brd-draft.md", "prd-draft.md", "brd.md", "prd.md"], r"\|\s*(BR-?\d+)\s*\|"),
+    # URD: business rules are defined as `**BR1 —** …` bullets or `| BR1 |` cells.
+    "BR": (["urd-draft.md", "urd.md"], r"(?:\|\s*|\*\*)(BR-?\d+)\b"),
+    # User stories defined in the §3.2 / §7 table as `| US-01 |` or `**US-01**`.
+    "US": (["urd-draft.md", "urd.md"], r"(?:\|\s*|\*\*)(US-\d+)\b"),
     # Flows are named F0n-Name (number is the stable anchor; -Name is appended): capture the F\d+ part.
-    "F":  (["brd-draft.md", "prd-draft.md", "brd.md", "prd.md"], r"\|\s*(F\d+)(?:-\w+)?\s*\|"),
-    "S":  (["brd.md", "prd.md", "wireframes.html"], r"\|\s*(S\d+)\s*\|"),
-    # Error codes now live in the in-document Error code & message table.
-    "CODE": (["brd-draft.md", "prd-draft.md", "brd.md", "prd.md"], r"\|\s*([A-Z][A-Z0-9]+_[A-Z0-9_]*\d+)\s*\|"),
+    "F":  (["urd-draft.md", "urd.md"], r"\|\s*(F\d+)(?:-\w+)?\s*\|"),
+    # Error codes live in each process's §3.7 Error code & message table (ERR-MODULE-NNN).
+    "ERR": (["urd-draft.md", "urd.md"], r"(ERR-[A-Z0-9]+-\d+)"),
 }
 REF_RES = {
     "BR": re.compile(r"\b(BR-?\d+)\b"),
+    "US": re.compile(r"\b(US-\d+)\b"),
     "F": re.compile(r"\b(F\d{2,})\b"),
-    "CODE": re.compile(r"\b([A-Z][A-Z0-9]{1,}_[A-Z0-9_]*\d+)\b"),
+    "ERR": re.compile(r"\b(ERR-[A-Z0-9]+-\d+)\b"),
 }
 
 def cmd_integrity(d, as_json):
@@ -171,41 +170,10 @@ def cmd_integrity(d, as_json):
         print(f"| {x['id']} | {x['kind']} | {x['where']} |")
     return 0
 
-# ---------------------------------------------------------------- manifest
-def cmd_manifest(d, as_json):
-    rp = os.path.join(d, "review-pack")
-    mpath = os.path.join(rp, "manifest.json")
-    try:
-        manifest = json.loads(read(mpath)) if os.path.exists(mpath) else {}
-    except json.JSONDecodeError:
-        manifest = {}
-    entries = []
-    for base, _dirs, files in os.walk(rp):
-        for fn in files:
-            if fn == "manifest.json": continue
-            rel = os.path.relpath(os.path.join(base, fn), d).replace(os.sep, "/")
-            ext = os.path.splitext(fn)[1]
-            rendered = ext in (".svg", ".png", ".html", ".pdf")
-            entries.append({"path": rel, "render_status": "rendered" if rendered else "source-only"})
-    # keep prior descriptive fields where paths match
-    prior = {e.get("path"): e for e in manifest.get("artifacts", []) if isinstance(e, dict)}
-    for e in entries:
-        if e["path"] in prior:
-            merged = dict(prior[e["path"]]); merged.update(e); e.clear(); e.update(merged)
-    manifest.setdefault("generated_by", "clarify:export")
-    manifest["artifacts"] = entries
-    os.makedirs(rp, exist_ok=True)
-    with open(mpath, "w", encoding="utf-8") as f:
-        json.dump(manifest, f, ensure_ascii=False, indent=2)
-    msg = {"manifest": mpath, "artifact_count": len(entries)}
-    print(json.dumps(msg, indent=2) if as_json else
-          f"manifest.json updated: {len(entries)} artifacts verified on disk.")
-    return 0
-
 # ---------------------------------------------------------------- main
 def main(argv):
     ap = argparse.ArgumentParser(prog="clarify_tools.py")
-    ap.add_argument("cmd", choices=["status", "answers", "integrity", "manifest"])
+    ap.add_argument("cmd", choices=["status", "answers", "integrity"])
     ap.add_argument("src", nargs="?", help="answers: answer-sheet file or '-' for stdin")
     ap.add_argument("--dir", default="clarify-output")
     ap.add_argument("--json", action="store_true")
@@ -217,7 +185,6 @@ def main(argv):
         if not a.src: ap.error("answers requires a file path or '-'")
         return cmd_answers(a.dir, a.src, a.json, a.by, a.source)
     if a.cmd == "integrity": return cmd_integrity(a.dir, a.json)
-    if a.cmd == "manifest":  return cmd_manifest(a.dir, a.json)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

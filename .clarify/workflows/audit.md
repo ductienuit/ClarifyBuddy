@@ -5,12 +5,8 @@ You want a quality score and findings for a requirement doc, fast — without
 generating downstream artifacts.
 
 ## Inputs
-- `$ARGUMENTS`: path to the doc. If empty, ask for it.
-- Document Profile: detect whether the target is BRD or PRD and whether it is a
-  business/product draft or a Dev/QA build-ready handoff package. If the input is
-  a Clarify `from-idea` draft, score **business draft readiness** first and treat
-  stories, AC, tests, API/data impact, and traceability as optional build-ready
-  layer artifacts unless the user explicitly asks for handoff readiness.
+- `$ARGUMENTS`: path to the doc (a URD draft, the sign-off `urd.md`, or any external
+  requirement document). If empty, ask for it.
 - Domain context (Principle 12): auto-detect the domain; use a matching pack if one
   exists, otherwise score with the domain-agnostic core and treat any
   domain-specific expectation as a labeled inference — never force-fit a pack.
@@ -35,7 +31,6 @@ generating downstream artifacts.
 - Total /100 + band (noting blocker cap), per-dimension table, findings grouped
   blocker/major/minor with each anti-pattern linked to a dimension and a fix,
   plus top 3 actions.
-- For a BRD/business draft, call out "Build-ready layer not generated" separately
-  from business-content findings. Do not imply the BRD is unreadable or incomplete
-  merely because user stories, AC, tests, API/data impact, or traceability have not
-  been generated yet.
+- Score the URD on business-content quality. Do not imply the URD is incomplete
+  merely because optional Dev/QA build-ready artifacts (tests, API/data impact) are
+  absent — they are out of URD scope.

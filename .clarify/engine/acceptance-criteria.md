@@ -24,7 +24,7 @@ happy, negative, and boundary paths.
 7. For risky/sensitive/financial/irreversible actions, add AC for confirmation,
    step-up authentication success, wrong/expired/cancelled authentication, and
    retry-limit behavior (`missing-authentication-step`).
-8. Tie each AC group to its story id.
+8. Tie each AC group to its story id (`US-#`).
 
 ## Rules
 - AC must be objectively verifiable; no subjective terms
@@ -33,5 +33,8 @@ happy, negative, and boundary paths.
 - Pull boundary/negative cases from the doc's Edge cases section to stay consistent.
 
 ## Output
-Append AC into `clarify-output/stories.md` (or a companion section) using
-`templates/acceptance-criteria-template.md`.
+Write the AC as the **"Tiêu chí chấp nhận" column of each user story** in the URD
+(§3.2 per process / draft §7); for multi-path AC, summarize the key happy/negative/
+boundary conditions there and keep fuller Given/When/Then notes inline. Use
+`templates/acceptance-criteria-template.md` as the working structure. There is no
+separate `stories.md` file.

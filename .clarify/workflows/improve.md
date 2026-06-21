@@ -1,13 +1,13 @@
 # Workflow: improve
 
 ## When to use
-After a `from-idea`, `audit`, or `from-spec` run, to resolve answers or upgrade a
-specific weak section instead of re-running everything.
+After a `from-idea` or `audit` run, to resolve answers or upgrade a specific weak section
+of the URD draft instead of re-running everything.
 
 ## Inputs
 - `$ARGUMENTS`: a **mode** naming the section to improve. Supported modes:
   `clarity`, `scope`, `business-rules`, `edge`, `acceptance-criteria`,
-  `stories`, `api-data`, `risk`, `traceability`, `nfr`, `model`, `answers`,
+  `stories`, `risk`, `traceability`, `nfr`, `model`, `answers`,
   `change-request`.
 - For `answers` mode, `$ARGUMENTS` (or the pasted message) is a filled **Answer
   Sheet** from a prior draft.
@@ -26,16 +26,13 @@ specific weak section instead of re-running everything.
   - `S# = yes` moves the suggestion into confirmed scope and into Requirements /
     Business Rules / Stakeholder Perspectives as appropriate; `no` moves it to
     Out of scope; `later` keeps it as a future suggestion.
-  - Re-run/resync the business-facing sections of the draft: Customer/User
-    Journey, Screen Information / Display Matrix, Business Rules, Error Handling
-    & Customer Messages summary, State Summary, business-level NFRs, Open
-    Questions, Assumptions, and Suggested Additional Capabilities.
+  - Re-run/resync the URD draft's sections: end-to-end journey, user stories +
+    acceptance criteria, Screen matrix & field specs, Business Rules, error & message
+    table, State model, business-level NFRs, Open Questions, Assumptions, and Suggested
+    Additional Capabilities.
   - Refresh the draft's own edge / error / model / state sections when affected
     (they live inside the draft now — there are no separate `edge-case-matrix.md`,
     `error-handling.md`, or `model-suggestions.md` files).
-  - Do **not** generate full stories, AC, tests, API/data impact, or traceability
-    unless the user explicitly chose the optional build-ready layer via
-    `from-spec`.
   - Re-flag any follow-on gaps the answers create.
   - **Record each applied decision in the draft itself** (Principle 13.10): add it to
     the **Decisions made** table (`Topic | Decision | Reflected in (BR/R)`) and add a
@@ -50,10 +47,9 @@ specific weak section instead of re-running everything.
   does not silently change the spec). `$ARGUMENTS` (or the pasted message) is the
   CR description. Steps:
   1. Assign the next `CR-<nn>` id and restate the requested change.
-  2. Walk the in-document trace spine — the Requirements table, the Flow Catalog
-     (rule / error-code / requirement columns), the error table, the Test scenarios,
-     and the screen matrix — to list EVERY affected item: Requirement / Flow / Screen
-     / Rule / Error / State / Story / Test.
+  2. Walk the in-document trace spine — the user stories, the Flow Catalog
+     (rule / error-code / user-story columns), the error table, and the screen matrix
+     — to list EVERY affected item: User story / Flow / Screen / Rule / Error / State.
   3. Write `clarify-output/change-impact.md` per
      `templates/change-impact-template.md`: impact table, the update each section
      needs, new `OPEN QUESTION`s the change raises, effort/risk notes (labeled
@@ -62,17 +58,15 @@ specific weak section instead of re-running everything.
      improve mode); when applied, record the `CR-<nn>` decision in the draft's
      **Decisions made** table, and the next `finalize` bumps the document version with
      a Change history row citing the CR.
-- `clarity` / `scope` → `clarify` + edit the draft (prd-draft or brd-draft).
-- `business-rules` / `risk` / `nfr` → `risk` + edit the draft (prd-draft or brd-draft).
+- `clarity` / `scope` → `clarify` + edit `urd-draft.md`.
+- `business-rules` / `risk` / `nfr` → `risk` + edit `urd-draft.md`.
 - `edge` → `edge` (refresh the draft's Edge cases section).
-- `stories` → `story`.
-- `acceptance-criteria` → `acceptance-criteria` (strengthen happy-only AC).
-- `api-data` → `data` + `api`.
-- `model` → `modeling` (refresh the draft's Functional Flows section **process-centric**:
-  a Flow Catalog, then per-process blocks each pairing the SAME process's PlantUML
-  activity + Mermaid sequence + step-by-step, plus entity & transaction/operation
-  state in Mermaid; viewer links pinned; never mix two processes in one block —
-  `mixed-process-diagram-block`).
+- `stories` → `story` (refresh the user stories §7).
+- `acceptance-criteria` → `acceptance-criteria` (strengthen happy-only acceptance criteria).
+- `model` → `modeling` (refresh the draft's flows **process-centric, Mermaid-only**: a Flow
+  Catalog, then per-process blocks each with the SAME process's Mermaid `sequenceDiagram` +
+  step-by-step, plus a colored `stateDiagram-v2`; viewer links pinned; never mix two processes
+  in one block — `mixed-process-diagram-block`; no PlantUML).
 - `traceability` → `trace` (verify the in-document trace spine; no separate file).
 
 ## Templates to fill
@@ -85,8 +79,7 @@ specific weak section instead of re-running everything.
 ## Done criteria
 - The targeted section's anti-patterns are resolved or downgraded, and the
   change is consistent with the rest of the outputs.
-- For `answers`, the result is a more resolved business/product draft with fewer
-  stale `ASSUMPTION` / `OPEN QUESTION` items, updated journey/screens/errors/state
+- For `answers`, the result is a more resolved URD draft with fewer stale
+  `ASSUMPTION` / `OPEN QUESTION` items, updated journey/stories/screens/errors/state
   where the answers changed scope or rules, and a next-step recommendation of
-  either `/clarify:finalize` for business sign-off or optional `/clarify:from-spec`
-  for Dev/QA build-ready elaboration.
+  `/clarify:finalize` to produce the URD (`urd.md` + `urd.html`; add `word` for `urd.docx`).

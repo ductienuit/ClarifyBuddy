@@ -37,5 +37,6 @@ check:
   mark uncertain obligations as OPEN QUESTION.
 
 ## Output
-A risk & control section feeding write-prd (section 10/11) and the audit
-findings. List each gap with its anti-pattern id and a concrete fix.
+A risk & control section feeding `write-urd` (§12 Non-functional requirements and the
+per-process §3.8) and the audit findings. List each gap with its anti-pattern id and a
+concrete fix.

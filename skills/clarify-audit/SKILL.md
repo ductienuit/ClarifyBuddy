@@ -3,7 +3,7 @@ name: clarify-audit
 description: >-
   Clarify · Audit — score a requirement document and list its quality issues,
   nothing more. Use when the user asks "how good is this spec", "score these
-  requirements", "audit this PRD/BRD", or wants blockers/major/minor findings.
+  requirements", "audit this URD", or wants blockers/major/minor findings.
   Produces a total /100, a band, a per-dimension table, and findings each linked
   to a rubric dimension with a concrete fix, using a 36-entry anti-pattern
   catalog. Does not rewrite the doc. Part of the Clarify requirement-quality pack.
@@ -26,5 +26,5 @@ Score a requirement doc and report findings only — do not elaborate or rewrite
 - Show the math: total /100, band, per-dimension breakdown.
 - Group findings blocker / major / minor; link each anti-pattern to a dimension
   and give a concrete fix. Any `blocker` caps the band at "Not ready for handoff".
-- Audit only — to elaborate the doc, use **clarify-from-spec**; to fix a specific
-  section, use **clarify-improve**.
+- Audit only — to fix a specific section, use **clarify-improve**; to produce the
+  sign-off URD, use **clarify-finalize**.
